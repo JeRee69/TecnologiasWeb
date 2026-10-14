@@ -54,6 +54,7 @@ class AutenticacionController extends Controller
 
         Auth::login($usuario, $recordar);
         $request->session()->regenerate();
+        $request->session()->put('password_hash_web', Auth::guard('web')->hashPasswordForCookie($usuario->getAuthPassword()));
 
         return $this->redirigirPorRol($usuario);
     }

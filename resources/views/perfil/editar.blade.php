@@ -25,7 +25,7 @@
     @if (session('estado'))
       <div role="status" class="mb-6 rounded-lg border border-emerald-200 bg-emerald-50 text-emerald-900 p-4 text-sm">{{ session('estado') }}</div>
     @endif
-    @if ($errors->any())
+    @if ($errors->any() || $errors->getBag('contrasena')->any())
       <div role="alert" class="mb-6 rounded-lg border border-red-200 bg-red-50 text-red-900 p-4 text-sm">Revisa los campos indicados. Tus cambios no se guardaron.</div>
     @endif
 
@@ -69,6 +69,27 @@
           <button type="submit" class="bg-[#1e3a8a] hover:bg-blue-900 text-white font-semibold text-sm rounded-lg px-5 py-3">Guardar cambios</button>
           <a href="{{ route($rutaPanel) }}" class="text-sm text-gray-600 hover:underline">Cancelar</a>
         </div>
+      </form>
+    </section>
+    <section aria-labelledby="contrasena-heading" class="bg-white border border-gray-200 rounded-xl p-5 sm:p-6 shadow-sm mt-6">
+      <h2 id="contrasena-heading" class="text-lg font-semibold">Cambiar contraseña</h2>
+      <p class="text-sm text-gray-500 mt-1 mb-5">Elige una contraseña personal de al menos 12 caracteres. Al cambiarla, los demás dispositivos deberán volver a iniciar sesión.</p>
+      <form action="{{ route('perfil.contrasena') }}" method="POST" class="space-y-5">
+        @csrf
+        @method('PATCH')
+        @foreach (['current_password' => 'Contraseña actual', 'password' => 'Nueva contraseña', 'password_confirmation' => 'Confirmar nueva contraseña'] as $campo => $etiqueta)
+          <div>
+            <label for="{{ $campo }}" class="block text-sm font-semibold mb-2">{{ $etiqueta }}</label>
+            <input id="{{ $campo }}" name="{{ $campo }}" type="password" required
+              autocomplete="{{ $campo === 'current_password' ? 'current-password' : 'new-password' }}"
+              @if ($campo !== 'current_password') minlength="12" @endif
+              aria-invalid="{{ $errors->getBag('contrasena')->has($campo) ? 'true' : 'false' }}"
+              @if ($errors->getBag('contrasena')->has($campo)) aria-describedby="{{ $campo }}-error" @endif
+              @class(['w-full rounded-lg border px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-700', 'border-red-400' => $errors->getBag('contrasena')->has($campo), 'border-gray-300' => !$errors->getBag('contrasena')->has($campo)])/>
+            @error($campo, 'contrasena')<p id="{{ $campo }}-error" class="text-sm text-red-700 mt-2">{{ $message }}</p>@enderror
+          </div>
+        @endforeach
+        <button type="submit" class="bg-[#1e3a8a] hover:bg-blue-900 text-white font-semibold text-sm rounded-lg px-5 py-3">Actualizar contraseña</button>
       </form>
     </section>
   </main>

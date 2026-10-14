@@ -77,3 +77,15 @@ La nueva columna se crea automáticamente al reconstruir y arrancar Docker. Para
 ```powershell
 docker compose exec -T app php tests/docker-hu06.php
 ```
+
+### Cambiar la contraseña personal
+
+En **Mi perfil → Cambiar contraseña**, indica la contraseña actual, una nueva de al menos 12 caracteres y su confirmación. Debe ser diferente de la actual y ocupar como máximo 72 bytes (límite de bcrypt). Esta acción solo cambia la cuenta autenticada y tiene un límite de 10 intentos por minuto.
+
+La sesión donde se realiza el cambio continúa activa; las demás sesiones se rechazan en su siguiente petición. Se invalidan las cookies anteriores de recordar sesión, los tokens API y los enlaces de recuperación pendientes. Las contraseñas no se vuelven a mostrar al fallar una validación. El formulario de contacto sigue sin permitir cambiar contraseñas.
+
+```powershell
+docker compose exec -T app php tests/docker-password.php
+```
+
+Esta prueba crea cuentas temporales para cada rol, comprueba los rechazos, el nuevo login y la invalidación de otros accesos, y elimina las cuentas al terminar.

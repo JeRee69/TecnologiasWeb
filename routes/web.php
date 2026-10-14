@@ -29,6 +29,9 @@ Route::post('/logout', [AutenticacionController::class, 'cerrarSesion'])->name('
 Route::middleware(['auth', 'rol'])->group(function () {
     Route::get('/perfil', [PerfilController::class, 'editar'])->name('perfil.editar');
     Route::patch('/perfil', [PerfilController::class, 'actualizar'])->name('perfil.actualizar');
+    Route::patch('/perfil/contrasena', [PerfilController::class, 'actualizarContrasena'])
+        ->middleware(\Illuminate\Routing\Middleware\ThrottleRequests::class.':10,1')
+        ->name('perfil.contrasena');
 });
 
 // Módulo Administrador (HU-02)
