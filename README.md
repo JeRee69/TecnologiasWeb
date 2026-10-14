@@ -89,3 +89,17 @@ docker compose exec -T app php tests/docker-password.php
 ```
 
 Esta prueba crea cuentas temporales para cada rol, comprueba los rechazos, el nuevo login y la invalidación de otros accesos, y elimina las cuentas al terminar.
+
+## HU-19: registro de espacios comunes
+
+En el panel del administrador, abre **Espacios Comunes → Administrar espacios** (`/admin/espacios-comunes`). Permite registrar espacios con nombre, descripción y estado, y consultar el listado paginado de registros.
+
+El nombre es obligatorio, único y admite hasta 150 caracteres; la descripción es obligatoria y admite hasta 2000. El estado debe ser **Activo** o **Inactivo**. Las validaciones conservan los valores escritos cuando hay errores. Solo las cuentas de administrador activas pueden entrar y registrar espacios.
+
+La tabla `espacios_comunes` se crea automáticamente al reconstruir y arrancar Docker. Los espacios activos se pueden consultar con `EspacioComun::activos()` para la futura configuración y reserva. Este sprint incluye únicamente registro y consulta administrativa; no añade reservas, horarios, aforos ni acceso de residentes a este módulo.
+
+```powershell
+docker compose exec -T app php tests/docker-hu19.php
+```
+
+La prueba usa cuentas y espacios temporales, comprueba persistencia, validaciones y permisos, y elimina sus datos al terminar.

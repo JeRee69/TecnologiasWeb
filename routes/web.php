@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\AutenticacionController;
 use App\Http\Controllers\Auth\RecuperarContrasenaController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\UsuarioController;
+use App\Http\Controllers\Admin\EspacioComunController;
 use App\Http\Controllers\PerfilController;
 use Illuminate\Support\Facades\Route;
 
@@ -39,6 +40,8 @@ Route::middleware(['auth', 'rol:Administrador'])->prefix('admin')->name('admin.'
     Route::get('/dashboard', [DashboardController::class, 'admin'])->name('dashboard');
     Route::get('/usuarios', [UsuarioController::class, 'index'])->name('usuarios.index');
     Route::patch('/usuarios/{usuario}/estado', [UsuarioController::class, 'actualizarEstado'])->name('usuarios.estado');
+    Route::get('/espacios-comunes', [EspacioComunController::class, 'index'])->name('espacios-comunes.index');
+    Route::post('/espacios-comunes', [EspacioComunController::class, 'store'])->name('espacios-comunes.store');
 });
 
 // Módulo Conserje (HU-02)

@@ -82,8 +82,10 @@
           <span class="material-symbols-outlined text-2xl">event_available</span>
         </div>
         <h3 class="text-lg font-semibold text-gray-900 mb-1">Espacios Comunes</h3>
-        <p class="text-sm text-gray-600 mb-4">Configuración de quinchos y salas, aforos, horarios y reglas de reserva.</p>
-        <span class="text-xs font-semibold text-purple-800 bg-purple-50 px-2.5 py-1 rounded-md">Reglas de Espacios</span>
+        <p class="text-sm text-gray-600 mb-4">Registra los espacios compartidos de la comunidad con su descripción y estado.</p>
+        <a href="{{ route('admin.espacios-comunes.index') }}" class="inline-flex items-center gap-1 text-sm font-semibold text-[#1e3a8a] hover:underline">
+          Administrar espacios <span class="material-symbols-outlined text-[18px]" aria-hidden="true">arrow_forward</span>
+        </a>
       </div>
 
       <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow transition-shadow">
