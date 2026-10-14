@@ -23,6 +23,7 @@
           <div class="font-semibold text-sm">{{ $usuario->nombre }}</div>
           <div class="text-xs text-blue-200">{{ $usuario->rol?->nombre }}</div>
         </div>
+        <a href="{{ route('perfil.editar') }}" class="text-xs font-semibold hover:underline whitespace-nowrap">Mi perfil</a>
         <form action="{{ route('logout') }}" method="POST">
           @csrf
           <button type="submit" class="bg-blue-800 hover:bg-blue-700 text-white text-xs px-3 py-2 rounded-lg flex items-center gap-1 transition-colors">
@@ -52,8 +53,10 @@
           <span class="material-symbols-outlined text-2xl">group</span>
         </div>
         <h3 class="text-lg font-semibold text-gray-900 mb-1">Usuarios y Roles</h3>
-        <p class="text-sm text-gray-600 mb-4">Alta, asignación de roles y control de activación o suspensión de cuentas.</p>
-        <span class="text-xs font-semibold text-[#1e3a8a] bg-blue-50 px-2.5 py-1 rounded-md">Módulo RBAC Activo</span>
+        <p class="text-sm text-gray-600 mb-4">Consulta los usuarios y activa o desactiva su acceso a la comunidad.</p>
+        <a href="{{ route('admin.usuarios.index') }}" class="inline-flex items-center gap-1 text-sm font-semibold text-[#1e3a8a] hover:underline">
+          Administrar usuarios <span class="material-symbols-outlined text-[18px]" aria-hidden="true">arrow_forward</span>
+        </a>
       </div>
 
       <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow transition-shadow">

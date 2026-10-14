@@ -53,3 +53,27 @@ docker compose exec -T app php tests/docker-smoke.php
 ```
 
 Esta prueba usa la aplicación real a través de Nginx y comprueba login, dashboards, permisos, CSRF y emisión de tokens de la API.
+
+## HU-04: activación y desactivación de usuarios
+
+Entra como administrador y abre **Usuarios y Roles → Administrar usuarios**, o visita `/admin/usuarios`. El listado muestra nombre, correo, RUT, rol y estado de cada cuenta, con las acciones **Activar** y **Desactivar**.
+
+Una cuenta inactiva no puede iniciar sesión por web ni por API. Si tiene una sesión web abierta, pierde acceso al solicitar una página protegida. Al desactivarla se revocan sus tokens API y su cookie de recordar sesión. Al reactivarla conserva su rol y contraseña. Solo un administrador activo puede cambiar estados; no puede desactivar su propia cuenta.
+
+Para comprobar esta HU con usuarios temporales que se eliminan al terminar:
+
+```powershell
+docker compose exec -T app php tests/docker-hu04.php
+```
+
+## HU-06: actualización de datos de contacto
+
+Desde cualquier panel, abre **Mi perfil** (`/perfil`). Una cuenta activa puede actualizar su propio teléfono y correo secundario. Ambos son opcionales; dejarlos vacíos elimina el dato guardado. El teléfono admite entre 7 y 15 dígitos, con código de país, espacios, paréntesis o guiones. El correo secundario debe tener un formato válido.
+
+El nombre, RUT, correo de acceso, rol y estado se muestran como datos de consulta. Las peticiones solo guardan los campos de contacto permitidos sobre la cuenta autenticada, aunque incluyan identificadores de otras cuentas o campos adicionales. Un error de validación conserva lo escrito y no guarda cambios parciales. El correo secundario no cambia las credenciales de acceso.
+
+La nueva columna se crea automáticamente al reconstruir y arrancar Docker. Para probar persistencia, validaciones y protección de campos en los tres roles con cuentas temporales:
+
+```powershell
+docker compose exec -T app php tests/docker-hu06.php
+```

@@ -23,6 +23,7 @@
           <div class="font-semibold text-sm">{{ $usuario->nombre }}</div>
           <div class="text-xs text-blue-200">{{ $usuario->rol?->nombre }}</div>
         </div>
+        <a href="{{ route('perfil.editar') }}" class="text-xs font-semibold hover:underline whitespace-nowrap">Mi perfil</a>
         <form action="{{ route('logout') }}" method="POST">
           @csrf
           <button type="submit" class="bg-blue-800 hover:bg-blue-700 text-white text-xs px-3 py-2 rounded-lg flex items-center gap-1 transition-colors">

@@ -17,6 +17,7 @@ class User extends Authenticatable
         'email',
         'rut',
         'telefono',
+        'email_secundario',
         'password',
         'rol_id',
         'estado',

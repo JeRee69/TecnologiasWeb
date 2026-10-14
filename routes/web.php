@@ -3,6 +3,8 @@
 use App\Http\Controllers\Auth\AutenticacionController;
 use App\Http\Controllers\Auth\RecuperarContrasenaController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Admin\UsuarioController;
+use App\Http\Controllers\PerfilController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -23,9 +25,17 @@ Route::middleware('guest')->group(function () {
 
 Route::post('/logout', [AutenticacionController::class, 'cerrarSesion'])->name('logout')->middleware('auth');
 
+// HU-06: datos de contacto propios, disponibles para cualquier cuenta activa.
+Route::middleware(['auth', 'rol'])->group(function () {
+    Route::get('/perfil', [PerfilController::class, 'editar'])->name('perfil.editar');
+    Route::patch('/perfil', [PerfilController::class, 'actualizar'])->name('perfil.actualizar');
+});
+
 // Módulo Administrador (HU-02)
 Route::middleware(['auth', 'rol:Administrador'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'admin'])->name('dashboard');
+    Route::get('/usuarios', [UsuarioController::class, 'index'])->name('usuarios.index');
+    Route::patch('/usuarios/{usuario}/estado', [UsuarioController::class, 'actualizarEstado'])->name('usuarios.estado');
 });
 
 // Módulo Conserje (HU-02)
