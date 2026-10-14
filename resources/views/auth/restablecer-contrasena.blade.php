@@ -43,7 +43,7 @@
     </div>
 
     @if ($errors->any())
-      <div class="p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm flex items-center gap-2">
+      <div data-swal-feedback class="p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm flex items-center gap-2">
         <span class="material-symbols-outlined text-red-600 text-[20px]">error</span>
         <div class="flex flex-col">
           @foreach ($errors->all() as $error)
@@ -99,5 +99,6 @@
       </button>
     </form>
   </div>
+  @include('components.alertas')
 </body>
 </html>

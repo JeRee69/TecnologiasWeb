@@ -45,8 +45,8 @@
     </div>
 
     @if (session('estado'))
-      <div class="p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-lg text-sm flex flex-col gap-2">
-        <div class="flex items-center gap-2">
+      <div data-swal-feedback class="p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-lg text-sm flex flex-col gap-2">
+        <div data-swal-message class="flex items-center gap-2">
           <span class="material-symbols-outlined text-emerald-600 text-[20px]">check_circle</span>
           <span class="font-medium">{{ session('estado') }}</span>
         </div>
@@ -62,7 +62,7 @@
     @endif
 
     @if ($errors->any())
-      <div class="p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm flex items-center gap-2">
+      <div data-swal-feedback class="p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm flex items-center gap-2">
         <span class="material-symbols-outlined text-red-600 text-[20px]">error</span>
         <div class="flex flex-col">
           @foreach ($errors->all() as $error)
@@ -106,5 +106,6 @@
       </a>
     </div>
   </div>
+  @include('components.alertas')
 </body>
 </html>

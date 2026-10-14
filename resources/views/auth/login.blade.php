@@ -151,14 +151,14 @@
 
           {{-- Alertas de estado y mensajes de error según criterios de aceptación HU-01 --}}
           @if (session('estado'))
-            <div class="p-sm bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-lg text-body-md flex items-center gap-xs">
+            <div data-swal-feedback class="p-sm bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-lg text-body-md flex items-center gap-xs">
               <span class="material-symbols-outlined text-[20px] text-emerald-600">check_circle</span>
               <span>{{ session('estado') }}</span>
             </div>
           @endif
 
           @if ($errors->any())
-            <div class="p-sm bg-red-50 border border-red-200 text-red-700 rounded-lg text-body-md flex items-center gap-xs">
+            <div data-swal-feedback class="p-sm bg-red-50 border border-red-200 text-red-700 rounded-lg text-body-md flex items-center gap-xs">
               <span class="material-symbols-outlined text-[20px] text-red-600">error</span>
               <div class="flex flex-col">
                 @foreach ($errors->all() as $error)
@@ -271,5 +271,6 @@
       }
     </script>
   </main>
+  @include('components.alertas')
 </body>
 </html>

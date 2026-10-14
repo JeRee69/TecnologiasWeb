@@ -29,10 +29,10 @@
     </div>
 
     @if (session('estado'))
-      <div role="status" class="mb-5 rounded-lg border border-emerald-200 bg-emerald-50 text-emerald-900 p-4 text-sm">{{ session('estado') }}</div>
+      <div data-swal-feedback role="status" class="mb-5 rounded-lg border border-emerald-200 bg-emerald-50 text-emerald-900 p-4 text-sm">{{ session('estado') }}</div>
     @endif
     @if ($errors->any())
-      <div role="alert" class="mb-5 rounded-lg border border-red-200 bg-red-50 text-red-900 p-4 text-sm">
+      <div data-swal-feedback role="alert" class="mb-5 rounded-lg border border-red-200 bg-red-50 text-red-900 p-4 text-sm">
         @foreach ($errors->all() as $error)
           <p>{{ $error }}</p>
         @endforeach
@@ -71,7 +71,10 @@
                   <span class="text-xs text-gray-500">Tu cuenta</span>
                 @else
                   <form action="{{ route('admin.usuarios.estado', $usuario) }}" method="POST"
-                    @if ($usuario->estaActivo()) onsubmit="return confirm('¿Desactivar esta cuenta? El usuario perderá el acceso a la comunidad.');" @endif>
+                    data-swal-confirm="{{ $usuario->estaActivo() ? '¿Desactivar esta cuenta?' : '¿Activar esta cuenta?' }}"
+                    data-swal-text="{{ $usuario->estaActivo() ? 'El usuario perderá el acceso a la comunidad. Se conservarán sus datos y su rol.' : 'El usuario recuperará el acceso según su rol asignado.' }}"
+                    data-swal-button="{{ $usuario->estaActivo() ? 'Sí, desactivar' : 'Sí, activar' }}"
+                    data-swal-danger="{{ $usuario->estaActivo() ? 'true' : 'false' }}">
                     @csrf
                     @method('PATCH')
                     <input type="hidden" name="estado" value="{{ $usuario->estaActivo() ? 'inactivo' : 'activo' }}"/>
@@ -91,5 +94,6 @@
     </div>
     <div class="mt-5">{{ $usuarios->links() }}</div>
   </main>
+  @include('components.alertas')
 </body>
 </html>

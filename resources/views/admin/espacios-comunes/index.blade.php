@@ -28,10 +28,15 @@
       <p class="text-sm text-gray-600 mt-2">Registra las áreas compartidas y define cuáles están habilitadas en la comunidad.</p>
     </div>
     @if (session('estado'))
-      <div role="status" class="mb-6 rounded-lg border border-emerald-200 bg-emerald-50 text-emerald-900 p-4 text-sm">{{ session('estado') }}</div>
+      <div data-swal-feedback role="status" class="mb-6 rounded-lg border border-emerald-200 bg-emerald-50 text-emerald-900 p-4 text-sm">{{ session('estado') }}</div>
     @endif
     @if ($errors->any())
-      <div role="alert" class="mb-6 rounded-lg border border-red-200 bg-red-50 text-red-900 p-4 text-sm">Revisa los campos indicados. El espacio no fue registrado.</div>
+      <div data-swal-feedback role="alert" class="mb-6 rounded-lg border border-red-200 bg-red-50 text-red-900 p-4 text-sm">Revisa los campos indicados. El espacio no fue registrado.</div>
+    @endif
+    @if ($errors->getBag('estadoEspacio')->any())
+      <div data-swal-feedback role="alert" class="mb-6 rounded-lg border border-red-200 bg-red-50 text-red-900 p-4 text-sm">
+        @foreach ($errors->getBag('estadoEspacio')->all() as $error)<p>{{ $error }}</p>@endforeach
+      </div>
     @endif
 
     <div class="grid lg:grid-cols-5 gap-6 items-start">
@@ -80,6 +85,29 @@
                 <span @class(['px-2.5 py-1 rounded-full text-xs font-semibold', 'bg-emerald-50 text-emerald-800' => $espacio->estado === 'activo', 'bg-gray-100 text-gray-700' => $espacio->estado === 'inactivo'])>{{ $espacio->estado === 'activo' ? 'Activo' : 'Inactivo' }}</span>
               </div>
               <p class="text-sm text-gray-600 mt-3 whitespace-pre-line break-words">{{ $espacio->descripcion }}</p>
+              @if ($espacio->tieneConfiguracion())
+                <dl class="grid sm:grid-cols-3 gap-3 mt-4 text-sm">
+                  <div><dt class="text-gray-500">Aforo</dt><dd class="font-medium">{{ $espacio->aforo }} personas</dd></div>
+                  <div><dt class="text-gray-500">Horario diario</dt><dd class="font-medium">{{ substr($espacio->hora_apertura, 0, 5) }}–{{ substr($espacio->hora_cierre, 0, 5) }}</dd></div>
+                  <div><dt class="text-gray-500">Costo</dt><dd class="font-medium">{{ (int) $espacio->costo === 0 ? 'Gratuito' : '$'.number_format((float) $espacio->costo, 0, ',', '.').' CLP' }}</dd></div>
+                </dl>
+              @else
+                <p class="text-xs text-amber-800 mt-4">Configuración pendiente</p>
+              @endif
+              <div class="flex flex-wrap items-center justify-between gap-4 mt-4">
+                <a href="{{ route('admin.espacios-comunes.configurar', $espacio) }}" class="inline-flex text-sm font-semibold text-[#1e3a8a] hover:underline">{{ $espacio->tieneConfiguracion() ? 'Ver y editar configuración' : 'Configurar espacio' }}</a>
+                <form action="{{ route('admin.espacios-comunes.estado', $espacio) }}" method="POST"
+                  data-swal-confirm="{{ $espacio->estado === 'activo' ? '¿Desactivar este espacio?' : '¿Activar este espacio?' }}"
+                  data-swal-text="{{ $espacio->estado === 'activo' ? 'El espacio quedará inactivo. Se conservarán todos sus datos y configuración.' : 'El espacio quedará habilitado, conservando su configuración.' }}"
+                  data-swal-button="{{ $espacio->estado === 'activo' ? 'Sí, desactivar' : 'Sí, activar' }}"
+                  data-swal-danger="{{ $espacio->estado === 'activo' ? 'true' : 'false' }}">
+                  @csrf
+                  @method('PATCH')
+                  <input type="hidden" name="estado" value="{{ $espacio->estado === 'activo' ? 'inactivo' : 'activo' }}"/>
+                  <button type="submit" aria-label="{{ $espacio->estado === 'activo' ? 'Desactivar' : 'Activar' }} espacio {{ $espacio->nombre }}"
+                    @class(['rounded-lg border px-3 py-2 text-xs font-semibold', 'border-red-200 text-red-700 hover:bg-red-50' => $espacio->estado === 'activo', 'border-emerald-200 text-emerald-800 hover:bg-emerald-50' => $espacio->estado === 'inactivo'])>{{ $espacio->estado === 'activo' ? 'Desactivar' : 'Activar' }}</button>
+                </form>
+              </div>
             </article>
           @empty
             <div class="bg-white border border-dashed border-gray-300 rounded-xl p-8 text-center">
@@ -92,5 +120,6 @@
       </section>
     </div>
   </main>
+  @include('components.alertas')
 </body>
 </html>

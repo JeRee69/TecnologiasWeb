@@ -96,10 +96,32 @@ En el panel del administrador, abre **Espacios Comunes → Administrar espacios*
 
 El nombre es obligatorio, único y admite hasta 150 caracteres; la descripción es obligatoria y admite hasta 2000. El estado debe ser **Activo** o **Inactivo**. Las validaciones conservan los valores escritos cuando hay errores. Solo las cuentas de administrador activas pueden entrar y registrar espacios.
 
-La tabla `espacios_comunes` se crea automáticamente al reconstruir y arrancar Docker. Los espacios activos se pueden consultar con `EspacioComun::activos()` para la futura configuración y reserva. Este sprint incluye únicamente registro y consulta administrativa; no añade reservas, horarios, aforos ni acceso de residentes a este módulo.
+La tabla `espacios_comunes` se crea automáticamente al reconstruir y arrancar Docker. Los espacios activos se pueden consultar con `EspacioComun::activos()`. La HU-19 cubre registro y consulta administrativa; la configuración se describe en la HU-20. Las reservas y el acceso de residentes a este módulo quedan para un sprint futuro.
 
 ```powershell
 docker compose exec -T app php tests/docker-hu19.php
 ```
 
 La prueba usa cuentas y espacios temporales, comprueba persistencia, validaciones y permisos, y elimina sus datos al terminar.
+
+## HU-20: configuración de espacios comunes
+
+En **Administrar espacios**, elige **Configurar espacio** o **Ver y editar configuración** en el espacio correspondiente. La configuración exige aforo (1 a 100000 personas), horario diario de apertura y cierre dentro del mismo día, costo entero en CLP (0 para gratuito, máximo 999999999999) y reglas de uso (hasta 5000 caracteres).
+
+Solo el administrador activo puede consultar y guardar la configuración. Se guarda sobre el espacio seleccionado sin cambiar su nombre, descripción ni estado; también se puede preparar la configuración de un espacio inactivo. Los espacios anteriores conservan sus datos y aparecen con configuración pendiente hasta completarla. El listado resume aforo, horario y costo, y el formulario recupera las reglas y los valores guardados para editarlos.
+
+La migración se aplica al reconstruir y arrancar Docker. El horario actual es el mismo todos los días; no incluye franjas por día, turnos nocturnos, reservas ni cobros.
+
+```powershell
+docker compose exec -T app php tests/docker-hu20.php
+```
+
+La prueba comprueba persistencia, edición, aislamiento entre espacios, validaciones y permisos con datos temporales que elimina al terminar.
+
+### Activar o desactivar un espacio existente
+
+Cada espacio del listado tiene un botón **Activar** o **Desactivar**, exclusivo del administrador activo. Desactivarlo requiere confirmar y conserva nombre, descripción, aforo, horario, costo y reglas. Se puede reactivar después sin volver a registrarlo ni configurarlo. Un espacio puede crearse inactivo para prepararlo antes de habilitar su uso o desactivarse temporalmente por mantenimiento. La consulta `EspacioComun::activos()` refleja los cambios de estado. Las pruebas de `docker-hu20.php` también verifican este flujo, sus permisos y la conservación de datos.
+
+### Alertas de la interfaz
+
+Las confirmaciones de activación y desactivación y los avisos de éxito o error usan SweetAlert2 11.26.25, con etiquetas en español y colores del sitio. Los errores junto a cada campo se mantienen. La biblioteca y su licencia MIT se incluyen en `public/lib/sweetalert2`, sin depender de una descarga externa en el navegador. El comportamiento compartido está en `public/js/alertas.js` y se integra mediante `components.alertas`. Si JavaScript no carga, los mensajes del servidor permanecen visibles.

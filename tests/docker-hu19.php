@@ -4,6 +4,10 @@
 require __DIR__.'/../vendor/autoload.php';
 $app = require __DIR__.'/../bootstrap/app.php';
 $app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap();
+set_exception_handler(function (Throwable $error) {
+    fwrite(STDERR, $error->getMessage()."\n");
+    exit(1);
+});
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Cookie\CookieJar;

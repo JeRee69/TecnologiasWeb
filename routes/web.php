@@ -42,6 +42,9 @@ Route::middleware(['auth', 'rol:Administrador'])->prefix('admin')->name('admin.'
     Route::patch('/usuarios/{usuario}/estado', [UsuarioController::class, 'actualizarEstado'])->name('usuarios.estado');
     Route::get('/espacios-comunes', [EspacioComunController::class, 'index'])->name('espacios-comunes.index');
     Route::post('/espacios-comunes', [EspacioComunController::class, 'store'])->name('espacios-comunes.store');
+    Route::patch('/espacios-comunes/{espacio}/estado', [EspacioComunController::class, 'actualizarEstado'])->name('espacios-comunes.estado');
+    Route::get('/espacios-comunes/{espacio}/configuracion', [EspacioComunController::class, 'configurar'])->name('espacios-comunes.configurar');
+    Route::patch('/espacios-comunes/{espacio}/configuracion', [EspacioComunController::class, 'guardarConfiguracion'])->name('espacios-comunes.configuracion');
 });
 
 // Módulo Conserje (HU-02)

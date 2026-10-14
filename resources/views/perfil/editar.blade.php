@@ -23,10 +23,10 @@
     <p class="text-sm text-gray-600 mt-2 mb-6">Mantén tus datos de contacto al día para la comunicación con tu comunidad.</p>
 
     @if (session('estado'))
-      <div role="status" class="mb-6 rounded-lg border border-emerald-200 bg-emerald-50 text-emerald-900 p-4 text-sm">{{ session('estado') }}</div>
+      <div data-swal-feedback role="status" class="mb-6 rounded-lg border border-emerald-200 bg-emerald-50 text-emerald-900 p-4 text-sm">{{ session('estado') }}</div>
     @endif
     @if ($errors->any() || $errors->getBag('contrasena')->any())
-      <div role="alert" class="mb-6 rounded-lg border border-red-200 bg-red-50 text-red-900 p-4 text-sm">Revisa los campos indicados. Tus cambios no se guardaron.</div>
+      <div data-swal-feedback role="alert" class="mb-6 rounded-lg border border-red-200 bg-red-50 text-red-900 p-4 text-sm">Revisa los campos indicados. Tus cambios no se guardaron.</div>
     @endif
 
     <section aria-labelledby="cuenta-heading" class="bg-white border border-gray-200 rounded-xl p-5 sm:p-6 mb-6 shadow-sm">
@@ -93,5 +93,6 @@
       </form>
     </section>
   </main>
+  @include('components.alertas')
 </body>
 </html>
