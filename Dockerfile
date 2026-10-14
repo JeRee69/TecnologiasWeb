@@ -18,6 +18,19 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
 
+COPY . .
+
+ENV COMPOSER_ALLOW_SUPERUSER=1
+
+RUN mkdir -p bootstrap/cache storage/app/public storage/framework/cache/data \
+    storage/framework/sessions storage/framework/views storage/logs \
+    && composer install --no-interaction --prefer-dist --optimize-autoloader \
+    && chown -R www-data:www-data storage bootstrap/cache \
+    && sed -i 's/\r$//' docker/entrypoint.sh \
+    && chmod +x docker/entrypoint.sh
+
+ENTRYPOINT ["/var/www/html/docker/entrypoint.sh"]
+
 EXPOSE 9000
 
 CMD ["php-fpm"]

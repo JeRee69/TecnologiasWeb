@@ -5,6 +5,8 @@
 /public/storage
 /storage/*.key
 /vendor
+/bootstrap/cache/*
+/storage
 .env
 .env.backup
 .env.production

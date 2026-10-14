@@ -31,8 +31,8 @@ class Kernel extends HttpKernel
     ];
 
     protected $middlewareAliases = [
-        'auth' => \Illuminate\Auth\Middleware\Authenticate::class,
-        'guest' => \Illuminate\Auth\Middleware\RedirectIfAuthenticated::class,
+        'auth' => \App\Http\Middleware\Authenticate::class,
+        'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'rol' => \App\Http\Middleware\VerificarRol::class,
     ];
 }
