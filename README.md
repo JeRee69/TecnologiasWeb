@@ -125,3 +125,18 @@ Cada espacio del listado tiene un botón **Activar** o **Desactivar**, exclusivo
 ### Alertas de la interfaz
 
 Las confirmaciones de activación y desactivación y los avisos de éxito o error usan SweetAlert2 11.26.25, con etiquetas en español y colores del sitio. Los errores junto a cada campo se mantienen. La biblioteca y su licencia MIT se incluyen en `public/lib/sweetalert2`, sin depender de una descarga externa en el navegador. El comportamiento compartido está en `public/js/alertas.js` y se integra mediante `components.alertas`. Si JavaScript no carga, los mensajes del servidor permanecen visibles.
+
+## HU-07, HU-08, HU-09 y HU-10: Módulo de Departamentos
+
+Desde el dashboard del administrador, abre **Departamentos → Administrar departamentos** (`/admin/departamentos`).
+
+- **HU-07 (Registro):** Permite registrar nuevas unidades residenciales indicando el número único (ej.: 101, 204-B) y el piso correspondiente (-10 a 200). Valida unicidad a nivel de formulario y base de datos.
+- **HU-08 (Gestión de Estado):** Permite activar o desactivar departamentos. Si un departamento está inactivo, el sistema restringe estrictamente la vinculación de nuevos residentes.
+- **HU-09 (Asociación de Residentes):** Permite vincular cuentas activas con rol Residente a departamentos activos, con designación opcional de residente titular principal o habitante general, así como desasociar residentes.
+- **HU-10 (Contactos de Emergencia):** Permite registrar contactos de emergencia (nombre, teléfono y relación/parentesco) vinculados a la unidad o a un residente específico de la misma, con capacidad de eliminación directa.
+
+Para ejecutar la suite de pruebas del módulo de departamentos con datos temporales que se limpian automáticamente:
+
+```powershell
+docker compose exec -T app php tests/docker-departamentos.php
+```

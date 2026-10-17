@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\RecuperarContrasenaController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\UsuarioController;
 use App\Http\Controllers\Admin\EspacioComunController;
+use App\Http\Controllers\Admin\DepartamentoController;
 use App\Http\Controllers\PerfilController;
 use Illuminate\Support\Facades\Route;
 
@@ -45,6 +46,16 @@ Route::middleware(['auth', 'rol:Administrador'])->prefix('admin')->name('admin.'
     Route::patch('/espacios-comunes/{espacio}/estado', [EspacioComunController::class, 'actualizarEstado'])->name('espacios-comunes.estado');
     Route::get('/espacios-comunes/{espacio}/configuracion', [EspacioComunController::class, 'configurar'])->name('espacios-comunes.configurar');
     Route::patch('/espacios-comunes/{espacio}/configuracion', [EspacioComunController::class, 'guardarConfiguracion'])->name('espacios-comunes.configuracion');
+
+    // Gestión de Departamentos (HU-07, HU-08, HU-09, HU-10)
+    Route::get('/departamentos', [DepartamentoController::class, 'index'])->name('departamentos.index');
+    Route::post('/departamentos', [DepartamentoController::class, 'store'])->name('departamentos.store');
+    Route::get('/departamentos/{departamento}', [DepartamentoController::class, 'show'])->name('departamentos.show');
+    Route::patch('/departamentos/{departamento}/estado', [DepartamentoController::class, 'actualizarEstado'])->name('departamentos.estado');
+    Route::post('/departamentos/{departamento}/residentes', [DepartamentoController::class, 'asociarResidente'])->name('departamentos.residentes.asociar');
+    Route::delete('/departamentos/{departamento}/residentes/{usuario}', [DepartamentoController::class, 'desasociarResidente'])->name('departamentos.residentes.desasociar');
+    Route::post('/departamentos/{departamento}/contactos', [DepartamentoController::class, 'storeContacto'])->name('departamentos.contactos.store');
+    Route::delete('/departamentos/{departamento}/contactos/{contacto}', [DepartamentoController::class, 'destroyContacto'])->name('departamentos.contactos.destroy');
 });
 
 // Módulo Conserje (HU-02)

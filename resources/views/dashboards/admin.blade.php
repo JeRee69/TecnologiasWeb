@@ -65,7 +65,9 @@
         </div>
         <h3 class="text-lg font-semibold text-gray-900 mb-1">Departamentos</h3>
         <p class="text-sm text-gray-600 mb-4">Gestión del padrón de unidades residenciales y vinculación con residentes.</p>
-        <span class="text-xs font-semibold text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-md">Padrón de Unidades</span>
+        <a href="{{ route('admin.departamentos.index') }}" class="inline-flex items-center gap-1 text-sm font-semibold text-[#1e3a8a] hover:underline">
+          Administrar departamentos <span class="material-symbols-outlined text-[18px]" aria-hidden="true">arrow_forward</span>
+        </a>
       </div>
 
       <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow transition-shadow">
