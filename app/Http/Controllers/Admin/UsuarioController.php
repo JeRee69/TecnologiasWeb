@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Rol;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
@@ -17,7 +19,54 @@ class UsuarioController extends Controller
     {
         return view('admin.usuarios.index', [
             'usuarios' => User::with('rol')->orderBy('nombre')->orderBy('id')->paginate(15),
+            'roles' => Rol::orderBy('id')->get(),
         ]);
+    }
+
+    public function store(Request $request): RedirectResponse
+    {
+        $datos = $request->validate([
+            'nombre' => ['required', 'string', 'max:150'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
+            'rut' => ['nullable', 'string', 'max:20', 'unique:users,rut'],
+            'telefono' => ['nullable', 'string', 'max:20'],
+            'rol_id' => ['required', 'exists:roles,id'],
+            'password' => ['nullable', 'string', 'min:6', 'max:100'],
+        ], [
+            'nombre.required' => 'El nombre del usuario es obligatorio.',
+            'nombre.max' => 'El nombre no puede exceder los 150 caracteres.',
+            'email.required' => 'El correo electrónico es obligatorio.',
+            'email.email' => 'Debes ingresar un correo electrónico válido.',
+            'email.unique' => 'El correo electrónico ya se encuentra registrado.',
+            'rut.unique' => 'El RUT ingresado ya se encuentra registrado.',
+            'rol_id.required' => 'Debes seleccionar un rol para el usuario.',
+            'rol_id.exists' => 'El rol seleccionado no es válido.',
+            'password.min' => 'La contraseña debe contener al menos 6 caracteres.',
+        ]);
+
+        $passwordPlano = !empty($datos['password'])
+            ? $datos['password']
+            : Str::random(10);
+
+        $usuario = User::create([
+            'nombre' => trim($datos['nombre']),
+            'email' => strtolower(trim($datos['email'])),
+            'rut' => !empty($datos['rut']) ? trim($datos['rut']) : null,
+            'telefono' => !empty($datos['telefono']) ? trim($datos['telefono']) : null,
+            'password' => Hash::make($passwordPlano),
+            'rol_id' => $datos['rol_id'],
+            'estado' => 'activo',
+        ]);
+
+        $rolNombre = $usuario->rol?->nombre ?? 'Asignado';
+
+        return redirect()->route('admin.usuarios.index')
+            ->with('estado', "El usuario {$usuario->nombre} fue registrado exitosamente con el rol {$rolNombre}.")
+            ->with('credencial_generada', [
+                'email' => $usuario->email,
+                'password' => $passwordPlano,
+                'rol' => $rolNombre,
+            ]);
     }
 
     public function actualizarEstado(Request $request, User $usuario): RedirectResponse

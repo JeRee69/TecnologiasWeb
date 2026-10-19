@@ -40,6 +40,7 @@ Route::middleware(['auth', 'rol'])->group(function () {
 Route::middleware(['auth', 'rol:Administrador'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'admin'])->name('dashboard');
     Route::get('/usuarios', [UsuarioController::class, 'index'])->name('usuarios.index');
+    Route::post('/usuarios', [UsuarioController::class, 'store'])->name('usuarios.store');
     Route::patch('/usuarios/{usuario}/estado', [UsuarioController::class, 'actualizarEstado'])->name('usuarios.estado');
     Route::get('/espacios-comunes', [EspacioComunController::class, 'index'])->name('espacios-comunes.index');
     Route::post('/espacios-comunes', [EspacioComunController::class, 'store'])->name('espacios-comunes.store');
