@@ -52,7 +52,7 @@
         <div class="w-12 h-12 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center mb-4">
           <span class="material-symbols-outlined text-2xl">account_balance_wallet</span>
         </div>
-        <h3 class="text-lg font-semibold text-gray-900 mb-1">Mis Gastos Comunes</h3>
+        <h2 class="text-lg font-semibold text-gray-900 mb-1">Mis Gastos Comunes</h2>
         <p class="text-sm text-gray-600 mb-4">Revisa tu saldo vigente, histórico de cobros y descarga el desglose en PDF.</p>
         <span class="text-xs font-semibold text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-md">Estado Financiero</span>
       </div>
@@ -61,7 +61,7 @@
         <div class="w-12 h-12 rounded-lg bg-blue-100 text-blue-800 flex items-center justify-center mb-4">
           <span class="material-symbols-outlined text-2xl">upload_file</span>
         </div>
-        <h3 class="text-lg font-semibold text-gray-900 mb-1">Cargar Comprobante</h3>
+        <h2 class="text-lg font-semibold text-gray-900 mb-1">Cargar Comprobante</h2>
         <p class="text-sm text-gray-600 mb-4">Sube tu comprobante de transferencia bancaria para validación del administrador.</p>
         <span class="text-xs font-semibold text-[#1e3a8a] bg-blue-50 px-2.5 py-1 rounded-md">Validación de Pagos</span>
       </div>
@@ -70,25 +70,28 @@
         <div class="w-12 h-12 rounded-lg bg-purple-100 text-purple-800 flex items-center justify-center mb-4">
           <span class="material-symbols-outlined text-2xl">calendar_month</span>
         </div>
-        <h3 class="text-lg font-semibold text-gray-900 mb-1">Reserva de Espacios</h3>
+        <h2 class="text-lg font-semibold text-gray-900 mb-1">Reserva de Espacios</h2>
         <p class="text-sm text-gray-600 mb-4">Reserva quinchos y salas de eventos con prevención de solapamientos horarios.</p>
         <span class="text-xs font-semibold text-purple-800 bg-purple-50 px-2.5 py-1 rounded-md">Áreas Comunes</span>
       </div>
 
-      <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow transition-shadow">
-        <div class="w-12 h-12 rounded-lg bg-amber-100 text-amber-800 flex items-center justify-center mb-4">
+      <a href="{{ route('residente.encomiendas.index') }}" class="group bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:border-amber-300 transition-all block">
+        <div class="w-12 h-12 rounded-lg bg-amber-100 text-amber-800 group-hover:bg-amber-600 group-hover:text-white flex items-center justify-center mb-4 transition-colors">
           <span class="material-symbols-outlined text-2xl">package_2</span>
         </div>
-        <h3 class="text-lg font-semibold text-gray-900 mb-1">Mis Encomiendas</h3>
+        <div class="flex items-center justify-between">
+          <h2 class="text-lg font-semibold text-gray-900 group-hover:text-amber-800 transition-colors mb-1">Mis Encomiendas</h2>
+          <span class="material-symbols-outlined text-gray-400 group-hover:text-amber-800 text-[20px] transition-colors">arrow_forward</span>
+        </div>
         <p class="text-sm text-gray-600 mb-4">Visualiza encomiendas recibidas en conserjería pendientes de retiro.</p>
-        <span class="text-xs font-semibold text-amber-800 bg-amber-50 px-2.5 py-1 rounded-md">Paquetes en Custodia</span>
-      </div>
+        <span class="text-xs font-semibold text-amber-800 bg-amber-50 px-2.5 py-1 rounded-md">Ver Paquetes en Custodia</span>
+      </a>
 
       <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow transition-shadow">
         <div class="w-12 h-12 rounded-lg bg-indigo-100 text-indigo-800 flex items-center justify-center mb-4">
           <span class="material-symbols-outlined text-2xl">newspaper</span>
         </div>
-        <h3 class="text-lg font-semibold text-gray-900 mb-1">Mural Informativo</h3>
+        <h2 class="text-lg font-semibold text-gray-900 mb-1">Mural Informativo</h2>
         <p class="text-sm text-gray-600 mb-4">Comunicados oficiales, citaciones a asamblea y mantenimientos programados.</p>
         <span class="text-xs font-semibold text-indigo-800 bg-indigo-50 px-2.5 py-1 rounded-md">Noticias del Edificio</span>
       </div>
@@ -97,7 +100,7 @@
         <div class="w-12 h-12 rounded-lg bg-rose-100 text-rose-800 flex items-center justify-center mb-4">
           <span class="material-symbols-outlined text-2xl">report_problem</span>
         </div>
-        <h3 class="text-lg font-semibold text-gray-900 mb-1">Reportar Incidencia</h3>
+        <h2 class="text-lg font-semibold text-gray-900 mb-1">Reportar Incidencia</h2>
         <p class="text-sm text-gray-600 mb-4">Registra solicitudes y reclamos sobre espacios comunes con seguimiento en línea.</p>
         <span class="text-xs font-semibold text-rose-800 bg-rose-50 px-2.5 py-1 rounded-md">Atención al Residente</span>
       </div>

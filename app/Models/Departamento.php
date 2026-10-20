@@ -36,6 +36,11 @@ class Departamento extends Model
         return $this->hasMany(ContactoEmergencia::class, 'departamento_id');
     }
 
+    public function encomiendas(): HasMany
+    {
+        return $this->hasMany(Encomienda::class, 'departamento_id');
+    }
+
     public function scopeActivos(Builder $query): Builder
     {
         return $query->where('estado', 'activo');

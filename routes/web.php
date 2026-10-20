@@ -6,6 +6,8 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\UsuarioController;
 use App\Http\Controllers\Admin\EspacioComunController;
 use App\Http\Controllers\Admin\DepartamentoController;
+use App\Http\Controllers\Conserje\EncomiendaController as ConserjeEncomiendaController;
+use App\Http\Controllers\Residente\EncomiendaController as ResidenteEncomiendaController;
 use App\Http\Controllers\PerfilController;
 use Illuminate\Support\Facades\Route;
 
@@ -59,12 +61,16 @@ Route::middleware(['auth', 'rol:Administrador'])->prefix('admin')->name('admin.'
     Route::delete('/departamentos/{departamento}/contactos/{contacto}', [DepartamentoController::class, 'destroyContacto'])->name('departamentos.contactos.destroy');
 });
 
-// Módulo Conserje (HU-02)
+// Módulo Conserje (HU-02, HU-25, HU-27)
 Route::middleware(['auth', 'rol:Conserje'])->prefix('conserje')->name('conserje.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'conserje'])->name('dashboard');
+    Route::get('/encomiendas', [ConserjeEncomiendaController::class, 'index'])->name('encomiendas.index');
+    Route::post('/encomiendas', [ConserjeEncomiendaController::class, 'store'])->name('encomiendas.store');
+    Route::patch('/encomiendas/{encomienda}/retiro', [ConserjeEncomiendaController::class, 'registrarRetiro'])->name('encomiendas.retiro');
 });
 
-// Módulo Residente (HU-02)
+// Módulo Residente (HU-02, HU-26)
 Route::middleware(['auth', 'rol:Residente'])->prefix('residente')->name('residente.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'residente'])->name('dashboard');
+    Route::get('/encomiendas', [ResidenteEncomiendaController::class, 'index'])->name('encomiendas.index');
 });

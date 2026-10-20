@@ -30,7 +30,7 @@ class UsuarioSeeder extends Seeder
                 'estado' => 'activo',
             ],
             [
-                'nombre' => 'María Residente',
+                'nombre' => 'Ámbar Residente',
                 'email' => 'residente@ediconnect.cl',
                 'rut' => '33.333.333-3',
                 'telefono' => '+56933333333',

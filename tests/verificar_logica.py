@@ -19,7 +19,7 @@ usuarios_db = {
     },
     'residente@ediconnect.cl': {
         'id': 3,
-        'nombre': 'María Residente',
+        'nombre': 'Ámbar Residente',
         'pass_hash': hashlib.sha256('Password123!'.encode()).hexdigest(),
         'rol': 'Residente',
         'estado': 'activo',
