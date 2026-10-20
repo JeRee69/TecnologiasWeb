@@ -88,6 +88,7 @@
         <a href="{{ route('admin.espacios-comunes.index') }}" class="inline-flex items-center gap-1 text-sm font-semibold text-[#1e3a8a] hover:underline">
           Administrar espacios <span class="material-symbols-outlined text-[18px]" aria-hidden="true">arrow_forward</span>
         </a>
+          <a href="{{ route('admin.reservas.index', ['estado' => 'pendiente']) }}" class="block mt-3 text-sm font-semibold text-[#1e3a8a] hover:underline">Gestionar solicitudes y reservas →</a>
       </div>
 
       <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow transition-shadow">
