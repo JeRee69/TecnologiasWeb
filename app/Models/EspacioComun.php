@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class EspacioComun extends Model
 {
@@ -12,6 +13,11 @@ class EspacioComun extends Model
     protected $fillable = ['nombre', 'descripcion', 'estado', 'aforo', 'hora_apertura', 'hora_cierre', 'costo', 'reglas'];
 
     protected $casts = ['aforo' => 'integer', 'costo' => 'decimal:0'];
+
+    public function reservas(): HasMany
+    {
+        return $this->hasMany(Reserva::class);
+    }
 
     public function tieneConfiguracion(): bool
     {

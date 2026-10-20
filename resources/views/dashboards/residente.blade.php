@@ -71,8 +71,10 @@
           <span class="material-symbols-outlined text-2xl">calendar_month</span>
         </div>
         <h2 class="text-lg font-semibold text-gray-900 mb-1">Reserva de Espacios</h2>
-        <p class="text-sm text-gray-600 mb-4">Reserva quinchos y salas de eventos con prevención de solapamientos horarios.</p>
-        <span class="text-xs font-semibold text-purple-800 bg-purple-50 px-2.5 py-1 rounded-md">Áreas Comunes</span>
+        <p class="text-sm text-gray-600 mb-4">Consulta por fecha los horarios disponibles y ocupados de los espacios comunes.</p>
+        <a href="{{ route('residente.espacios-comunes.disponibilidad') }}" class="text-sm font-semibold text-purple-800 hover:underline">Consultar disponibilidad →</a>
+        <a href="{{ route('residente.reservas.index') }}" class="block mt-3 text-sm font-semibold text-purple-800 hover:underline">Mis reservas →</a>
+        <span class="inline-block mt-3 text-xs font-semibold text-purple-800 bg-purple-50 px-2.5 py-1 rounded-md">Áreas Comunes</span>
       </div>
 
       <a href="{{ route('residente.encomiendas.index') }}" class="group bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:border-amber-300 transition-all block">

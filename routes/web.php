@@ -9,6 +9,8 @@ use App\Http\Controllers\Admin\DepartamentoController;
 use App\Http\Controllers\Conserje\EncomiendaController as ConserjeEncomiendaController;
 use App\Http\Controllers\Residente\EncomiendaController as ResidenteEncomiendaController;
 use App\Http\Controllers\PerfilController;
+use App\Http\Controllers\Residente\DisponibilidadController;
+use App\Http\Controllers\Residente\ReservaController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -41,6 +43,8 @@ Route::middleware(['auth', 'rol'])->group(function () {
 // Módulo Administrador (HU-02)
 Route::middleware(['auth', 'rol:Administrador'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'admin'])->name('dashboard');
+    Route::get('/reservas', [\App\Http\Controllers\Admin\ReservaController::class, 'index'])->name('reservas.index');
+    Route::patch('/reservas/{reserva}/estado', [\App\Http\Controllers\Admin\ReservaController::class, 'actualizarEstado'])->whereNumber('reserva')->name('reservas.estado');
     Route::get('/usuarios', [UsuarioController::class, 'index'])->name('usuarios.index');
     Route::post('/usuarios', [UsuarioController::class, 'store'])->name('usuarios.store');
     Route::patch('/usuarios/{usuario}/estado', [UsuarioController::class, 'actualizarEstado'])->name('usuarios.estado');
@@ -73,4 +77,8 @@ Route::middleware(['auth', 'rol:Conserje'])->prefix('conserje')->name('conserje.
 Route::middleware(['auth', 'rol:Residente'])->prefix('residente')->name('residente.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'residente'])->name('dashboard');
     Route::get('/encomiendas', [ResidenteEncomiendaController::class, 'index'])->name('encomiendas.index');
+    Route::get('/espacios-comunes/disponibilidad', [DisponibilidadController::class, 'index'])->name('espacios-comunes.disponibilidad');
+    Route::get('/reservas', [ReservaController::class, 'index'])->name('reservas.index');
+    Route::post('/reservas', [ReservaController::class, 'store'])->name('reservas.store');
+    Route::patch('/reservas/{reserva}/cancelacion', [ReservaController::class, 'cancelar'])->whereNumber('reserva')->name('reservas.cancelar');
 });
