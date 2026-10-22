@@ -41,6 +41,16 @@ class Departamento extends Model
         return $this->hasMany(Encomienda::class, 'departamento_id');
     }
 
+    public function visitas(): HasMany
+    {
+        return $this->hasMany(Visita::class, 'departamento_id');
+    }
+
+    public function vehiculosAutorizados(): HasMany
+    {
+        return $this->hasMany(VehiculoAutorizado::class, 'departamento_id');
+    }
+
     public function scopeActivos(Builder $query): Builder
     {
         return $query->where('estado', 'activo');

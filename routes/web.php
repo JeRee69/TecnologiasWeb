@@ -7,6 +7,8 @@ use App\Http\Controllers\Admin\UsuarioController;
 use App\Http\Controllers\Admin\EspacioComunController;
 use App\Http\Controllers\Admin\DepartamentoController;
 use App\Http\Controllers\Conserje\EncomiendaController as ConserjeEncomiendaController;
+use App\Http\Controllers\Conserje\VisitaController as ConserjeVisitaController;
+use App\Http\Controllers\Conserje\VehiculoAutorizadoController as ConserjeVehiculoController;
 use App\Http\Controllers\Residente\EncomiendaController as ResidenteEncomiendaController;
 use App\Http\Controllers\PerfilController;
 use App\Http\Controllers\Residente\DisponibilidadController;
@@ -65,12 +67,25 @@ Route::middleware(['auth', 'rol:Administrador'])->prefix('admin')->name('admin.'
     Route::delete('/departamentos/{departamento}/contactos/{contacto}', [DepartamentoController::class, 'destroyContacto'])->name('departamentos.contactos.destroy');
 });
 
-// Módulo Conserje (HU-02, HU-25, HU-27)
+// Módulo Conserje (HU-02, HU-25, HU-27, HU-29, HU-30)
 Route::middleware(['auth', 'rol:Conserje'])->prefix('conserje')->name('conserje.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'conserje'])->name('dashboard');
+    
+    // Encomiendas (HU-25, HU-27, HU-28)
     Route::get('/encomiendas', [ConserjeEncomiendaController::class, 'index'])->name('encomiendas.index');
     Route::post('/encomiendas', [ConserjeEncomiendaController::class, 'store'])->name('encomiendas.store');
     Route::patch('/encomiendas/{encomienda}/retiro', [ConserjeEncomiendaController::class, 'registrarRetiro'])->name('encomiendas.retiro');
+
+    // Control de Visitas (HU-29)
+    Route::get('/visitas', [ConserjeVisitaController::class, 'index'])->name('visitas.index');
+    Route::post('/visitas', [ConserjeVisitaController::class, 'store'])->name('visitas.store');
+    Route::patch('/visitas/{visita}/salida', [ConserjeVisitaController::class, 'registrarSalida'])->name('visitas.salida');
+
+    // Registro y Verificación Vehicular (HU-30)
+    Route::get('/vehiculos', [ConserjeVehiculoController::class, 'index'])->name('vehiculos.index');
+    Route::post('/vehiculos', [ConserjeVehiculoController::class, 'store'])->name('vehiculos.store');
+    Route::get('/vehiculos/verificar', [ConserjeVehiculoController::class, 'verificar'])->name('vehiculos.verificar');
+    Route::patch('/vehiculos/{vehiculo}/estado', [ConserjeVehiculoController::class, 'cambiarEstado'])->name('vehiculos.estado');
 });
 
 // Módulo Residente (HU-02, HU-26)

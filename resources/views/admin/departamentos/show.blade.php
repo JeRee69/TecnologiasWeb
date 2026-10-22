@@ -53,21 +53,27 @@
           </div>
         </div>
 
-        {{-- Control rápido de estado (HU-08) --}}
+        {{-- Control rápido de estado (HU-08) con SweetAlert2 --}}
         <div class="flex items-center gap-3">
           @if ($departamento->estaActivo())
             <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
               <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
               Departamento Activo
             </span>
-            <form action="{{ route('admin.departamentos.estado', $departamento) }}" method="POST">
+            <form 
+              action="{{ route('admin.departamentos.estado', $departamento) }}" 
+              method="POST"
+              data-swal-confirm="¿Desactivar el Departamento {{ $departamento->numero }}?"
+              data-swal-text="Los residentes no podrán ser asociados mientras la unidad permanezca inactiva."
+              data-swal-danger="true"
+              data-swal-button="Sí, desactivar"
+            >
               @csrf
               @method('PATCH')
               <input type="hidden" name="estado" value="inactivo"/>
               <button 
                 type="submit" 
                 class="text-xs bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 px-3 py-1.5 rounded-lg font-semibold transition-colors flex items-center gap-1"
-                onclick="return confirm('¿Estás seguro de desactivar el Departamento {{ $departamento->numero }}? Los residentes no podrán ser asociados mientras esté inactivo.')"
               >
                 <span class="material-symbols-outlined text-[16px]">do_not_disturb_on</span>
                 Desactivar unidad
@@ -78,7 +84,13 @@
               <span class="w-2 h-2 rounded-full bg-gray-400"></span>
               Departamento Inactivo
             </span>
-            <form action="{{ route('admin.departamentos.estado', $departamento) }}" method="POST">
+            <form 
+              action="{{ route('admin.departamentos.estado', $departamento) }}" 
+              method="POST"
+              data-swal-confirm="¿Activar el Departamento {{ $departamento->numero }}?"
+              data-swal-text="La unidad volverá a quedar habilitada para asociar residentes."
+              data-swal-button="Sí, activar"
+            >
               @csrf
               @method('PATCH')
               <input type="hidden" name="estado" value="activo"/>
@@ -96,15 +108,22 @@
     </div>
 
     {{-- Feedback y notificaciones --}}
-    @if (session('estado'))
-      <div role="status" class="mb-6 rounded-lg border border-emerald-200 bg-emerald-50 text-emerald-900 p-4 text-sm flex items-center gap-3 shadow-sm">
+    @if (session('estado') || session('exito'))
+      <div data-swal-feedback role="status" class="mb-6 rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-900 p-4 text-sm flex items-center gap-3 shadow-sm">
         <span class="material-symbols-outlined text-emerald-600">check_circle</span>
-        <span>{{ session('estado') }}</span>
+        <span>{{ session('estado') ?? session('exito') }}</span>
+      </div>
+    @endif
+
+    @if (session('error'))
+      <div data-swal-feedback role="alert" class="mb-6 rounded-xl border border-red-200 bg-red-50 text-red-900 p-4 text-sm flex items-center gap-3 shadow-sm">
+        <span class="material-symbols-outlined text-red-600">error</span>
+        <span>{{ session('error') }}</span>
       </div>
     @endif
 
     @if ($errors->any())
-      <div role="alert" class="mb-6 rounded-lg border border-red-200 bg-red-50 text-red-900 p-4 text-sm shadow-sm">
+      <div data-swal-feedback role="alert" class="mb-6 rounded-xl border border-red-200 bg-red-50 text-red-900 p-4 text-sm shadow-sm">
         <div class="flex items-center gap-2 font-semibold mb-1">
           <span class="material-symbols-outlined text-red-600">error</span>
           <span>Por favor atiende las siguientes observaciones:</span>
@@ -119,7 +138,7 @@
 
     {{-- Advertencia especial HU-08 si está inactivo --}}
     @if (! $departamento->estaActivo())
-      <div class="mb-6 bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-lg shadow-sm flex items-start gap-3">
+      <div class="mb-6 bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-xl shadow-sm flex items-start gap-3">
         <span class="material-symbols-outlined text-amber-600 shrink-0 mt-0.5">warning</span>
         <div>
           <h2 class="text-sm font-bold text-amber-800">Restricción de asociación (HU-08)</h2>
@@ -227,22 +246,29 @@
                 </div>
               </div>
 
-              {{-- Botón desasociar --}}
-              <form action="{{ route('admin.departamentos.residentes.desasociar', [$departamento, $residente]) }}" method="POST" class="ml-3 shrink-0">
+              {{-- Botón desasociar con SweetAlert2 --}}
+              <form 
+                action="{{ route('admin.departamentos.residentes.desasociar', [$departamento, $residente]) }}" 
+                method="POST" 
+                class="ml-3 shrink-0"
+                data-swal-confirm="¿Desasociar a {{ $residente->nombre }}?"
+                data-swal-text="El usuario dejará de estar vinculado al Departamento {{ $departamento->numero }}."
+                data-swal-danger="true"
+                data-swal-button="Sí, desasociar"
+              >
                 @csrf
                 @method('DELETE')
                 <button 
                   type="submit" 
                   class="text-xs text-red-600 hover:text-red-800 p-1.5 rounded hover:bg-red-50 transition-colors"
                   title="Desasociar del departamento"
-                  onclick="return confirm('¿Desasociar a {{ $residente->nombre }} de este departamento?')"
                 >
                   <span class="material-symbols-outlined text-[18px]">person_remove</span>
                 </button>
               </form>
             </div>
           @empty
-            <div class="p-6 text-center border-2 border-dashed border-gray-200 rounded-lg text-gray-500 text-xs">
+            <div class="p-8 text-center border-2 border-dashed border-gray-200 rounded-lg text-gray-500 text-xs">
               <span class="material-symbols-outlined text-3xl text-gray-300 block mb-1">person_off</span>
               Aún no hay cuentas de residentes asociadas a esta unidad habitacional.
             </div>
@@ -377,22 +403,29 @@
                 </div>
               </div>
 
-              {{-- Botón eliminar contacto --}}
-              <form action="{{ route('admin.departamentos.contactos.destroy', [$departamento, $contacto]) }}" method="POST" class="ml-3 shrink-0">
+              {{-- Botón eliminar contacto con SweetAlert2 --}}
+              <form 
+                action="{{ route('admin.departamentos.contactos.destroy', [$departamento, $contacto]) }}" 
+                method="POST" 
+                class="ml-3 shrink-0"
+                data-swal-confirm="¿Eliminar el contacto {{ $contacto->nombre }}?"
+                data-swal-text="Esta acción eliminará el registro de contacto de emergencia de forma permanente."
+                data-swal-danger="true"
+                data-swal-button="Sí, eliminar"
+              >
                 @csrf
                 @method('DELETE')
                 <button 
                   type="submit" 
                   class="text-xs text-red-600 hover:text-red-800 p-1.5 rounded hover:bg-red-50 transition-colors"
                   title="Eliminar contacto de emergencia"
-                  onclick="return confirm('¿Eliminar el contacto {{ $contacto->nombre }}?')"
                 >
                   <span class="material-symbols-outlined text-[18px]">delete</span>
                 </button>
               </form>
             </div>
           @empty
-            <div class="p-6 text-center border-2 border-dashed border-gray-200 rounded-lg text-gray-500 text-xs">
+            <div class="p-8 text-center border-2 border-dashed border-gray-200 rounded-lg text-gray-500 text-xs">
               <span class="material-symbols-outlined text-3xl text-gray-300 block mb-1">contact_phone</span>
               No hay contactos de emergencia registrados para esta unidad residencial.
             </div>
@@ -401,5 +434,10 @@
       </section>
     </div>
   </main>
+
+  <footer class="bg-white border-t border-gray-200 py-4 text-center text-xs text-gray-500 mt-auto">
+    © 2026 EdiConnect - Plataforma de Gestión de Comunidades Residenciales
+  </footer>
+  @include('components.alertas')
 </body>
 </html>

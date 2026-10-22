@@ -22,6 +22,10 @@
     const alerts = payload ? JSON.parse(payload.textContent) : {};
     if (alerts.errores?.length) {
         dialog.fire({ icon: 'error', title: 'Revisa los datos', text: alerts.errores.join('\n') });
+    } else if (alerts.error) {
+        dialog.fire({ icon: 'error', title: 'Atención', text: alerts.error });
+    } else if (alerts.alerta) {
+        dialog.fire({ icon: 'warning', title: 'Aviso', text: alerts.alerta });
     } else if (alerts.exito) {
         dialog.fire({ icon: 'success', title: 'Operación completada', text: alerts.exito });
     }

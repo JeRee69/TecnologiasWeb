@@ -50,15 +50,22 @@
     </div>
 
     {{-- Notificaciones y feedback --}}
-    @if (session('estado'))
-      <div role="status" class="mb-6 rounded-lg border border-emerald-200 bg-emerald-50 text-emerald-900 p-4 text-sm flex items-center gap-3 shadow-sm">
+    @if (session('estado') || session('exito'))
+      <div data-swal-feedback role="status" class="mb-6 rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-900 p-4 text-sm flex items-center gap-3 shadow-sm">
         <span class="material-symbols-outlined text-emerald-600">check_circle</span>
-        <span>{{ session('estado') }}</span>
+        <span>{{ session('estado') ?? session('exito') }}</span>
+      </div>
+    @endif
+
+    @if (session('error'))
+      <div data-swal-feedback role="alert" class="mb-6 rounded-xl border border-red-200 bg-red-50 text-red-900 p-4 text-sm flex items-center gap-3 shadow-sm">
+        <span class="material-symbols-outlined text-red-600">error</span>
+        <span>{{ session('error') }}</span>
       </div>
     @endif
 
     @if ($errors->any())
-      <div role="alert" class="mb-6 rounded-lg border border-red-200 bg-red-50 text-red-900 p-4 text-sm shadow-sm">
+      <div data-swal-feedback role="alert" class="mb-6 rounded-xl border border-red-200 bg-red-50 text-red-900 p-4 text-sm shadow-sm">
         <div class="flex items-center gap-2 font-semibold mb-1">
           <span class="material-symbols-outlined text-red-600">error</span>
           <span>Por favor corrige los siguientes errores:</span>
@@ -282,8 +289,22 @@
                           <span>Gestionar</span>
                         </a>
 
-                        {{-- Cambio rápido de estado (HU-08) --}}
-                        <form action="{{ route('admin.departamentos.estado', $depto) }}" method="POST" class="inline">
+                        {{-- Cambio rápido de estado (HU-08) con SweetAlert2 --}}
+                        <form 
+                          action="{{ route('admin.departamentos.estado', $depto) }}" 
+                          method="POST" 
+                          class="inline"
+                          @if ($depto->estaActivo())
+                            data-swal-confirm="¿Desactivar el Departamento {{ $depto->numero }}?"
+                            data-swal-text="No se podrán asociar nuevos residentes mientras permanezca inactivo."
+                            data-swal-danger="true"
+                            data-swal-button="Sí, desactivar"
+                          @else
+                            data-swal-confirm="¿Activar el Departamento {{ $depto->numero }}?"
+                            data-swal-text="La unidad volverá a quedar habilitada para asociar residentes."
+                            data-swal-button="Sí, activar"
+                          @endif
+                        >
                           @csrf
                           @method('PATCH')
                           @if ($depto->estaActivo())
@@ -292,7 +313,6 @@
                               type="submit" 
                               class="text-xs text-gray-600 hover:text-red-700 px-2 py-1.5 rounded hover:bg-gray-100 transition-colors"
                               title="Desactivar departamento"
-                              onclick="return confirm('¿Confirmas que deseas desactivar el Departamento {{ $depto->numero }}? No se podrán asociar nuevos residentes mientras permanezca inactivo.')"
                             >
                               Desactivar
                             </button>
@@ -312,9 +332,12 @@
                   </tr>
                 @empty
                   <tr>
-                    <td colspan="6" class="px-5 py-8 text-center text-gray-500 text-sm">
-                      <span class="material-symbols-outlined text-4xl text-gray-300 block mb-2">apartment</span>
-                      No se encontraron departamentos registrados que coincidan con la búsqueda.
+                    <td colspan="6" class="px-5 py-12 text-center">
+                      <div class="max-w-xs mx-auto">
+                        <span class="material-symbols-outlined text-5xl text-gray-300 block mb-3">apartment</span>
+                        <p class="font-semibold text-gray-800 text-sm">Sin departamentos</p>
+                        <p class="text-xs text-gray-500 mt-1">No se encontraron departamentos registrados que coincidan con la búsqueda.</p>
+                      </div>
                     </td>
                   </tr>
                 @endforelse
@@ -331,5 +354,10 @@
       </section>
     </div>
   </main>
+
+  <footer class="bg-white border-t border-gray-200 py-4 text-center text-xs text-gray-500 mt-auto">
+    © 2026 EdiConnect - Plataforma de Gestión de Comunidades Residenciales
+  </footer>
+  @include('components.alertas')
 </body>
 </html>

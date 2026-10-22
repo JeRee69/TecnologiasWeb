@@ -8,6 +8,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable
 {
@@ -43,6 +44,16 @@ class User extends Authenticatable
         return $this->belongsToMany(Departamento::class, 'departamento_user')
             ->withPivot('es_titular')
             ->withTimestamps();
+    }
+
+    public function visitasRegistradas(): HasMany
+    {
+        return $this->hasMany(Visita::class, 'conserje_id');
+    }
+
+    public function vehiculosRegistrados(): HasMany
+    {
+        return $this->hasMany(VehiculoAutorizado::class, 'conserje_id');
     }
 
     public function tieneRol(string $nombreRol): bool
