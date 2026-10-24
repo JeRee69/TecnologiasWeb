@@ -2,6 +2,33 @@
 
 Plataforma de gestión de comunidades residenciales con PHP 8.2, Laravel 12, Nginx y MySQL 8.
 
+## HU-11: generación de gastos comunes
+
+Como administrador activo, abre **Gastos Comunes → Generar gastos comunes** desde el panel (`/admin/gastos-comunes`). Selecciona un departamento activo, el período mensual y el monto entero en CLP (1 a 999999999999). Genera un cobro por departamento y mes, asociado a la unidad y con estado inicial **Pendiente**. El período admite desde enero de 1900 hasta diciembre de 9999 y se almacena como el primer día del mes.
+
+El listado muestra departamento, período, monto y estado; permite filtrar por mes y está paginado. Los departamentos sin residentes también pueden recibir cobros. Los inactivos no admiten nuevos cobros; sus registros anteriores se conservan. Repetir o enviar simultáneamente la generación del mismo departamento y período se rechaza sin sobrescribir el monto original. Se usa una transacción con bloqueo del departamento y una restricción única en la base. El estado inicial se fija en el servidor. Esta HU cubre generación y consulta administrativa; los pagos y desgloses corresponden a las siguientes historias.
+
+Reconstruye para aplicar la migración y ejecuta la prueba de integración, que elimina sus datos temporales al terminar:
+
+```powershell
+docker compose up -d --build
+docker compose exec -T app php tests/docker-hu11.php
+```
+
+## HU-12: desglose de gastos comunes
+
+En **Gastos Comunes**, abre **Registrar desglose** o **Ver y editar desglose** en el cobro correspondiente. Registra hasta 50 conceptos con nombre (hasta 200 caracteres) y monto positivo entero en CLP. Se sugieren fondo de reserva, mantenciones y consumos básicos; puedes agregar conceptos propios o quitar los que no correspondan. La pantalla calcula el total y la diferencia con el monto asignado.
+
+El servidor exige que la suma coincida exactamente con el monto del cobro. Un error conserva los datos escritos y no modifica el desglose anterior. Guardar reemplaza todos los conceptos en una transacción con bloqueo del cobro, evitando mezclas entre ediciones simultáneas; no modifica monto, departamento, período ni estado. Solo acceden administradores activos, con CSRF para guardar. Los cobros anteriores aparecen sin desglose hasta que se registre, sin crear conceptos ficticios; también se pueden detallar cobros de unidades desactivadas.
+
+```powershell
+docker compose up -d --build
+docker compose exec -T app php tests/docker-hu12.php
+docker compose exec -T app php tests/docker-hu11.php
+```
+
+La prueba HU-12 comprueba persistencia, edición, sumas distintas, límites y entradas malformadas, conservación del desglose anterior, aislamiento entre cobros, texto seguro, permisos, CSRF y ediciones simultáneas. Elimina sus datos temporales al terminar.
+
 ## Ejecutar con Docker
 
 Con Docker Desktop instalado e iniciado (contenedores Linux), abre una terminal en esta carpeta y ejecuta:

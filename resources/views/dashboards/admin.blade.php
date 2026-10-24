@@ -75,8 +75,8 @@
           <span class="material-symbols-outlined text-2xl">receipt_long</span>
         </div>
         <h3 class="text-lg font-semibold text-gray-900 mb-1">Gastos Comunes</h3>
-        <p class="text-sm text-gray-600 mb-4">Emisión mensual de cobros, desglose financiero y aprobación de comprobantes.</p>
-        <span class="text-xs font-semibold text-amber-800 bg-amber-50 px-2.5 py-1 rounded-md">Gestión Financiera</span>
+        <p class="text-sm text-gray-600 mb-4">Genera los cobros mensuales de cada departamento y consulta los gastos registrados.</p>
+        <a href="{{ route('admin.gastos-comunes.index') }}" class="inline-flex items-center gap-1 text-sm font-semibold text-[#1e3a8a] hover:underline">Generar gastos comunes <span class="material-symbols-outlined text-[18px]" aria-hidden="true">arrow_forward</span></a>
       </div>
 
       <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow transition-shadow">

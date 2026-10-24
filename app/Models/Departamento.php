@@ -24,6 +24,11 @@ class Departamento extends Model
         'piso' => 'integer',
     ];
 
+    public function gastosComunes(): HasMany
+    {
+        return $this->hasMany(GastoComun::class);
+    }
+
     public function residentes(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'departamento_user')

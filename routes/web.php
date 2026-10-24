@@ -45,6 +45,10 @@ Route::middleware(['auth', 'rol'])->group(function () {
 // Módulo Administrador (HU-02)
 Route::middleware(['auth', 'rol:Administrador'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'admin'])->name('dashboard');
+    Route::get('/gastos-comunes', [\App\Http\Controllers\Admin\GastoComunController::class, 'index'])->name('gastos-comunes.index');
+    Route::post('/gastos-comunes', [\App\Http\Controllers\Admin\GastoComunController::class, 'store'])->name('gastos-comunes.store');
+    Route::get('/gastos-comunes/{gasto}/desglose', [\App\Http\Controllers\Admin\GastoComunController::class, 'desglose'])->whereNumber('gasto')->name('gastos-comunes.desglose');
+    Route::put('/gastos-comunes/{gasto}/desglose', [\App\Http\Controllers\Admin\GastoComunController::class, 'guardarDesglose'])->whereNumber('gasto')->name('gastos-comunes.desglose.guardar');
     Route::get('/reservas', [\App\Http\Controllers\Admin\ReservaController::class, 'index'])->name('reservas.index');
     Route::patch('/reservas/{reserva}/estado', [\App\Http\Controllers\Admin\ReservaController::class, 'actualizarEstado'])->whereNumber('reserva')->name('reservas.estado');
     Route::get('/usuarios', [UsuarioController::class, 'index'])->name('usuarios.index');
