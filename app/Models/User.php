@@ -56,6 +56,16 @@ class User extends Authenticatable
         return $this->hasMany(VehiculoAutorizado::class, 'conserje_id');
     }
 
+    public function avisosCreados(): HasMany
+    {
+        return $this->hasMany(Aviso::class, 'autor_id');
+    }
+
+    public function incidencias(): HasMany
+    {
+        return $this->hasMany(Incidencia::class, 'user_id');
+    }
+
     public function tieneRol(string $nombreRol): bool
     {
         return strtolower($this->rol?->nombre ?? '') === strtolower($nombreRol);

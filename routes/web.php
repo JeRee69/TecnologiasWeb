@@ -6,10 +6,15 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\UsuarioController;
 use App\Http\Controllers\Admin\EspacioComunController;
 use App\Http\Controllers\Admin\DepartamentoController;
+use App\Http\Controllers\Admin\AvisoController as AdminAvisoController;
+use App\Http\Controllers\Admin\IncidenciaController as AdminIncidenciaController;
 use App\Http\Controllers\Conserje\EncomiendaController as ConserjeEncomiendaController;
 use App\Http\Controllers\Conserje\VisitaController as ConserjeVisitaController;
 use App\Http\Controllers\Conserje\VehiculoAutorizadoController as ConserjeVehiculoController;
+use App\Http\Controllers\Conserje\IncidenciaController as ConserjeIncidenciaController;
 use App\Http\Controllers\Residente\EncomiendaController as ResidenteEncomiendaController;
+use App\Http\Controllers\Residente\MuralController as ResidenteMuralController;
+use App\Http\Controllers\Residente\IncidenciaController as ResidenteIncidenciaController;
 use App\Http\Controllers\PerfilController;
 use App\Http\Controllers\Residente\DisponibilidadController;
 use App\Http\Controllers\Residente\ReservaController;
@@ -42,7 +47,7 @@ Route::middleware(['auth', 'rol'])->group(function () {
         ->name('perfil.contrasena');
 });
 
-// Módulo Administrador (HU-02)
+// Módulo Administrador (HU-02, HU-31, HU-32, HU-36, HU-37)
 Route::middleware(['auth', 'rol:Administrador'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'admin'])->name('dashboard');
     Route::get('/reservas', [\App\Http\Controllers\Admin\ReservaController::class, 'index'])->name('reservas.index');
@@ -65,9 +70,21 @@ Route::middleware(['auth', 'rol:Administrador'])->prefix('admin')->name('admin.'
     Route::delete('/departamentos/{departamento}/residentes/{usuario}', [DepartamentoController::class, 'desasociarResidente'])->name('departamentos.residentes.desasociar');
     Route::post('/departamentos/{departamento}/contactos', [DepartamentoController::class, 'storeContacto'])->name('departamentos.contactos.store');
     Route::delete('/departamentos/{departamento}/contactos/{contacto}', [DepartamentoController::class, 'destroyContacto'])->name('departamentos.contactos.destroy');
+
+    // Mural Informativo: Avisos Oficiales (HU-31, HU-32)
+    Route::get('/avisos', [AdminAvisoController::class, 'index'])->name('avisos.index');
+    Route::post('/avisos', [AdminAvisoController::class, 'store'])->name('avisos.store');
+    Route::get('/avisos/{aviso}/editar', [AdminAvisoController::class, 'edit'])->name('avisos.edit');
+    Route::put('/avisos/{aviso}', [AdminAvisoController::class, 'update'])->name('avisos.update');
+    Route::patch('/avisos/{aviso}/estado', [AdminAvisoController::class, 'cambiarEstado'])->name('avisos.estado');
+
+    // Gestión de Incidencias y Reclamos (HU-36, HU-37)
+    Route::get('/incidencias', [AdminIncidenciaController::class, 'index'])->name('incidencias.index');
+    Route::get('/incidencias/{incidencia}', [AdminIncidenciaController::class, 'show'])->name('incidencias.show');
+    Route::patch('/incidencias/{incidencia}/estado', [AdminIncidenciaController::class, 'actualizarEstado'])->name('incidencias.estado');
 });
 
-// Módulo Conserje (HU-02, HU-25, HU-27, HU-29, HU-30)
+// Módulo Conserje (HU-02, HU-25, HU-27, HU-29, HU-30, HU-36, HU-37)
 Route::middleware(['auth', 'rol:Conserje'])->prefix('conserje')->name('conserje.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'conserje'])->name('dashboard');
     
@@ -86,9 +103,14 @@ Route::middleware(['auth', 'rol:Conserje'])->prefix('conserje')->name('conserje.
     Route::post('/vehiculos', [ConserjeVehiculoController::class, 'store'])->name('vehiculos.store');
     Route::get('/vehiculos/verificar', [ConserjeVehiculoController::class, 'verificar'])->name('vehiculos.verificar');
     Route::patch('/vehiculos/{vehiculo}/estado', [ConserjeVehiculoController::class, 'cambiarEstado'])->name('vehiculos.estado');
+
+    // Gestión de Incidencias en Conserjería (HU-36, HU-37)
+    Route::get('/incidencias', [ConserjeIncidenciaController::class, 'index'])->name('incidencias.index');
+    Route::get('/incidencias/{incidencia}', [ConserjeIncidenciaController::class, 'show'])->name('incidencias.show');
+    Route::patch('/incidencias/{incidencia}/estado', [ConserjeIncidenciaController::class, 'actualizarEstado'])->name('incidencias.estado');
 });
 
-// Módulo Residente (HU-02, HU-26)
+// Módulo Residente (HU-02, HU-26, HU-33, HU-34, HU-35)
 Route::middleware(['auth', 'rol:Residente'])->prefix('residente')->name('residente.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'residente'])->name('dashboard');
     Route::get('/encomiendas', [ResidenteEncomiendaController::class, 'index'])->name('encomiendas.index');
@@ -96,4 +118,13 @@ Route::middleware(['auth', 'rol:Residente'])->prefix('residente')->name('residen
     Route::get('/reservas', [ReservaController::class, 'index'])->name('reservas.index');
     Route::post('/reservas', [ReservaController::class, 'store'])->name('reservas.store');
     Route::patch('/reservas/{reserva}/cancelacion', [ReservaController::class, 'cancelar'])->whereNumber('reserva')->name('reservas.cancelar');
+
+    // Mural Informativo (HU-33)
+    Route::get('/mural', [ResidenteMuralController::class, 'index'])->name('mural.index');
+
+    // Reporte y Seguimiento de Incidencias (HU-34, HU-35)
+    Route::get('/incidencias', [ResidenteIncidenciaController::class, 'index'])->name('incidencias.index');
+    Route::get('/incidencias/crear', [ResidenteIncidenciaController::class, 'create'])->name('incidencias.create');
+    Route::post('/incidencias', [ResidenteIncidenciaController::class, 'store'])->name('incidencias.store');
+    Route::get('/incidencias/{incidencia}', [ResidenteIncidenciaController::class, 'show'])->name('incidencias.show');
 });

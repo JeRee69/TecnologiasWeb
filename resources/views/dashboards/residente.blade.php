@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-  <title>Portal Residente - EdiConnect</title>
+  <title>Dashboard Residente - EdiConnect</title>
   <link href="https://fonts.googleapis.com" rel="preconnect"/>
   <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
@@ -39,11 +39,11 @@
     <div class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
       <div>
         <h1 class="text-2xl font-bold text-gray-900">Hola, {{ $usuario->nombre }}</h1>
-        <p class="text-sm text-gray-500">Módulos habilitados para tu departamento</p>
+        <p class="text-sm text-gray-500">Bienvenido al portal de tu comunidad residencial</p>
       </div>
       <div class="inline-flex items-center gap-2 bg-emerald-50 text-emerald-800 px-3 py-1.5 rounded-lg border border-emerald-200 text-xs font-medium">
         <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-        Al día en gastos comunes
+        Residente activo
       </div>
     </div>
 
@@ -89,28 +89,37 @@
         <span class="text-xs font-semibold text-amber-800 bg-amber-50 px-2.5 py-1 rounded-md">Ver Paquetes en Custodia</span>
       </a>
 
-      <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow transition-shadow">
-        <div class="w-12 h-12 rounded-lg bg-indigo-100 text-indigo-800 flex items-center justify-center mb-4">
+      {{-- Mural Informativo (HU-33) --}}
+      <a href="{{ route('residente.mural.index') }}" class="group bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:border-indigo-300 transition-all block">
+        <div class="w-12 h-12 rounded-lg bg-indigo-100 text-indigo-800 group-hover:bg-indigo-700 group-hover:text-white flex items-center justify-center mb-4 transition-colors">
           <span class="material-symbols-outlined text-2xl">newspaper</span>
         </div>
-        <h2 class="text-lg font-semibold text-gray-900 mb-1">Mural Informativo</h2>
+        <div class="flex items-center justify-between">
+          <h2 class="text-lg font-semibold text-gray-900 group-hover:text-indigo-800 transition-colors mb-1">Mural Informativo</h2>
+          <span class="material-symbols-outlined text-gray-400 group-hover:text-indigo-800 text-[20px] transition-colors">arrow_forward</span>
+        </div>
         <p class="text-sm text-gray-600 mb-4">Comunicados oficiales, citaciones a asamblea y mantenimientos programados.</p>
-        <span class="text-xs font-semibold text-indigo-800 bg-indigo-50 px-2.5 py-1 rounded-md">Noticias del Edificio</span>
-      </div>
+        <span class="text-xs font-semibold text-indigo-800 bg-indigo-50 px-2.5 py-1 rounded-md">Ver Tablón de Avisos</span>
+      </a>
 
-      <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow transition-shadow">
-        <div class="w-12 h-12 rounded-lg bg-rose-100 text-rose-800 flex items-center justify-center mb-4">
+      {{-- Incidencias y Reclamos (HU-34, HU-35) --}}
+      <a href="{{ route('residente.incidencias.index') }}" class="group bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:border-rose-300 transition-all block">
+        <div class="w-12 h-12 rounded-lg bg-rose-100 text-rose-800 group-hover:bg-rose-700 group-hover:text-white flex items-center justify-center mb-4 transition-colors">
           <span class="material-symbols-outlined text-2xl">report_problem</span>
         </div>
-        <h2 class="text-lg font-semibold text-gray-900 mb-1">Reportar Incidencia</h2>
-        <p class="text-sm text-gray-600 mb-4">Registra solicitudes y reclamos sobre espacios comunes con seguimiento en línea.</p>
-        <span class="text-xs font-semibold text-rose-800 bg-rose-50 px-2.5 py-1 rounded-md">Atención al Residente</span>
-      </div>
+        <div class="flex items-center justify-between">
+          <h2 class="text-lg font-semibold text-gray-900 group-hover:text-rose-800 transition-colors mb-1">Mis Incidencias</h2>
+          <span class="material-symbols-outlined text-gray-400 group-hover:text-rose-800 text-[20px] transition-colors">arrow_forward</span>
+        </div>
+        <p class="text-sm text-gray-600 mb-4">Registra solicitudes sobre espacios comunes y haz seguimiento en tiempo real.</p>
+        <span class="text-xs font-semibold text-rose-800 bg-rose-50 px-2.5 py-1 rounded-md">Reportar y Consultar</span>
+      </a>
     </div>
   </main>
 
   <footer class="bg-white border-t border-gray-200 py-4 text-center text-xs text-gray-500">
     © 2026 EdiConnect - Plataforma de Gestión de Comunidades Residenciales
   </footer>
+  @include('components.alertas')
 </body>
 </html>

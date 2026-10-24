@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-  <title>Bitácora de Conserjería - EdiConnect</title>
+  <title>Dashboard Conserje - EdiConnect</title>
   <link href="https://fonts.googleapis.com" rel="preconnect"/>
   <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
@@ -16,7 +16,7 @@
       <div class="flex items-center gap-3">
         <span class="material-symbols-outlined text-3xl">apartment</span>
         <span class="font-bold text-xl tracking-tight">EdiConnect</span>
-        <span class="text-xs bg-blue-900 text-blue-200 px-2 py-0.5 rounded-full font-medium ml-2">Módulo de Conserjería</span>
+        <span class="text-xs bg-blue-900 text-blue-200 px-2 py-0.5 rounded-full font-medium ml-2">Panel Operativo de Conserjería</span>
       </div>
       <div class="flex items-center gap-4">
         <div class="text-right hidden sm:block">
@@ -38,12 +38,12 @@
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full">
     <div class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
       <div>
-        <h1 class="text-2xl font-bold text-gray-900">Bitácora Operativa, {{ $usuario->nombre }}</h1>
-        <p class="text-sm text-gray-500">Módulos autorizados para el rol Conserje</p>
+        <h1 class="text-2xl font-bold text-gray-900">Bienvenido al turno, {{ $usuario->nombre }}</h1>
+        <p class="text-sm text-gray-500">Panel de control de operaciones diarias y bitácora del edificio</p>
       </div>
       <div class="inline-flex items-center gap-2 bg-emerald-50 text-emerald-800 px-3 py-1.5 rounded-lg border border-emerald-200 text-xs font-medium">
         <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-        Turno activo
+        Turno activo en garita
       </div>
     </div>
 
@@ -55,18 +55,18 @@
       </div>
     @endif
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       {{-- Recepción de Encomiendas (HU-25, HU-27, HU-28) --}}
       <a href="{{ route('conserje.encomiendas.index') }}" class="group bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:border-blue-300 transition-all block">
         <div class="w-12 h-12 rounded-lg bg-blue-100 text-blue-800 group-hover:bg-[#1e3a8a] group-hover:text-white flex items-center justify-center mb-4 transition-colors">
           <span class="material-symbols-outlined text-2xl">inventory_2</span>
         </div>
         <div class="flex items-center justify-between">
-          <h2 class="text-lg font-semibold text-gray-900 group-hover:text-[#1e3a8a] transition-colors mb-1">Recepción de Encomiendas</h2>
+          <h2 class="text-lg font-semibold text-gray-900 group-hover:text-[#1e3a8a] transition-colors mb-1">Recepción Encomiendas</h2>
           <span class="material-symbols-outlined text-gray-400 group-hover:text-[#1e3a8a] text-[20px] transition-colors">arrow_forward</span>
         </div>
         <p class="text-sm text-gray-600 mb-4">Registro de paquetes recibidos con departamento de destino y empresa de delivery.</p>
-        <span class="text-xs font-semibold text-[#1e3a8a] bg-blue-50 px-2.5 py-1 rounded-md">Abrir Bitácora de Encomiendas</span>
+        <span class="text-xs font-semibold text-[#1e3a8a] bg-blue-50 px-2.5 py-1 rounded-md">Abrir Bitácora</span>
       </a>
 
       {{-- Control de Visitas (HU-29) --}}
@@ -79,7 +79,7 @@
           <span class="material-symbols-outlined text-gray-400 group-hover:text-emerald-800 text-[20px] transition-colors">arrow_forward</span>
         </div>
         <p class="text-sm text-gray-600 mb-4">Registro inmediato de visitas con RUT, nombre, departamento de destino y egreso.</p>
-        <span class="text-xs font-semibold text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-md">Abrir Bitácora de Accesos</span>
+        <span class="text-xs font-semibold text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-md">Abrir Accesos</span>
       </a>
 
       {{-- Registro Vehicular (HU-30) --}}
@@ -92,7 +92,20 @@
           <span class="material-symbols-outlined text-gray-400 group-hover:text-amber-800 text-[20px] transition-colors">arrow_forward</span>
         </div>
         <p class="text-sm text-gray-600 mb-4">Verificación rápida de patentes autorizadas para estacionamientos de visitas y residentes.</p>
-        <span class="text-xs font-semibold text-amber-800 bg-amber-50 px-2.5 py-1 rounded-md">Abrir Control de Portón</span>
+        <span class="text-xs font-semibold text-amber-800 bg-amber-50 px-2.5 py-1 rounded-md">Control de Portón</span>
+      </a>
+
+      {{-- Incidencias Vecinales (HU-36, HU-37) --}}
+      <a href="{{ route('conserje.incidencias.index') }}" class="group bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:border-rose-300 transition-all block">
+        <div class="w-12 h-12 rounded-lg bg-rose-100 text-rose-800 group-hover:bg-rose-700 group-hover:text-white flex items-center justify-center mb-4 transition-colors">
+          <span class="material-symbols-outlined text-2xl">report_problem</span>
+        </div>
+        <div class="flex items-center justify-between">
+          <h2 class="text-lg font-semibold text-gray-900 group-hover:text-rose-800 transition-colors mb-1">Incidencias Vecinales</h2>
+          <span class="material-symbols-outlined text-gray-400 group-hover:text-rose-800 text-[20px] transition-colors">arrow_forward</span>
+        </div>
+        <p class="text-sm text-gray-600 mb-4">Atención operativa de reportes sobre fallas en áreas comunes y servicios del edificio.</p>
+        <span class="text-xs font-semibold text-rose-800 bg-rose-50 px-2.5 py-1 rounded-md">Atender Reportes</span>
       </a>
     </div>
   </main>

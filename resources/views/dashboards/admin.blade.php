@@ -88,25 +88,31 @@
         <a href="{{ route('admin.espacios-comunes.index') }}" class="inline-flex items-center gap-1 text-sm font-semibold text-[#1e3a8a] hover:underline">
           Administrar espacios <span class="material-symbols-outlined text-[18px]" aria-hidden="true">arrow_forward</span>
         </a>
-          <a href="{{ route('admin.reservas.index', ['estado' => 'pendiente']) }}" class="block mt-3 text-sm font-semibold text-[#1e3a8a] hover:underline">Gestionar solicitudes y reservas →</a>
+        <a href="{{ route('admin.reservas.index', ['estado' => 'pendiente']) }}" class="block mt-3 text-sm font-semibold text-[#1e3a8a] hover:underline">Gestionar solicitudes y reservas →</a>
       </div>
 
+      {{-- Mural Comunitario (HU-31, HU-32) --}}
       <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow transition-shadow">
         <div class="w-12 h-12 rounded-lg bg-indigo-100 text-indigo-800 flex items-center justify-center mb-4">
           <span class="material-symbols-outlined text-2xl">campaign</span>
         </div>
         <h3 class="text-lg font-semibold text-gray-900 mb-1">Mural Comunitario</h3>
         <p class="text-sm text-gray-600 mb-4">Publicación oficial de comunicados, mantenimientos y avisos urgentes.</p>
-        <span class="text-xs font-semibold text-indigo-800 bg-indigo-50 px-2.5 py-1 rounded-md">Publicaciones</span>
+        <a href="{{ route('admin.avisos.index') }}" class="inline-flex items-center gap-1 text-sm font-semibold text-[#1e3a8a] hover:underline">
+          Publicar y gestionar avisos <span class="material-symbols-outlined text-[18px]" aria-hidden="true">arrow_forward</span>
+        </a>
       </div>
 
+      {{-- Incidencias y Reclamos (HU-36, HU-37) --}}
       <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow transition-shadow">
         <div class="w-12 h-12 rounded-lg bg-rose-100 text-rose-800 flex items-center justify-center mb-4">
           <span class="material-symbols-outlined text-2xl">assignment_late</span>
         </div>
         <h3 class="text-lg font-semibold text-gray-900 mb-1">Incidencias y Reclamos</h3>
         <p class="text-sm text-gray-600 mb-4">Revisión y actualización del estado de las solicitudes reportadas por residentes.</p>
-        <span class="text-xs font-semibold text-rose-800 bg-rose-50 px-2.5 py-1 rounded-md">Atención Vecinal</span>
+        <a href="{{ route('admin.incidencias.index') }}" class="inline-flex items-center gap-1 text-sm font-semibold text-[#1e3a8a] hover:underline">
+          Atender y resolver incidencias <span class="material-symbols-outlined text-[18px]" aria-hidden="true">arrow_forward</span>
+        </a>
       </div>
     </div>
   </main>
@@ -114,5 +120,6 @@
   <footer class="bg-white border-t border-gray-200 py-4 text-center text-xs text-gray-500">
     © 2026 EdiConnect - Plataforma de Gestión de Comunidades Residenciales
   </footer>
+  @include('components.alertas')
 </body>
 </html>
