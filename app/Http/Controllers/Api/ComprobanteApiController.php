@@ -20,12 +20,12 @@ class ComprobanteApiController extends Controller
             $query->where('departamento_id', $departamentoId);
         }
 
-        $gastos = $query->orderBy('periodo', 'desc')->get()->map(function ($gasto) {
+        $gastos = $query->orderByDesc('periodo')->get()->map(function (GastoComun $gasto) {
             return [
                 'id' => $gasto->id,
-                'periodo' => $gasto->periodo,
-                'monto' => $gasto->monto_total,
-                'estado' => $gasto->estado,
+                'periodo' => $gasto->periodo?->format('Y-m'),
+                'monto' => $gasto->monto,
+                'estado' => $gasto->estadoVigente(),
             ];
         });
 
@@ -61,7 +61,7 @@ class ComprobanteApiController extends Controller
         $gasto = GastoComun::findOrFail($gastoId);
         $rutaArchivo = $archivo->store('comprobantes', 'public');
 
-        $usuarioId = $request->user()?->id ?? 3; // fallback demo si aplica
+        $usuarioId = $request->user()?->id ?? 3;
 
         $comprobante = ComprobantePago::create([
             'gasto_comun_id' => $gasto->id,
@@ -69,14 +69,12 @@ class ComprobanteApiController extends Controller
             'user_id' => $usuarioId,
             'archivo_path' => $rutaArchivo,
             'archivo_nombre_original' => $archivo->getClientOriginalName(),
-            'archivo_mime' => $archivo->getClientMimeType() ?: $archivo->getMimeType(),
+            'archivo_mime' => $archivo->getMimeType() ?: $archivo->getClientMimeType(),
             'archivo_tamano' => $archivo->getSize(),
-            'monto' => $gasto->monto_total,
-            'fecha_pago' => now()->toDateString(),
+            'monto' => $gasto->monto,
+            'fecha_pago' => today('America/Santiago')->toDateString(),
             'estado' => 'en_revision',
         ]);
-
-        $gasto->update(['estado' => 'En revisión']);
 
         return response()->json([
             'id' => $comprobante->id,

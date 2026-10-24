@@ -10,6 +10,7 @@
 <div class="ui-card-title"><h2>Gestión de la comunidad</h2><span class="text-xs text-gray-500">Módulos del administrador</span></div>
 <div class="module-grid">
   @include('components.module-card', ['icono'=>'payments','titulo'=>'Gastos Comunes','descripcion'=>'Genera cobros mensuales, registra su desglose y valida los pagos recibidos.','destino'=>'admin.gastos-comunes.index','accion'=>'Generar gastos comunes'])
+  @include('components.module-card', ['icono'=>'fact_check','titulo'=>'Comprobantes de Pago','descripcion'=>'Revisa, aprueba o rechaza los comprobantes de transferencia enviados por residentes.','destino'=>'admin.comprobantes.index','accion'=>'Revisar comprobantes'])
   @include('components.module-card', ['icono'=>'apartment','titulo'=>'Departamentos','descripcion'=>'Mantén el padrón de propiedades, residentes y contactos de emergencia.','destino'=>'admin.departamentos.index','accion'=>'Administrar departamentos'])
   @include('components.module-card', ['icono'=>'group','titulo'=>'Usuarios y Roles','descripcion'=>'Registra cuentas y gestiona los accesos de cada integrante de la comunidad.','destino'=>'admin.usuarios.index','accion'=>'Administrar usuarios'])
   @include('components.module-card', ['icono'=>'meeting_room','titulo'=>'Espacios Comunes','descripcion'=>'Configura los espacios, sus horarios, aforo y reglas de uso.','destino'=>'admin.espacios-comunes.index','accion'=>'Administrar espacios'])

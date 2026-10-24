@@ -6,6 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\UsuarioController;
 use App\Http\Controllers\Admin\EspacioComunController;
 use App\Http\Controllers\Admin\DepartamentoController;
+use App\Http\Controllers\Admin\ComprobantePagoController as AdminComprobanteController;
 use App\Http\Controllers\Admin\AvisoController as AdminAvisoController;
 use App\Http\Controllers\Admin\IncidenciaController as AdminIncidenciaController;
 use App\Http\Controllers\Conserje\EncomiendaController as ConserjeEncomiendaController;
@@ -47,7 +48,7 @@ Route::middleware(['auth', 'rol'])->group(function () {
         ->name('perfil.contrasena');
 });
 
-// Módulo Administrador (HU-02, HU-31, HU-32, HU-36, HU-37)
+// Módulo Administrador (HU-02, HU-17, HU-18, HU-31, HU-32, HU-36, HU-37)
 Route::middleware(['auth', 'rol:Administrador'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'admin'])->name('dashboard');
     Route::get('/gastos-comunes', [\App\Http\Controllers\Admin\GastoComunController::class, 'index'])->name('gastos-comunes.index');
@@ -57,6 +58,13 @@ Route::middleware(['auth', 'rol:Administrador'])->prefix('admin')->name('admin.'
     Route::post('/gastos-comunes', [\App\Http\Controllers\Admin\GastoComunController::class, 'store'])->name('gastos-comunes.store');
     Route::get('/gastos-comunes/{gasto}/desglose', [\App\Http\Controllers\Admin\GastoComunController::class, 'desglose'])->whereNumber('gasto')->name('gastos-comunes.desglose');
     Route::put('/gastos-comunes/{gasto}/desglose', [\App\Http\Controllers\Admin\GastoComunController::class, 'guardarDesglose'])->whereNumber('gasto')->name('gastos-comunes.desglose.guardar');
+
+    // Revisión y Aprobación de Comprobantes de Pago (HU-17, HU-18)
+    Route::get('/comprobantes', [AdminComprobanteController::class, 'index'])->name('comprobantes.index');
+    Route::patch('/comprobantes/{comprobante}/aprobar', [AdminComprobanteController::class, 'aprobar'])->whereNumber('comprobante')->name('comprobantes.aprobar');
+    Route::patch('/comprobantes/{comprobante}/rechazar', [AdminComprobanteController::class, 'rechazar'])->whereNumber('comprobante')->name('comprobantes.rechazar');
+    Route::get('/comprobantes/{comprobante}/archivo', [AdminComprobanteController::class, 'verArchivo'])->whereNumber('comprobante')->name('comprobantes.archivo');
+
     Route::get('/reservas', [\App\Http\Controllers\Admin\ReservaController::class, 'index'])->name('reservas.index');
     Route::patch('/reservas/{reserva}/estado', [\App\Http\Controllers\Admin\ReservaController::class, 'actualizarEstado'])->whereNumber('reserva')->name('reservas.estado');
     Route::get('/usuarios', [UsuarioController::class, 'index'])->name('usuarios.index');
@@ -117,11 +125,13 @@ Route::middleware(['auth', 'rol:Conserje'])->prefix('conserje')->name('conserje.
     Route::patch('/incidencias/{incidencia}/estado', [ConserjeIncidenciaController::class, 'actualizarEstado'])->name('incidencias.estado');
 });
 
-// Módulo Residente (HU-02, HU-26, HU-33, HU-34, HU-35)
+// Módulo Residente (HU-02, HU-16, HU-26, HU-33, HU-34, HU-35)
 Route::middleware(['auth', 'rol:Residente'])->prefix('residente')->name('residente.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'residente'])->name('dashboard');
     Route::get('/gastos-comunes', [\App\Http\Controllers\Residente\GastoComunController::class, 'index'])->name('gastos-comunes.index');
     Route::get('/gastos-comunes/{gasto}/pdf', [\App\Http\Controllers\Residente\GastoComunController::class, 'descargarPdf'])->whereNumber('gasto')->name('gastos-comunes.pdf');
+    Route::post('/gastos-comunes/{gasto}/comprobante', [\App\Http\Controllers\Residente\GastoComunController::class, 'storeComprobante'])->whereNumber('gasto')->name('gastos-comunes.comprobante.store');
+    Route::get('/comprobantes/{comprobante}/archivo', [\App\Http\Controllers\Residente\GastoComunController::class, 'verArchivo'])->whereNumber('comprobante')->name('comprobantes.archivo');
     Route::get('/encomiendas', [ResidenteEncomiendaController::class, 'index'])->name('encomiendas.index');
     Route::get('/espacios-comunes/disponibilidad', [DisponibilidadController::class, 'index'])->name('espacios-comunes.disponibilidad');
     Route::get('/reservas', [ReservaController::class, 'index'])->name('reservas.index');

@@ -66,6 +66,16 @@ class User extends Authenticatable
         return $this->hasMany(Incidencia::class, 'user_id');
     }
 
+    public function comprobantesPago(): HasMany
+    {
+        return $this->hasMany(ComprobantePago::class, 'user_id');
+    }
+
+    public function comprobantesRevisados(): HasMany
+    {
+        return $this->hasMany(ComprobantePago::class, 'revisado_por');
+    }
+
     public function tieneRol(string $nombreRol): bool
     {
         return strtolower($this->rol?->nombre ?? '') === strtolower($nombreRol);

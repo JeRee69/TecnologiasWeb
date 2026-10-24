@@ -16,6 +16,7 @@
     'admin' => [
       ['admin.dashboard','space_dashboard','Dashboard Administrador','admin.dashboard'],
       ['admin.gastos-comunes.index','payments','Gastos Comunes','admin.gastos-comunes.*'],
+      ['admin.comprobantes.index','fact_check','Comprobantes de Pago','admin.comprobantes.*'],
       ['admin.departamentos.index','apartment','Padrón de Propiedades','admin.departamentos.*'],
       ['admin.usuarios.index','group','Usuarios y Roles','admin.usuarios.*'],
       ['admin.espacios-comunes.index','meeting_room','Espacios Comunes','admin.espacios-comunes.*'],

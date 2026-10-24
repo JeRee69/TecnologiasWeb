@@ -2,7 +2,13 @@
 @section('title', 'Gastos comunes')
 @section('content')
 <div class="legacy-page">
-<a href="{{ route('admin.dashboard') }}" class="text-sm font-semibold text-blue-900 hover:underline">← Volver al panel</a>
+<div class="flex flex-wrap items-center justify-between gap-4">
+  <a href="{{ route('admin.dashboard') }}" class="text-sm font-semibold text-blue-900 hover:underline">← Volver al panel</a>
+  <a href="{{ route('admin.comprobantes.index') }}" class="inline-flex items-center gap-1.5 text-sm font-semibold bg-blue-50 text-blue-900 hover:bg-blue-100 border border-blue-200 rounded-lg px-4 py-2 transition">
+    <span class="material-symbols-outlined text-base" aria-hidden="true">fact_check</span>
+    Revisar comprobantes de pago →
+  </a>
+</div>
     <h1 class="text-2xl font-bold mt-4">Gastos comunes</h1>
     <p class="text-gray-600 text-sm mt-1 mb-6">Genera cobros mensuales por departamento y consulta los registros emitidos.</p>
 

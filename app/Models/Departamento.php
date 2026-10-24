@@ -56,6 +56,11 @@ class Departamento extends Model
         return $this->hasMany(VehiculoAutorizado::class, 'departamento_id');
     }
 
+    public function comprobantesPago(): HasMany
+    {
+        return $this->hasMany(ComprobantePago::class, 'departamento_id');
+    }
+
     public function incidencias(): HasMany
     {
         return $this->hasMany(Incidencia::class, 'departamento_id');

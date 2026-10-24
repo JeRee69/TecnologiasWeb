@@ -5,21 +5,26 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\ComprobantePago;
 use App\Models\Departamento;
+use App\Models\GastoComun;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 
 class ComprobantePagoController extends Controller
 {
     public function index(Request $request)
     {
-        $estadoFiltro = $request->query('estado', 'todos');
+        $estadoFiltro = $request->query('estado', 'en_revision');
         $departamentoFiltro = $request->query('departamento_id');
 
-        $query = ComprobantePago::with(['gastoComun', 'departamento', 'residente', 'revisor'])
-            ->latest();
+        $query = ComprobantePago::with(['gastoComun', 'departamento', 'residente', 'revisor'])->latest();
 
-        if ($estadoFiltro !== 'todos' && in_array($estadoFiltro, ['en_revision', 'aprobado', 'rechazado'])) {
+        if (in_array($estadoFiltro, ['en_revision', 'aprobado', 'rechazado'], true)) {
             $query->where('estado', $estadoFiltro);
+        } else {
+            $estadoFiltro = 'todos';
         }
 
         if ($departamentoFiltro) {
@@ -37,37 +42,42 @@ class ComprobantePagoController extends Controller
 
         $departamentos = Departamento::orderBy('numero')->get();
 
-        return view('admin.comprobantes.index', compact(
-            'comprobantes',
-            'totales',
-            'departamentos',
-            'estadoFiltro',
-            'departamentoFiltro'
-        ));
+        return response()->view('admin.comprobantes.index', compact(
+            'comprobantes', 'totales', 'departamentos', 'estadoFiltro', 'departamentoFiltro'
+        ))->header('Cache-Control', 'private, no-store');
     }
 
-    public function aprobar(Request $request, ComprobantePago $comprobante)
+    public function aprobar(Request $request, ComprobantePago $comprobante): RedirectResponse
     {
-        $comprobante->update([
-            'estado' => 'aprobado',
-            'motivo_rechazo' => null,
-            'revisado_por' => $request->user()->id,
-            'revisado_at' => now(),
-        ]);
+        DB::transaction(function () use ($request, $comprobante) {
+            $actual = ComprobantePago::whereKey($comprobante->id)->lockForUpdate()->firstOrFail();
+            if ($actual->estado !== 'en_revision') {
+                throw ValidationException::withMessages(['comprobante' => 'Este comprobante ya fue revisado.']);
+            }
 
-        if ($comprobante->gastoComun) {
-            $comprobante->gastoComun->update([
-                'estado' => 'Pagado',
+            $actual->update([
+                'estado' => 'aprobado',
+                'motivo_rechazo' => null,
+                'revisado_por' => $request->user()->id,
+                'revisado_at' => now(),
             ]);
-        }
 
-        return redirect()->back()
-            ->with('exito', 'Comprobante aprobado exitosamente. El gasto común fue actualizado a estado "Pagado".');
+            $gasto = GastoComun::whereKey($actual->gasto_comun_id)->lockForUpdate()->first();
+            if ($gasto && $gasto->estado !== 'pagado') {
+                $gasto->estado = 'pagado';
+                $gasto->pago_validado_at = now();
+                $gasto->pago_validado_por = $request->user()->id;
+                $gasto->referencia_pago = 'Comprobante #'.$actual->id;
+                $gasto->save();
+            }
+        }, 3);
+
+        return back()->with('estado', 'Comprobante aprobado. El gasto común quedó Al día (Pagado).');
     }
 
-    public function rechazar(Request $request, ComprobantePago $comprobante)
+    public function rechazar(Request $request, ComprobantePago $comprobante): RedirectResponse
     {
-        $request->validate([
+        $datos = $request->validate([
             'motivo_rechazo' => ['required', 'string', 'min:3', 'max:500'],
         ], [
             'motivo_rechazo.required' => 'Debes ingresar el motivo del rechazo.',
@@ -75,21 +85,22 @@ class ComprobantePagoController extends Controller
             'motivo_rechazo.max' => 'El motivo no puede exceder los 500 caracteres.',
         ]);
 
-        $comprobante->update([
-            'estado' => 'rechazado',
-            'motivo_rechazo' => $request->motivo_rechazo,
-            'revisado_por' => $request->user()->id,
-            'revisado_at' => now(),
-        ]);
+        DB::transaction(function () use ($request, $comprobante, $datos) {
+            $actual = ComprobantePago::whereKey($comprobante->id)->lockForUpdate()->firstOrFail();
+            if ($actual->estado !== 'en_revision') {
+                throw ValidationException::withMessages(['comprobante' => 'Este comprobante ya fue revisado.']);
+            }
 
-        if ($comprobante->gastoComun) {
-            $comprobante->gastoComun->update([
-                'estado' => 'Pendiente',
+            // El gasto no se modifica: conserva su estado pendiente o moroso.
+            $actual->update([
+                'estado' => 'rechazado',
+                'motivo_rechazo' => $datos['motivo_rechazo'],
+                'revisado_por' => $request->user()->id,
+                'revisado_at' => now(),
             ]);
-        }
+        }, 3);
 
-        return redirect()->back()
-            ->with('exito', 'Comprobante rechazado. El gasto común se mantiene en estado "Pendiente" y el residente podrá ver el motivo.');
+        return back()->with('estado', 'Comprobante rechazado. El gasto común se mantiene pendiente y el residente verá el motivo.');
     }
 
     public function verArchivo(ComprobantePago $comprobante)
@@ -98,9 +109,6 @@ class ComprobantePagoController extends Controller
             abort(404, 'El archivo del comprobante no fue encontrado en el servidor.');
         }
 
-        return Storage::disk('public')->response(
-            $comprobante->archivo_path,
-            $comprobante->archivo_nombre_original
-        );
+        return Storage::disk('public')->response($comprobante->archivo_path, $comprobante->archivo_nombre_original);
     }
 }

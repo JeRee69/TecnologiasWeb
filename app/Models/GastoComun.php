@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class GastoComun extends Model
 {
@@ -43,5 +44,31 @@ class GastoComun extends Model
     public function departamento(): BelongsTo
     {
         return $this->belongsTo(Departamento::class);
+    }
+
+    public function comprobantes(): HasMany
+    {
+        return $this->hasMany(ComprobantePago::class, 'gasto_comun_id');
+    }
+
+    public function ultimoComprobante(): HasOne
+    {
+        return $this->hasOne(ComprobantePago::class, 'gasto_comun_id')->latestOfMany();
+    }
+
+    public function tieneComprobanteEnRevision(): bool
+    {
+        return $this->comprobantes()->where('estado', 'en_revision')->exists();
+    }
+
+    // Un cobro pagado o con un comprobante aún sin revisar no admite una nueva carga.
+    public function permiteCargarComprobante(): bool
+    {
+        return $this->estado !== 'pagado' && ! $this->tieneComprobanteEnRevision();
+    }
+
+    public function montoFormateado(): string
+    {
+        return '$'.number_format($this->monto, 0, ',', '.');
     }
 }

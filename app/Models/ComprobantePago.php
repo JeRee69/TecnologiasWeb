@@ -68,8 +68,8 @@ class ComprobantePago extends Model
 
     public function montoFormateado(): string
     {
-        $monto = $this->monto ?? $this->gastoComun?->monto_total ?? 0;
-        return '$ ' . number_format($monto, 0, ',', '.');
+        $monto = $this->monto ?? $this->gastoComun?->monto ?? 0;
+        return '$'.number_format($monto, 0, ',', '.');
     }
 
     public function tamanoLegible(): string
