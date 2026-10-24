@@ -5,6 +5,7 @@
 /public/storage
 /storage/*.key
 /vendor
+/tmp/pdfs/
 /bootstrap/cache/*
 /storage
 .env

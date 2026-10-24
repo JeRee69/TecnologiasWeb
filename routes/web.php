@@ -46,6 +46,9 @@ Route::middleware(['auth', 'rol'])->group(function () {
 Route::middleware(['auth', 'rol:Administrador'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'admin'])->name('dashboard');
     Route::get('/gastos-comunes', [\App\Http\Controllers\Admin\GastoComunController::class, 'index'])->name('gastos-comunes.index');
+    Route::get('/gastos-comunes/{gasto}/estado', [\App\Http\Controllers\Admin\GastoComunController::class, 'estado'])->whereNumber('gasto')->name('gastos-comunes.estado');
+    Route::patch('/gastos-comunes/{gasto}/vencimiento', [\App\Http\Controllers\Admin\GastoComunController::class, 'guardarVencimiento'])->whereNumber('gasto')->name('gastos-comunes.vencimiento');
+    Route::post('/gastos-comunes/{gasto}/validar-pago', [\App\Http\Controllers\Admin\GastoComunController::class, 'validarPago'])->whereNumber('gasto')->name('gastos-comunes.pago.validar');
     Route::post('/gastos-comunes', [\App\Http\Controllers\Admin\GastoComunController::class, 'store'])->name('gastos-comunes.store');
     Route::get('/gastos-comunes/{gasto}/desglose', [\App\Http\Controllers\Admin\GastoComunController::class, 'desglose'])->whereNumber('gasto')->name('gastos-comunes.desglose');
     Route::put('/gastos-comunes/{gasto}/desglose', [\App\Http\Controllers\Admin\GastoComunController::class, 'guardarDesglose'])->whereNumber('gasto')->name('gastos-comunes.desglose.guardar');
@@ -95,6 +98,8 @@ Route::middleware(['auth', 'rol:Conserje'])->prefix('conserje')->name('conserje.
 // Módulo Residente (HU-02, HU-26)
 Route::middleware(['auth', 'rol:Residente'])->prefix('residente')->name('residente.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'residente'])->name('dashboard');
+    Route::get('/gastos-comunes', [\App\Http\Controllers\Residente\GastoComunController::class, 'index'])->name('gastos-comunes.index');
+    Route::get('/gastos-comunes/{gasto}/pdf', [\App\Http\Controllers\Residente\GastoComunController::class, 'descargarPdf'])->whereNumber('gasto')->name('gastos-comunes.pdf');
     Route::get('/encomiendas', [ResidenteEncomiendaController::class, 'index'])->name('encomiendas.index');
     Route::get('/espacios-comunes/disponibilidad', [DisponibilidadController::class, 'index'])->name('espacios-comunes.disponibilidad');
     Route::get('/reservas', [ReservaController::class, 'index'])->name('reservas.index');

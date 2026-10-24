@@ -41,20 +41,18 @@
         <h1 class="text-2xl font-bold text-gray-900">Hola, {{ $usuario->nombre }}</h1>
         <p class="text-sm text-gray-500">Módulos habilitados para tu departamento</p>
       </div>
-      <div class="inline-flex items-center gap-2 bg-emerald-50 text-emerald-800 px-3 py-1.5 rounded-lg border border-emerald-200 text-xs font-medium">
-        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-        Al día en gastos comunes
-      </div>
+      @include('components.estado-gasto', ['estadoGasto' => $resumenGastos['estado']])
     </div>
 
+    @include('components.resumen-gastos')
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow transition-shadow">
         <div class="w-12 h-12 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center mb-4">
           <span class="material-symbols-outlined text-2xl">account_balance_wallet</span>
         </div>
         <h2 class="text-lg font-semibold text-gray-900 mb-1">Mis Gastos Comunes</h2>
-        <p class="text-sm text-gray-600 mb-4">Revisa tu saldo vigente, histórico de cobros y descarga el desglose en PDF.</p>
-        <span class="text-xs font-semibold text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-md">Estado Financiero</span>
+        <p class="text-sm text-gray-600 mb-4">Consulta los cobros de tus departamentos, con período, monto y desglose de conceptos.</p>
+        <a href="{{ route('residente.gastos-comunes.index') }}" class="text-sm font-semibold text-emerald-800 hover:underline">Consultar mis gastos comunes →</a>
       </div>
 
       <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow transition-shadow">

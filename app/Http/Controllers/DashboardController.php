@@ -19,9 +19,11 @@ class DashboardController extends Controller
         return view('dashboards.conserje', compact('usuario'));
     }
 
-    public function residente(): View
+    public function residente(): \Symfony\Component\HttpFoundation\Response
     {
         $usuario = Auth::user();
-        return view('dashboards.residente', compact('usuario'));
+        $resumenGastos = \App\Models\GastoComun::resumenPara($usuario);
+        return response()->view('dashboards.residente', compact('usuario', 'resumenGastos'))
+            ->header('Cache-Control', 'private, no-store');
     }
 }

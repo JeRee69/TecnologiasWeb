@@ -35,6 +35,7 @@ class GastoComunController extends Controller
             'departamento_id' => ['bail', 'required', 'integer', 'exists:departamentos,id'],
             'periodo' => ['bail', 'required', 'date_format:Y-m', 'after_or_equal:1900-01', 'before_or_equal:9999-12'],
             'monto' => ['bail', 'required', 'integer', 'min:1', 'max:999999999999'],
+            'fecha_vencimiento' => ['nullable', 'date_format:Y-m-d', 'after_or_equal:1900-01-01', 'before_or_equal:9999-12-31'],
         ], [
             'departamento_id.required' => 'Selecciona un departamento.',
             'departamento_id.exists' => 'El departamento seleccionado no existe.',
@@ -65,6 +66,7 @@ class GastoComunController extends Controller
                     'periodo' => $datos['periodo'].'-01',
                     'monto' => $datos['monto'],
                     'estado' => 'pendiente',
+                    'fecha_vencimiento' => $datos['fecha_vencimiento'] ?? null,
                 ]);
             }, 3);
         } catch (UniqueConstraintViolationException $error) {
@@ -72,7 +74,7 @@ class GastoComunController extends Controller
         }
 
         return redirect()->route('admin.gastos-comunes.index', ['periodo' => $datos['periodo']])
-            ->with('estado', 'Gasto común generado correctamente con estado Pendiente.');
+            ->with('estado', 'Gasto común generado correctamente.');
     }
 
     public function desglose(GastoComun $gasto)
@@ -125,6 +127,58 @@ class GastoComunController extends Controller
 
         return redirect()->route('admin.gastos-comunes.desglose', $gasto)
             ->with('estado', 'Desglose guardado correctamente. El total coincide con el monto asignado.');
+    }
+
+    public function estado(GastoComun $gasto)
+    {
+        $gasto->load('departamento');
+        return response()->view('admin.gastos-comunes.estado', compact('gasto'))
+            ->header('Cache-Control', 'private, no-store');
+    }
+
+    public function guardarVencimiento(Request $request, GastoComun $gasto): RedirectResponse
+    {
+        $datos = $request->validate([
+            'fecha_vencimiento' => ['nullable', 'date_format:Y-m-d', 'after_or_equal:1900-01-01', 'before_or_equal:9999-12-31'],
+        ], ['fecha_vencimiento.date_format' => 'Ingresa una fecha de vencimiento válida.']);
+        DB::transaction(function () use ($datos, $gasto) {
+            $actual = GastoComun::whereKey($gasto->id)->lockForUpdate()->firstOrFail();
+            if ($actual->estado === 'pagado') {
+                throw ValidationException::withMessages(['fecha_vencimiento' => 'El cobro ya está pagado. Su vencimiento se conserva.']);
+            }
+            $actual->fecha_vencimiento = $datos['fecha_vencimiento'] ?? null;
+            $actual->save();
+        }, 3);
+        return redirect()->route('admin.gastos-comunes.estado', $gasto)->with('estado', 'Vencimiento actualizado.');
+    }
+
+    public function validarPago(Request $request, GastoComun $gasto): RedirectResponse
+    {
+        $datos = $request->validate([
+            'monto_recibido' => ['bail', 'required', 'integer', 'min:1', 'max:999999999999'],
+            'referencia_pago' => ['bail', 'required', 'string', 'max:200'],
+        ], [
+            'monto_recibido.required' => 'Ingresa el monto recibido para validar el pago.',
+            'monto_recibido.integer' => 'El monto recibido debe ser un número entero en CLP.',
+            'referencia_pago.required' => 'Ingresa la referencia del pago que verificaste.',
+            'referencia_pago.max' => 'La referencia admite hasta 200 caracteres.',
+        ]);
+        DB::transaction(function () use ($request, $datos, $gasto) {
+            $actual = GastoComun::whereKey($gasto->id)->lockForUpdate()->firstOrFail();
+            if ($actual->estado === 'pagado') {
+                throw ValidationException::withMessages(['referencia_pago' => 'Este cobro ya tiene un pago validado. No se modificó su registro.']);
+            }
+            if ((int) $datos['monto_recibido'] !== $actual->monto) {
+                throw ValidationException::withMessages(['monto_recibido' => 'El monto recibido debe coincidir con el total del cobro.']);
+            }
+            $actual->estado = 'pagado';
+            $actual->pago_validado_at = now();
+            $actual->pago_validado_por = $request->user()->id;
+            $actual->referencia_pago = $datos['referencia_pago'];
+            $actual->save();
+        }, 3);
+        return redirect()->route('admin.gastos-comunes.estado', $gasto)
+            ->with('estado', 'Pago validado. El cobro ahora figura como Al día (Pagado).');
     }
 
     private function duplicado(): never

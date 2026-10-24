@@ -36,13 +36,13 @@
     <div class="grid lg:grid-cols-3 gap-6 items-start">
       <section class="bg-white border rounded-xl p-6 shadow-sm" aria-labelledby="generar-heading">
         <h2 id="generar-heading" class="text-lg font-bold mb-2">Generar gasto común</h2>
-        <p class="text-sm text-gray-600 mb-5">Ingresa el monto correspondiente a una unidad activa. Cada departamento admite un cobro por mes, con estado inicial Pendiente.</p>
+        <p class="text-sm text-gray-600 mb-5">Ingresa el monto correspondiente a una unidad activa. Cada departamento admite un cobro por mes. Su estado vigente considera el vencimiento y la validación del pago.</p>
         @if ($departamentos->isEmpty())
           <p class="text-sm text-amber-900 bg-amber-50 p-3 rounded-lg">No hay departamentos activos para generar cobros.</p>
           <a href="{{ route('admin.departamentos.index') }}" class="block mt-3 text-blue-900 hover:underline">Administrar departamentos →</a>
         @else
           <form action="{{ route('admin.gastos-comunes.store') }}" method="POST" class="space-y-4"
-                data-swal-confirm="¿Generar este gasto común?" data-swal-text="El cobro se registrará con estado Pendiente para el departamento y período indicados." data-swal-button="Sí, generar">
+                data-swal-confirm="¿Generar este gasto común?" data-swal-text="Se registrará el cobro para el departamento, período y vencimiento indicados." data-swal-button="Sí, generar">
             @csrf
             <div>
               <label for="departamento_id" class="block text-sm font-semibold mb-1">Departamento</label>
@@ -65,6 +65,12 @@
               <p class="text-xs text-gray-500 mt-1">Pesos enteros, sin puntos ni decimales.</p>
               @error('monto')<p class="text-red-700 text-xs mt-1">{{ $message }}</p>@enderror
             </div>
+            <div>
+              <label for="fecha_vencimiento" class="block text-sm font-semibold mb-1">Fecha de vencimiento (opcional)</label>
+              <input id="fecha_vencimiento" name="fecha_vencimiento" type="date" min="1900-01-01" max="9999-12-31" value="{{ is_string(old('fecha_vencimiento')) ? old('fecha_vencimiento') : '' }}" class="w-full border border-gray-300 rounded-lg p-2"/>
+              <p class="text-xs text-gray-500 mt-1">Si no está pagado, será moroso desde el día siguiente. Sin fecha, permanece pendiente.</p>
+              @error('fecha_vencimiento')<p class="text-red-700 text-xs mt-1">{{ $message }}</p>@enderror
+            </div>
             <button type="submit" class="w-full bg-[#1e3a8a] hover:bg-blue-900 text-white font-semibold rounded-lg py-2.5">Generar gasto común</button>
           </form>
         @endif
@@ -84,7 +90,7 @@
             <thead class="bg-gray-50 border-b text-gray-600"><tr><th scope="col" class="px-5 py-3">Departamento</th><th scope="col" class="px-5 py-3">Período</th><th scope="col" class="px-5 py-3 text-right">Monto CLP</th><th scope="col" class="px-5 py-3">Estado</th></tr></thead>
             <tbody class="divide-y">
               @forelse ($gastos as $gasto)
-                <tr><td class="px-5 py-4 font-semibold">{{ $gasto->departamento->numero }}<a href="{{ route('admin.gastos-comunes.desglose', $gasto) }}" class="block mt-2 text-xs text-blue-900 hover:underline">{{ $gasto->detalles_count ? 'Ver y editar desglose' : 'Registrar desglose' }} →</a></td><td class="px-5 py-4">{{ $gasto->periodo->format('m/Y') }}</td><td class="px-5 py-4 text-right whitespace-nowrap">${{ number_format($gasto->monto, 0, ',', '.') }}</td><td class="px-5 py-4"><span class="bg-amber-50 text-amber-900 rounded-full px-2 py-1">{{ ucfirst($gasto->estado) }}</span></td></tr>
+                <tr><td class="px-5 py-4 font-semibold">{{ $gasto->departamento->numero }}<a href="{{ route('admin.gastos-comunes.desglose', $gasto) }}" class="block mt-2 text-xs text-blue-900 hover:underline">{{ $gasto->detalles_count ? 'Ver y editar desglose' : 'Registrar desglose' }} →</a><a href="{{ route('admin.gastos-comunes.estado', $gasto) }}" class="block mt-2 text-xs text-blue-900 hover:underline">Gestionar estado y pago →</a></td><td class="px-5 py-4">{{ $gasto->periodo->format('m/Y') }}</td><td class="px-5 py-4 text-right whitespace-nowrap">${{ number_format($gasto->monto, 0, ',', '.') }}</td><td class="px-5 py-4">@include('components.estado-gasto', ['estadoGasto' => $gasto->estadoVigente()])</td></tr>
               @empty
                 <tr><td colspan="4" class="p-8 text-center text-gray-500">No hay gastos comunes para mostrar. Genera un cobro o consulta otro período.</td></tr>
               @endforelse

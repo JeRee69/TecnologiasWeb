@@ -29,6 +29,48 @@ docker compose exec -T app php tests/docker-hu11.php
 
 La prueba HU-12 comprueba persistencia, edición, sumas distintas, límites y entradas malformadas, conservación del desglose anterior, aislamiento entre cobros, texto seguro, permisos, CSRF y ediciones simultáneas. Elimina sus datos temporales al terminar.
 
+## HU-13: consulta de gastos comunes del residente
+
+Desde el portal del residente, abre **Mis Gastos Comunes → Consultar mis gastos comunes** (`/residente/gastos-comunes`). El historial muestra departamento, período, monto en CLP y estado. **Ver detalle del cobro** despliega los conceptos y sus montos, sin depender de JavaScript. Si todavía no existe desglose, se indica que está pendiente de registro por la administración.
+
+La consulta usa exclusivamente las asociaciones vigentes de la cuenta autenticada, sin aceptar identificadores de residentes o departamentos del navegador. Incluye todas sus unidades, tanto para titulares como habitantes, y conserva la consulta de cobros de departamentos inactivos mientras mantengan su asociación. Desasociar al residente revoca el acceso a los cobros de esa unidad. El historial se ordena por período descendente y muestra 10 cobros por página, con respuesta privada sin caché. Solo acceden residentes activos. Se muestran avisos cuando no hay departamento asociado o cobros registrados.
+
+```powershell
+docker compose up -d --build
+docker compose exec -T app php tests/docker-hu13.php
+```
+
+La prueba verifica columnas y conceptos contra MySQL, privacidad entre residentes, parámetros manipulados, varias unidades, habitantes, unidades compartidas e inactivas, paginación, estados vacíos, desasociación, permisos, texto seguro y actualización del desglose desde administración. Elimina sus datos temporales al terminar.
+
+## HU-14: estado vigente de gastos comunes
+
+El portal y **Mis gastos comunes** muestran estados con texto y color: **Al día (Pagado)**, **Pendiente** o **Moroso**. El resumen abarca todos los cobros de las unidades asociadas, incluidas deudas fuera de la página actual. Si hay algún moroso, el estado general es moroso; si solo hay impagos sin vencer, pendiente; si todos están pagados, al día. Sin cobros se muestra **Sin cobros registrados**.
+
+El administrador elige opcionalmente la fecha de vencimiento al generar un cobro o desde **Gestionar estado y pago** en el listado. Un impago vence al terminar esa fecha en `America/Santiago` y se muestra moroso desde el día siguiente, sin necesitar una tarea programada. Los cobros anteriores conservan su estado y quedan sin vencimiento hasta configurarlo; no se inventa una fecha para ellos.
+
+En **Gestionar estado y pago → Validar pago recibido**, el administrador registra el monto recibido completo y una referencia obligatoria del pago que verificó. La validación guarda estado pagado, responsable, fecha y referencia, y el residente ve el estado actualizado en su siguiente consulta. Esta validación manual no incluye carga de comprobantes ni pagos parciales. Solo accede un administrador activo, con CSRF. La operación usa bloqueo transaccional; una segunda validación se rechaza y no reemplaza los datos originales. Un cobro pagado conserva su vencimiento y su estado, aunque la fecha ya haya pasado.
+
+```powershell
+docker compose up -d --build
+docker compose exec -T app php tests/docker-hu14.php
+docker compose exec -T app php tests/docker-hu13.php
+```
+
+La prueba HU-14 cubre vencimiento y medianoche en Santiago, resumen fuera de la primera página, validación y persistencia del pago, permisos, CSRF, montos incorrectos, concurrencia, referencias escapadas y privacidad entre residentes. Los datos temporales se eliminan al terminar.
+
+## HU-15: descarga de gasto común en PDF
+
+En **Mis gastos comunes**, pulsa **Descargar PDF** en el cobro correspondiente. El documento A4 incluye número de cobro, departamento, período, vencimiento, estado vigente, conceptos con sus montos, total en CLP y fecha de emisión en horario de Santiago. Incluye numeración de páginas y aviso cuando aún no existe desglose. Cada descarga vuelve a leer la información, por lo que refleja la validación de un pago o el vencimiento más recientes.
+
+La ruta `/residente/gastos-comunes/{gasto}/pdf` exige residente activo y asociación vigente a la unidad. Un cobro ajeno o inexistente devuelve 404; las unidades inactivas conservan su historial mientras exista la asociación. Se envía como archivo adjunto con nombre seguro, respuesta privada sin caché y sin guardar copias públicas. La generación usa Dompdf, con recursos remotos y ejecución de PHP/JavaScript deshabilitados y datos escapados.
+
+```powershell
+docker compose up -d --build
+docker compose exec -T app php tests/docker-hu15.php
+```
+
+La prueba comprueba descarga HTTP, permisos, aislamiento entre residentes, desasociación, estados antes y después de validar un pago, unidades inactivas y desgloses vacíos y de 50 conceptos. Elimina sus datos temporales y deja PDFs de prueba en `storage/app/hu15-qa` (almacenamiento privado) para revisar contenido y presentación. `tests/verificar_pdf_hu15.py` permite verificar esos archivos y renderizarlos con pypdf, pdfplumber y Poppler.
+
 ## Ejecutar con Docker
 
 Con Docker Desktop instalado e iniciado (contenedores Linux), abre una terminal en esta carpeta y ejecuta:
