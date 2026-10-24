@@ -48,6 +48,14 @@
       </div>
       <a href="{{ route('residente.encomiendas.index') }}" class="ui-link inline-block mt-4">Mis Encomiendas →</a>
     </section>
+    <section class="ui-card">
+      <div class="ui-card-title">
+        <h2><span class="material-symbols-outlined" aria-hidden="true">campaign</span>Mural Informativo</h2>
+        <a href="{{ route('residente.mural.index') }}" class="ui-link">Ver avisos →</a>
+      </div>
+      <p class="text-xs text-gray-500 leading-relaxed mb-4">Consulta los comunicados oficiales, avisos de corte y novedades de la administración.</p>
+      <a href="{{ route('residente.mural.index') }}" class="ui-button secondary w-full">Consultar mural de la comunidad</a>
+    </section>
   </div>
   <div class="dashboard-stack">
     @include('components.resumen-gastos')
@@ -66,6 +74,17 @@
       @empty
         <p class="text-xs text-gray-500">Sin unidades asociadas.</p>
       @endforelse
+    </section>
+    <section class="ui-card">
+      <div class="ui-card-title">
+        <h2><span class="material-symbols-outlined" aria-hidden="true">report_problem</span>Mis Incidencias y Reclamos</h2>
+        <a href="{{ route('residente.incidencias.index') }}" class="ui-link">Ver reportes →</a>
+      </div>
+      <p class="text-xs text-gray-500 leading-relaxed mb-4">Reporta desperfectos en áreas comunes o servicios y haz seguimiento a su resolución.</p>
+      <div class="flex flex-wrap gap-2">
+        <a href="{{ route('residente.incidencias.create') }}" class="ui-button"><span class="material-symbols-outlined" aria-hidden="true">add</span>Reportar incidencia</a>
+        <a href="{{ route('residente.incidencias.index') }}" class="ui-button secondary">Mis reportes</a>
+      </div>
     </section>
   </div>
 </div>

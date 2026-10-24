@@ -14,6 +14,8 @@
   @include('components.module-card', ['icono'=>'group','titulo'=>'Usuarios y Roles','descripcion'=>'Registra cuentas y gestiona los accesos de cada integrante de la comunidad.','destino'=>'admin.usuarios.index','accion'=>'Administrar usuarios'])
   @include('components.module-card', ['icono'=>'meeting_room','titulo'=>'Espacios Comunes','descripcion'=>'Configura los espacios, sus horarios, aforo y reglas de uso.','destino'=>'admin.espacios-comunes.index','accion'=>'Administrar espacios'])
   @include('components.module-card', ['icono'=>'event_available','titulo'=>'Solicitudes y Reservas','descripcion'=>'Gestiona solicitudes y reservas y consulta las decisiones y cancelaciones.','destino'=>'admin.reservas.index','accion'=>'Ver reservas y cancelaciones'])
+  @include('components.module-card', ['icono'=>'campaign','titulo'=>'Mural Comunitario','descripcion'=>'Publica avisos oficiales, mantenimientos y comunicados urgentes para los residentes.','destino'=>'admin.avisos.index','accion'=>'Gestionar avisos'])
+  @include('components.module-card', ['icono'=>'assignment_late','titulo'=>'Incidencias y Reclamos','descripcion'=>'Revisa y actualiza el estado de las solicitudes reportadas por la comunidad.','destino'=>'admin.incidencias.index','accion'=>'Atender incidencias'])
   @include('components.module-card', ['icono'=>'account_circle','titulo'=>'Mi perfil','descripcion'=>'Actualiza tus datos de contacto y tu contraseña personal.','destino'=>'perfil.editar','accion'=>'Editar mi perfil'])
 </div>
 <a href="{{ route('admin.reservas.index', ['estado' => 'pendiente']) }}" class="ui-link inline-block mt-6">Gestionar solicitudes y reservas →</a>

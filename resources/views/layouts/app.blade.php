@@ -20,12 +20,15 @@
       ['admin.usuarios.index','group','Usuarios y Roles','admin.usuarios.*'],
       ['admin.espacios-comunes.index','meeting_room','Espacios Comunes','admin.espacios-comunes.*'],
       ['admin.reservas.index','event_available','Solicitudes y Reservas','admin.reservas.*'],
+      ['admin.avisos.index','campaign','Mural Comunitario','admin.avisos.*'],
+      ['admin.incidencias.index','assignment_late','Incidencias y Reclamos','admin.incidencias.*'],
     ],
     'conserje' => [
       ['conserje.dashboard','space_dashboard','Dashboard Conserje','conserje.dashboard'],
       ['conserje.encomiendas.index','inventory_2','Recepción de Encomiendas','conserje.encomiendas.*'],
       ['conserje.visitas.index','shield_person','Control de Visitas','conserje.visitas.*'],
       ['conserje.vehiculos.index','directions_car','Registro Vehicular','conserje.vehiculos.*'],
+      ['conserje.incidencias.index','report_problem','Incidencias Vecinales','conserje.incidencias.*'],
     ],
     default => [
       ['residente.dashboard','home','Dashboard Residente','residente.dashboard'],
@@ -33,6 +36,8 @@
       ['residente.encomiendas.index','inventory_2','Mis Encomiendas','residente.encomiendas.*'],
       ['residente.espacios-comunes.disponibilidad','calendar_month','Reserva de Espacios','residente.espacios-comunes.*'],
       ['residente.reservas.index','event_available','Mis Reservas','residente.reservas.*'],
+      ['residente.mural.index','campaign','Mural Informativo','residente.mural.*'],
+      ['residente.incidencias.index','report_problem','Mis Incidencias','residente.incidencias.*'],
     ],
   };
 @endphp
