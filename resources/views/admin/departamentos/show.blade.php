@@ -1,42 +1,8 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Departamento {{ $departamento->numero }} - EdiConnect</title>
-  <link href="https://fonts.googleapis.com" rel="preconnect"/>
-  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-[#f9fafb] font-['Inter',sans-serif] text-gray-900 min-h-screen flex flex-col">
-  <header class="bg-[#1e3a8a] text-white shadow-md">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <span class="material-symbols-outlined text-3xl">apartment</span>
-        <a href="{{ route('admin.dashboard') }}" class="font-bold text-xl tracking-tight">EdiConnect</a>
-        <span class="text-xs bg-blue-900 text-blue-200 px-2 py-0.5 rounded-full font-medium ml-2">Panel de Administración</span>
-      </div>
-      <div class="flex items-center gap-4">
-        <div class="text-right hidden sm:block">
-          <div class="font-semibold text-sm">{{ auth()->user()->nombre }}</div>
-          <div class="text-xs text-blue-200">{{ auth()->user()->rol?->nombre }}</div>
-        </div>
-        <a href="{{ route('perfil.editar') }}" class="text-xs font-semibold hover:underline whitespace-nowrap">Mi perfil</a>
-        <form action="{{ route('logout') }}" method="POST">
-          @csrf
-          <button type="submit" class="bg-blue-800 hover:bg-blue-700 text-white text-xs px-3 py-2 rounded-lg flex items-center gap-1 transition-colors">
-            <span class="material-symbols-outlined text-[16px]">logout</span>
-            <span>Salir</span>
-          </button>
-        </form>
-      </div>
-    </div>
-  </header>
-
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full">
-    {{-- Navegación superior --}}
+@extends('layouts.app')
+@section('title', 'Departamento '.e($departamento->numero))
+@section('content')
+<div class="legacy-page">
+{{-- Navegación superior --}}
     <div class="mb-6">
       <a href="{{ route('admin.departamentos.index') }}" class="inline-flex items-center gap-1 text-sm font-semibold text-[#1e3a8a] hover:underline mb-3">
         <span class="material-symbols-outlined text-[18px]">arrow_back</span>
@@ -60,8 +26,8 @@
               <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
               Departamento Activo
             </span>
-            <form 
-              action="{{ route('admin.departamentos.estado', $departamento) }}" 
+            <form
+              action="{{ route('admin.departamentos.estado', $departamento) }}"
               method="POST"
               data-swal-confirm="¿Desactivar el Departamento {{ $departamento->numero }}?"
               data-swal-text="Los residentes no podrán ser asociados mientras la unidad permanezca inactiva."
@@ -71,8 +37,8 @@
               @csrf
               @method('PATCH')
               <input type="hidden" name="estado" value="inactivo"/>
-              <button 
-                type="submit" 
+              <button
+                type="submit"
                 class="text-xs bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 px-3 py-1.5 rounded-lg font-semibold transition-colors flex items-center gap-1"
               >
                 <span class="material-symbols-outlined text-[16px]">do_not_disturb_on</span>
@@ -84,8 +50,8 @@
               <span class="w-2 h-2 rounded-full bg-gray-400"></span>
               Departamento Inactivo
             </span>
-            <form 
-              action="{{ route('admin.departamentos.estado', $departamento) }}" 
+            <form
+              action="{{ route('admin.departamentos.estado', $departamento) }}"
               method="POST"
               data-swal-confirm="¿Activar el Departamento {{ $departamento->numero }}?"
               data-swal-text="La unidad volverá a quedar habilitada para asociar residentes."
@@ -94,8 +60,8 @@
               @csrf
               @method('PATCH')
               <input type="hidden" name="estado" value="activo"/>
-              <button 
-                type="submit" 
+              <button
+                type="submit"
                 class="text-xs bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg font-semibold transition-colors flex items-center gap-1 shadow-sm"
               >
                 <span class="material-symbols-outlined text-[16px]">check_circle</span>
@@ -165,17 +131,17 @@
         {{-- Formulario de asociación (HU-09) --}}
         <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
           <h3 class="text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Asociar Nueva Cuenta de Residente</h3>
-          
+
           @if ($departamento->estaActivo())
             @if ($residentesDisponibles->isNotEmpty())
               <form action="{{ route('admin.departamentos.residentes.asociar', $departamento) }}" method="POST" class="space-y-3">
                 @csrf
                 <div>
                   <label for="residente_id" class="sr-only">Seleccionar Residente</label>
-                  <select 
-                    id="residente_id" 
-                    name="residente_id" 
-                    required 
+                  <select
+                    id="residente_id"
+                    name="residente_id"
+                    required
                     class="w-full text-xs rounded-lg border border-gray-300 px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-700"
                   >
                     <option value="">-- Selecciona un residente activo --</option>
@@ -189,17 +155,17 @@
 
                 <div class="flex items-center justify-between gap-2">
                   <label class="flex items-center gap-2 cursor-pointer text-xs text-gray-700 font-medium">
-                    <input 
-                      type="checkbox" 
-                      name="es_titular" 
-                      value="1" 
+                    <input
+                      type="checkbox"
+                      name="es_titular"
+                      value="1"
                       class="rounded border-gray-300 text-blue-600 focus:ring-blue-500 h-4 w-4"
                     />
                     <span>Designar como Titular Principal</span>
                   </label>
 
-                  <button 
-                    type="submit" 
+                  <button
+                    type="submit"
                     class="bg-[#1e3a8a] hover:bg-blue-900 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1 transition-colors shadow-sm"
                   >
                     <span class="material-symbols-outlined text-[16px]">person_add</span>
@@ -247,9 +213,9 @@
               </div>
 
               {{-- Botón desasociar con SweetAlert2 --}}
-              <form 
-                action="{{ route('admin.departamentos.residentes.desasociar', [$departamento, $residente]) }}" 
-                method="POST" 
+              <form
+                action="{{ route('admin.departamentos.residentes.desasociar', [$departamento, $residente]) }}"
+                method="POST"
                 class="ml-3 shrink-0"
                 data-swal-confirm="¿Desasociar a {{ $residente->nombre }}?"
                 data-swal-text="El usuario dejará de estar vinculado al Departamento {{ $departamento->numero }}."
@@ -258,8 +224,8 @@
               >
                 @csrf
                 @method('DELETE')
-                <button 
-                  type="submit" 
+                <button
+                  type="submit"
                   class="text-xs text-red-600 hover:text-red-800 p-1.5 rounded hover:bg-red-50 transition-colors"
                   title="Desasociar del departamento"
                 >
@@ -291,21 +257,21 @@
         {{-- Formulario nuevo contacto (HU-10) --}}
         <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
           <h3 class="text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Registrar Contacto de Emergencia</h3>
-          
+
           <form action="{{ route('admin.departamentos.contactos.store', $departamento) }}" method="POST" class="space-y-3">
             @csrf
             <div>
               <label for="nombre_contacto" class="block text-xs font-semibold text-gray-700 mb-1">
                 Nombre Completo <span class="text-red-500">*</span>
               </label>
-              <input 
-                id="nombre_contacto" 
-                name="nombre" 
-                type="text" 
-                value="{{ old('nombre') }}" 
-                required 
-                maxlength="150" 
-                placeholder="Ej.: Dra. Claudia Morales" 
+              <input
+                id="nombre_contacto"
+                name="nombre"
+                type="text"
+                value="{{ old('nombre') }}"
+                required
+                maxlength="150"
+                placeholder="Ej.: Dra. Claudia Morales"
                 class="w-full text-xs rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-700 bg-white"
               />
             </div>
@@ -315,14 +281,14 @@
                 <label for="telefono_contacto" class="block text-xs font-semibold text-gray-700 mb-1">
                   Teléfono <span class="text-red-500">*</span>
                 </label>
-                <input 
-                  id="telefono_contacto" 
-                  name="telefono" 
-                  type="text" 
-                  value="{{ old('telefono') }}" 
-                  required 
-                  maxlength="30" 
-                  placeholder="Ej.: +56912345678" 
+                <input
+                  id="telefono_contacto"
+                  name="telefono"
+                  type="text"
+                  value="{{ old('telefono') }}"
+                  required
+                  maxlength="30"
+                  placeholder="Ej.: +56912345678"
                   class="w-full text-xs rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-700 bg-white"
                 />
               </div>
@@ -331,13 +297,13 @@
                 <label for="relacion_contacto" class="block text-xs font-semibold text-gray-700 mb-1">
                   Relación o Parentesco
                 </label>
-                <input 
-                  id="relacion_contacto" 
-                  name="relacion" 
-                  type="text" 
-                  value="{{ old('relacion') }}" 
-                  maxlength="100" 
-                  placeholder="Ej.: Madre, Propietario, Pareja" 
+                <input
+                  id="relacion_contacto"
+                  name="relacion"
+                  type="text"
+                  value="{{ old('relacion') }}"
+                  maxlength="100"
+                  placeholder="Ej.: Madre, Propietario, Pareja"
                   class="w-full text-xs rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-700 bg-white"
                 />
               </div>
@@ -348,9 +314,9 @@
                 <label for="user_id_contacto" class="block text-xs font-semibold text-gray-700 mb-1">
                   Residente Vinculado (Opcional)
                 </label>
-                <select 
-                  id="user_id_contacto" 
-                  name="user_id" 
+                <select
+                  id="user_id_contacto"
+                  name="user_id"
                   class="w-full text-xs rounded-lg border border-gray-300 px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-700"
                 >
                   <option value="">General (Asociado a todo el departamento)</option>
@@ -363,8 +329,8 @@
               </div>
             @endif
 
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               class="w-full bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold px-4 py-2 rounded-lg flex items-center justify-center gap-1.5 transition-colors shadow-sm"
             >
               <span class="material-symbols-outlined text-[16px]">add_call</span>
@@ -404,9 +370,9 @@
               </div>
 
               {{-- Botón eliminar contacto con SweetAlert2 --}}
-              <form 
-                action="{{ route('admin.departamentos.contactos.destroy', [$departamento, $contacto]) }}" 
-                method="POST" 
+              <form
+                action="{{ route('admin.departamentos.contactos.destroy', [$departamento, $contacto]) }}"
+                method="POST"
                 class="ml-3 shrink-0"
                 data-swal-confirm="¿Eliminar el contacto {{ $contacto->nombre }}?"
                 data-swal-text="Esta acción eliminará el registro de contacto de emergencia de forma permanente."
@@ -415,8 +381,8 @@
               >
                 @csrf
                 @method('DELETE')
-                <button 
-                  type="submit" 
+                <button
+                  type="submit"
                   class="text-xs text-red-600 hover:text-red-800 p-1.5 rounded hover:bg-red-50 transition-colors"
                   title="Eliminar contacto de emergencia"
                 >
@@ -433,11 +399,5 @@
         </div>
       </section>
     </div>
-  </main>
-
-  <footer class="bg-white border-t border-gray-200 py-4 text-center text-xs text-gray-500 mt-auto">
-    © 2026 EdiConnect - Plataforma de Gestión de Comunidades Residenciales
-  </footer>
-  @include('components.alertas')
-</body>
-</html>
+</div>
+@endsection

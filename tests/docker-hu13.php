@@ -104,7 +104,7 @@ try {
                 verify(str_contains($text, $detalle->concepto) && str_contains($text, '$'.number_format($detalle->monto, 0, ',', '.')), 'Detalle incluye concepto y monto reales');
             }
         }
-        verify(!str_contains($html, "HU13-b-$suffix") && !str_contains($html, "Concepto-b-") && !str_contains($html, '<script>'), 'No se filtran unidades ni conceptos ajenos; texto escapado');
+        verify(!str_contains($html, "HU13-b-$suffix") && !str_contains($html, "Concepto-b-") && !str_contains($html, $suffix.'<script>') && str_contains($html, '&lt;script&gt;'), 'No se filtran unidades ni conceptos ajenos; texto escapado');
         $all += $found;
     }
     verify(count($all) === 13 && isset($all[$inactive->id]) && str_contains($all[$owned[0]->id], 'Desglose aún no registrado'), 'Incluye historial de unidad inactiva y aviso de desglose pendiente');

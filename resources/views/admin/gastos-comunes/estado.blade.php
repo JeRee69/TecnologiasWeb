@@ -1,16 +1,8 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Estado y pago del gasto común - EdiConnect</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-[#f9fafb] font-['Inter',sans-serif] text-gray-900 min-h-screen">
-  <header class="bg-[#1e3a8a] text-white p-4"><div class="max-w-4xl mx-auto flex flex-wrap justify-between gap-3"><a href="{{ route('admin.dashboard') }}" class="font-bold text-xl">EdiConnect · Administración</a><span>{{ auth()->user()->nombre }}</span></div></header>
-  <main class="max-w-4xl mx-auto px-4 py-8">
-    <a href="{{ route('admin.gastos-comunes.index', ['periodo' => $gasto->periodo->format('Y-m')]) }}" class="text-sm text-blue-900 hover:underline">← Volver a gastos comunes</a>
+@extends('layouts.app')
+@section('title', 'Estado y pago del gasto común')
+@section('content')
+<div class="legacy-page">
+<a href="{{ route('admin.gastos-comunes.index', ['periodo' => $gasto->periodo->format('Y-m')]) }}" class="text-sm text-blue-900 hover:underline">← Volver a gastos comunes</a>
     <h1 class="text-2xl font-bold mt-4 mb-6">Estado y pago del gasto común</h1>
     @if (session('estado'))
       <div data-swal-feedback role="status" class="mb-5 bg-emerald-50 border border-emerald-200 text-emerald-900 p-4 rounded-xl">{{ session('estado') }}</div>
@@ -61,7 +53,5 @@
         </section>
       </div>
     @endif
-  </main>
-  @include('components.alertas')
-</body>
-</html>
+</div>
+@endsection

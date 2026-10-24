@@ -1,40 +1,8 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Mis Encomiendas Pendientes - EdiConnect</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-[#f9fafb] font-['Inter',sans-serif] text-gray-900 min-h-screen flex flex-col">
-  <header class="bg-[#1e3a8a] text-white shadow-md">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <span class="material-symbols-outlined text-3xl">apartment</span>
-        <a href="{{ route('residente.dashboard') }}" class="font-bold text-xl tracking-tight">EdiConnect</a>
-        <span class="text-xs bg-blue-900 text-blue-200 px-2 py-0.5 rounded-full font-medium ml-2">Portal Residente</span>
-      </div>
-      <div class="flex items-center gap-4">
-        <div class="text-right hidden sm:block">
-          <div class="font-semibold text-sm">{{ $usuario->nombre }}</div>
-          <div class="text-xs text-blue-200">{{ $usuario->rol?->nombre }}</div>
-        </div>
-        <a href="{{ route('perfil.editar') }}" class="text-xs font-semibold hover:underline whitespace-nowrap">Mi perfil</a>
-        <form action="{{ route('logout') }}" method="POST">
-          @csrf
-          <button type="submit" class="bg-blue-800 hover:bg-blue-700 text-white text-xs px-3 py-2 rounded-lg flex items-center gap-1 transition-colors">
-            <span class="material-symbols-outlined text-[16px]">logout</span>
-            <span>Salir</span>
-          </button>
-        </form>
-      </div>
-    </div>
-  </header>
-
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full">
-    <div class="mb-6">
+@extends('layouts.app')
+@section('title', 'Mis Encomiendas Pendientes')
+@section('content')
+<div class="legacy-page">
+<div class="mb-6">
       <a href="{{ route('residente.dashboard') }}" class="inline-flex items-center gap-1 text-sm font-semibold text-[#1e3a8a] hover:underline mb-3">
         <span class="material-symbols-outlined text-[18px]">arrow_back</span>
         Volver al portal
@@ -146,11 +114,5 @@
         </div>
       </div>
     @endif
-  </main>
-
-  <footer class="bg-white border-t border-gray-200 py-4 text-center text-xs text-gray-500">
-    © 2026 EdiConnect - Plataforma de Gestión de Comunidades Residenciales
-  </footer>
-  @include('components.alertas')
-</body>
-</html>
+</div>
+@endsection

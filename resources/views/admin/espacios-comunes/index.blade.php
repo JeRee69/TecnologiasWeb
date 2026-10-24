@@ -1,28 +1,8 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Espacios comunes - EdiConnect</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-[#f9fafb] font-['Inter',sans-serif] text-gray-900 min-h-screen">
-  <header class="bg-[#1e3a8a] text-white shadow-md">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex flex-wrap items-center justify-between gap-4">
-      <a href="{{ route('admin.dashboard') }}" class="font-bold text-xl">EdiConnect</a>
-      <div class="flex items-center gap-4">
-        <span class="text-sm hidden sm:inline">{{ auth()->user()->nombre }}</span>
-        <a href="{{ route('perfil.editar') }}" class="text-sm font-semibold hover:underline">Mi perfil</a>
-        <form action="{{ route('logout') }}" method="POST">
-          @csrf
-          <button type="submit" class="bg-blue-800 hover:bg-blue-700 rounded-lg px-3 py-2 text-sm">Salir</button>
-        </form>
-      </div>
-    </div>
-  </header>
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 py-8">
-    <a href="{{ route('admin.dashboard') }}" class="text-sm text-blue-800 hover:underline">← Volver al panel</a>
+@extends('layouts.app')
+@section('title', 'Espacios comunes')
+@section('content')
+<div class="legacy-page">
+<a href="{{ route('admin.dashboard') }}" class="text-sm text-blue-800 hover:underline">← Volver al panel</a>
     <div class="my-6">
       <h1 class="text-2xl font-bold">Espacios comunes</h1>
       <p class="text-sm text-gray-600 mt-2">Registra las áreas compartidas y define cuáles están habilitadas en la comunidad.</p>
@@ -119,7 +99,5 @@
         <div class="mt-5">{{ $espacios->links() }}</div>
       </section>
     </div>
-  </main>
-  @include('components.alertas')
-</body>
-</html>
+</div>
+@endsection

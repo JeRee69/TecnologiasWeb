@@ -1,25 +1,8 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Desglose de gasto común - EdiConnect</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-[#f9fafb] font-['Inter',sans-serif] text-gray-900 min-h-screen flex flex-col">
-  <header class="bg-[#1e3a8a] text-white shadow-md">
-    <div class="max-w-5xl mx-auto px-4 py-4 flex flex-wrap items-center justify-between gap-4">
-      <a href="{{ route('admin.dashboard') }}" class="font-bold text-xl">EdiConnect <span class="text-xs font-normal ml-2">Administración</span></a>
-      <div class="flex items-center gap-4 text-sm">
-        <span>{{ auth()->user()->nombre }}</span>
-        <a href="{{ route('perfil.editar') }}" class="hover:underline">Mi perfil</a>
-        <form action="{{ route('logout') }}" method="POST">@csrf<button class="bg-blue-800 rounded-lg px-3 py-2" type="submit">Salir</button></form>
-      </div>
-    </div>
-  </header>
-  <main class="max-w-5xl mx-auto px-4 py-8 flex-1 w-full">
-    <a href="{{ route('admin.gastos-comunes.index', ['periodo' => $gasto->periodo->format('Y-m')]) }}" class="text-sm font-semibold text-blue-900 hover:underline">← Volver a gastos comunes</a>
+@extends('layouts.app')
+@section('title', 'Desglose de gasto común')
+@section('content')
+<div class="legacy-page">
+<a href="{{ route('admin.gastos-comunes.index', ['periodo' => $gasto->periodo->format('Y-m')]) }}" class="text-sm font-semibold text-blue-900 hover:underline">← Volver a gastos comunes</a>
     <h1 class="text-2xl font-bold mt-4">Desglose del gasto común</h1>
     <p class="text-sm text-gray-600 mt-1 mb-6">Detalla los conceptos que componen el cobro. La suma debe coincidir exactamente con el monto asignado.</p>
     @if (session('estado'))
@@ -81,9 +64,7 @@
       <p class="text-xs text-gray-500 mt-5">Guardar reemplaza el desglose anterior. El monto asignado y el estado del cobro se conservan.</p>
       <button type="submit" class="mt-4 bg-[#1e3a8a] hover:bg-blue-900 text-white rounded-lg px-5 py-2.5 font-semibold">Guardar desglose</button>
     </form>
-  </main>
-  <footer class="bg-white border-t py-4 text-center text-xs text-gray-500">EdiConnect · Gestión de comunidades residenciales</footer>
-  <script src="{{ asset('js/desglose-gastos.js') }}" defer></script>
-  @include('components.alertas')
-</body>
-</html>
+
+<script src="{{ asset('js/desglose-gastos.js') }}" defer></script>
+</div>
+@endsection

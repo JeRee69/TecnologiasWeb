@@ -73,6 +73,14 @@ La prueba comprueba descarga HTTP, permisos, aislamiento entre residentes, desas
 
 ## Ejecutar con Docker
 
+El frontend usa la referencia visual del prototipo Stitch de EdiConnect: navegación lateral blanca con sección activa azul marino, acciones azules, fondo claro, tarjetas y tipografía Inter. Las pantallas web comparten `layouts.app` y las públicas `layouts.auth`; estilos y menú móvil están en `public/css/ediconnect.css` y `public/js/ediconnect.js`. Los menús se construyen según el rol autenticado. Los paneles muestran datos persistidos, sin incorporar cuentas bancarias, residentes ni cifras ficticias del prototipo. El menú se convierte en un panel desplegable en móvil, con cierre por Escape y navegación de teclado.
+
+Para comprobar renderizado de las pantallas, navegación por rol y privacidad de los datos del panel con cuentas temporales:
+
+```powershell
+docker compose exec -T app php tests/docker-front.php
+```
+
 Con Docker Desktop instalado e iniciado (contenedores Linux), abre una terminal en esta carpeta y ejecuta:
 
 ```powershell

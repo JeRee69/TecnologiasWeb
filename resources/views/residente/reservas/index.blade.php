@@ -1,10 +1,9 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Mis reservas - EdiConnect</title>
-  <style>
+@extends('layouts.app')
+@section('title', 'Mis reservas')
+@push('styles')
+<style>
+@scope (.legacy-page) {
+
     * { box-sizing: border-box; }
     body { margin: 0; background: #f9fafb; color: #111827; font-family: Inter, system-ui, sans-serif; }
     header { background: #1e3a8a; color: white; }
@@ -31,18 +30,13 @@
     .motivo { white-space: pre-line; overflow-wrap: anywhere; max-width: 340px; }
     :focus-visible { outline: 3px solid #2563eb; outline-offset: 3px; }
     @media(max-width:600px) { main { padding: 20px 16px; } .panel { padding: 16px; } }
-  </style>
-</head>
-<body>
-  <header><div>
-    <a class="brand" href="{{ route('residente.dashboard') }}">EdiConnect</a>
-    <nav aria-label="Cuenta">
-      <a href="{{ route('perfil.editar') }}">Mi perfil</a>
-      <form action="{{ route('logout') }}" method="POST">@csrf<button type="submit">Salir</button></form>
-    </nav>
-  </div></header>
-  <main>
-    <a href="{{ route('residente.dashboard') }}">← Volver al portal</a>
+
+}
+</style>
+@endpush
+@section('content')
+<div class="legacy-page">
+<a href="{{ route('residente.dashboard') }}">← Volver al portal</a>
     <h1>Mis reservas</h1>
     <p class="muted">Consulta tus solicitudes y reservas. Solo las confirmadas han sido aprobadas por el administrador. Horarios de Santiago.</p>
     <a href="{{ route('residente.espacios-comunes.disponibilidad') }}">Consultar disponibilidad y reservar →</a>
@@ -116,7 +110,5 @@
         @endif
       @endif
     </section>
-  </main>
-  @include('components.alertas')
-</body>
-</html>
+</div>
+@endsection

@@ -1,42 +1,8 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Registro Vehicular y Control de Portón - EdiConnect</title>
-  <link href="https://fonts.googleapis.com" rel="preconnect"/>
-  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-[#f9fafb] font-['Inter',sans-serif] text-gray-900 min-h-screen flex flex-col">
-  <header class="bg-[#1e3a8a] text-white shadow-md">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <span class="material-symbols-outlined text-3xl">apartment</span>
-        <a href="{{ route('conserje.dashboard') }}" class="font-bold text-xl tracking-tight">EdiConnect</a>
-        <span class="text-xs bg-blue-900 text-blue-200 px-2 py-0.5 rounded-full font-medium ml-2">Módulo de Conserjería</span>
-      </div>
-      <div class="flex items-center gap-4">
-        <div class="text-right hidden sm:block">
-          <div class="font-semibold text-sm">{{ auth()->user()->nombre }}</div>
-          <div class="text-xs text-blue-200">{{ auth()->user()->rol?->nombre }}</div>
-        </div>
-        <a href="{{ route('perfil.editar') }}" class="text-xs font-semibold hover:underline whitespace-nowrap">Mi perfil</a>
-        <form action="{{ route('logout') }}" method="POST">
-          @csrf
-          <button type="submit" class="bg-blue-800 hover:bg-blue-700 text-white text-xs px-3 py-2 rounded-lg flex items-center gap-1 transition-colors">
-            <span class="material-symbols-outlined text-[16px]">logout</span>
-            <span>Salir</span>
-          </button>
-        </form>
-      </div>
-    </div>
-  </header>
-
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full">
-    <div class="mb-6">
+@extends('layouts.app')
+@section('title', 'Registro Vehicular y Control de Portón')
+@section('content')
+<div class="legacy-page">
+<div class="mb-6">
       <a href="{{ route('conserje.dashboard') }}" class="inline-flex items-center gap-1 text-sm font-semibold text-[#1e3a8a] hover:underline mb-3">
         <span class="material-symbols-outlined text-[18px]">arrow_back</span>
         Volver a la bitácora principal
@@ -61,17 +27,17 @@
         </div>
 
         <form method="GET" action="{{ route('conserje.vehiculos.index') }}" class="flex items-center gap-2 max-w-md w-full">
-          <input 
-            type="text" 
-            name="verificar_patente" 
-            value="{{ $verificarPatente }}" 
-            placeholder="Ej.: BBCL12 o AB1234" 
+          <input
+            type="text"
+            name="verificar_patente"
+            value="{{ $verificarPatente }}"
+            placeholder="Ej.: BBCL12 o AB1234"
             maxlength="10"
             required
             class="flex-1 px-4 py-2.5 rounded-xl bg-white text-gray-900 font-mono font-bold tracking-wider uppercase text-sm border-2 border-transparent focus:outline-none focus:ring-2 focus:ring-amber-400"
           />
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             class="bg-amber-500 hover:bg-amber-400 text-gray-900 font-bold px-4 py-2.5 rounded-xl text-sm transition-all hover:shadow flex items-center gap-1 shrink-0 shadow"
           >
             <span class="material-symbols-outlined text-[20px]">search</span>
@@ -93,7 +59,7 @@
                     <span>VEHÍCULO AUTORIZADO — ACCESO PERMITIDO</span>
                   </div>
                   <div class="text-xs text-emerald-200 mt-0.5">
-                    Asociado a: <strong class="text-white">Depto. {{ $resultadoVerificacion['vehiculo']->departamento?->numero }}</strong> 
+                    Asociado a: <strong class="text-white">Depto. {{ $resultadoVerificacion['vehiculo']->departamento?->numero }}</strong>
                     • Tipo: <span class="capitalize">{{ $resultadoVerificacion['vehiculo']->tipo }}</span>
                     @if ($resultadoVerificacion['vehiculo']->marca || $resultadoVerificacion['vehiculo']->modelo)
                       • {{ $resultadoVerificacion['vehiculo']->marca }} {{ $resultadoVerificacion['vehiculo']->modelo }} ({{ $resultadoVerificacion['vehiculo']->color ?? 'Color no esp.' }})
@@ -213,9 +179,9 @@
             <label for="departamento_id" class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
               Departamento asociado <span class="text-red-500">*</span>
             </label>
-            <select 
-              id="departamento_id" 
-              name="departamento_id" 
+            <select
+              id="departamento_id"
+              name="departamento_id"
               required
               @class([
                 'w-full rounded-lg border px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors',
@@ -239,13 +205,13 @@
             <label for="patente" class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
               Patente vehicular <span class="text-red-500">*</span>
             </label>
-            <input 
-              id="patente" 
-              name="patente" 
-              type="text" 
-              value="{{ old('patente') }}" 
-              required 
-              maxlength="15" 
+            <input
+              id="patente"
+              name="patente"
+              type="text"
+              value="{{ old('patente') }}"
+              required
+              maxlength="15"
               placeholder="Ej.: BBCL12 o AB1234"
               class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm uppercase font-mono font-bold tracking-wider focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
             />
@@ -259,12 +225,12 @@
               <label for="marca" class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
                 Marca <span class="text-gray-400 font-normal">(Opcional)</span>
               </label>
-              <input 
-                id="marca" 
-                name="marca" 
-                type="text" 
-                value="{{ old('marca') }}" 
-                maxlength="60" 
+              <input
+                id="marca"
+                name="marca"
+                type="text"
+                value="{{ old('marca') }}"
+                maxlength="60"
                 placeholder="Ej.: Toyota"
                 class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
               />
@@ -273,12 +239,12 @@
               <label for="modelo" class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
                 Modelo <span class="text-gray-400 font-normal">(Opcional)</span>
               </label>
-              <input 
-                id="modelo" 
-                name="modelo" 
-                type="text" 
-                value="{{ old('modelo') }}" 
-                maxlength="60" 
+              <input
+                id="modelo"
+                name="modelo"
+                type="text"
+                value="{{ old('modelo') }}"
+                maxlength="60"
                 placeholder="Ej.: Yaris"
                 class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
               />
@@ -290,12 +256,12 @@
               <label for="color" class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
                 Color <span class="text-gray-400 font-normal">(Opcional)</span>
               </label>
-              <input 
-                id="color" 
-                name="color" 
-                type="text" 
-                value="{{ old('color') }}" 
-                maxlength="40" 
+              <input
+                id="color"
+                name="color"
+                type="text"
+                value="{{ old('color') }}"
+                maxlength="40"
                 placeholder="Ej.: Gris Plata"
                 class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
               />
@@ -304,9 +270,9 @@
               <label for="tipo" class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
                 Tipo de vínculo <span class="text-red-500">*</span>
               </label>
-              <select 
-                id="tipo" 
-                name="tipo" 
+              <select
+                id="tipo"
+                name="tipo"
                 required
                 class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
               >
@@ -321,11 +287,11 @@
             <label for="vigente_hasta" class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
               Autorizado hasta <span class="text-gray-400 font-normal">(Dejar en blanco para indefinido)</span>
             </label>
-            <input 
-              id="vigente_hasta" 
-              name="vigente_hasta" 
-              type="date" 
-              value="{{ old('vigente_hasta') }}" 
+            <input
+              id="vigente_hasta"
+              name="vigente_hasta"
+              type="date"
+              value="{{ old('vigente_hasta') }}"
               class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
             />
           </div>
@@ -334,18 +300,18 @@
             <label for="observaciones" class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
               Observaciones / Estacionamiento <span class="text-gray-400 font-normal">(Opcional)</span>
             </label>
-            <textarea 
-              id="observaciones" 
-              name="observaciones" 
-              rows="2" 
-              maxlength="500" 
+            <textarea
+              id="observaciones"
+              name="observaciones"
+              rows="2"
+              maxlength="500"
               placeholder="Ej.: Estacionamiento N° 45, torre A..."
               class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
             >{{ old('observaciones') }}</textarea>
           </div>
 
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             class="w-full bg-[#1e3a8a] hover:bg-blue-900 text-white font-semibold text-sm py-2.5 px-4 rounded-lg shadow-sm transition-all hover:shadow flex items-center justify-center gap-2 mt-2"
           >
             <span class="material-symbols-outlined text-[18px]">add_circle</span>
@@ -365,19 +331,19 @@
 
             {{-- Filtros Rápidos --}}
             <div class="flex items-center gap-1.5 bg-gray-100 p-1 rounded-lg text-xs font-medium">
-              <a 
+              <a
                 href="{{ route('conserje.vehiculos.index', ['filtro' => 'todos', 'busqueda' => $busqueda]) }}"
                 class="px-2.5 py-1 rounded-md transition-colors {{ $filtro === 'todos' ? 'bg-white text-gray-900 shadow-sm font-semibold' : 'text-gray-600 hover:text-gray-900' }}"
               >
                 Todos
               </a>
-              <a 
+              <a
                 href="{{ route('conserje.vehiculos.index', ['filtro' => 'autorizados', 'busqueda' => $busqueda]) }}"
                 class="px-2.5 py-1 rounded-md transition-colors {{ $filtro === 'autorizados' ? 'bg-white text-emerald-800 shadow-sm font-semibold' : 'text-gray-600 hover:text-gray-900' }}"
               >
                 Autorizados
               </a>
-              <a 
+              <a
                 href="{{ route('conserje.vehiculos.index', ['filtro' => 'revocados', 'busqueda' => $busqueda]) }}"
                 class="px-2.5 py-1 rounded-md transition-colors {{ $filtro === 'revocados' ? 'bg-white text-rose-800 shadow-sm font-semibold' : 'text-gray-600 hover:text-gray-900' }}"
               >
@@ -391,11 +357,11 @@
             <input type="hidden" name="filtro" value="{{ $filtro }}"/>
             <div class="relative flex-1">
               <span class="material-symbols-outlined absolute left-3 top-2.5 text-gray-400 text-[18px]">search</span>
-              <input 
-                type="text" 
-                name="busqueda" 
-                value="{{ $busqueda }}" 
-                placeholder="Buscar por patente, marca, modelo o depto..." 
+              <input
+                type="text"
+                name="busqueda"
+                value="{{ $busqueda }}"
+                placeholder="Buscar por patente, marca, modelo o depto..."
                 class="w-full pl-9 pr-3 py-2 text-xs rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
               />
             </div>
@@ -469,8 +435,8 @@
                     </td>
 
                     <td class="py-3 px-3.5 whitespace-nowrap text-right">
-                      <form 
-                        action="{{ route('conserje.vehiculos.estado', $vehiculo) }}" 
+                      <form
+                        action="{{ route('conserje.vehiculos.estado', $vehiculo) }}"
                         method="POST"
                         @if ($vehiculo->estado === 'Autorizado')
                           data-swal-confirm="¿Revocar autorización vehicular?"
@@ -486,16 +452,16 @@
                         @csrf
                         @method('PATCH')
                         @if ($vehiculo->estado === 'Autorizado')
-                          <button 
-                            type="submit" 
+                          <button
+                            type="submit"
                             title="Revocar autorización de portón"
                             class="text-rose-600 hover:text-rose-800 hover:bg-rose-50 px-2.5 py-1 rounded-lg border border-rose-200 transition-colors text-xs font-semibold"
                           >
                             Revocar
                           </button>
                         @else
-                          <button 
-                            type="submit" 
+                          <button
+                            type="submit"
                             title="Habilitar autorización de portón"
                             class="text-emerald-700 hover:text-emerald-900 hover:bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200 transition-colors text-xs font-semibold"
                           >
@@ -529,11 +495,5 @@
         </div>
       </section>
     </div>
-  </main>
-
-  <footer class="bg-white border-t border-gray-200 py-4 text-center text-xs text-gray-500 mt-auto">
-    © 2026 EdiConnect - Plataforma de Gestión de Comunidades Residenciales
-  </footer>
-  @include('components.alertas')
-</body>
-</html>
+</div>
+@endsection

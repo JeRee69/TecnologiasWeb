@@ -1,42 +1,8 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Control de Visitas - EdiConnect</title>
-  <link href="https://fonts.googleapis.com" rel="preconnect"/>
-  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-[#f9fafb] font-['Inter',sans-serif] text-gray-900 min-h-screen flex flex-col">
-  <header class="bg-[#1e3a8a] text-white shadow-md">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <span class="material-symbols-outlined text-3xl">apartment</span>
-        <a href="{{ route('conserje.dashboard') }}" class="font-bold text-xl tracking-tight">EdiConnect</a>
-        <span class="text-xs bg-blue-900 text-blue-200 px-2 py-0.5 rounded-full font-medium ml-2">Módulo de Conserjería</span>
-      </div>
-      <div class="flex items-center gap-4">
-        <div class="text-right hidden sm:block">
-          <div class="font-semibold text-sm">{{ auth()->user()->nombre }}</div>
-          <div class="text-xs text-blue-200">{{ auth()->user()->rol?->nombre }}</div>
-        </div>
-        <a href="{{ route('perfil.editar') }}" class="text-xs font-semibold hover:underline whitespace-nowrap">Mi perfil</a>
-        <form action="{{ route('logout') }}" method="POST">
-          @csrf
-          <button type="submit" class="bg-blue-800 hover:bg-blue-700 text-white text-xs px-3 py-2 rounded-lg flex items-center gap-1 transition-colors">
-            <span class="material-symbols-outlined text-[16px]">logout</span>
-            <span>Salir</span>
-          </button>
-        </form>
-      </div>
-    </div>
-  </header>
-
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full">
-    <div class="mb-6">
+@extends('layouts.app')
+@section('title', 'Control de Visitas')
+@section('content')
+<div class="legacy-page">
+<div class="mb-6">
       <a href="{{ route('conserje.dashboard') }}" class="inline-flex items-center gap-1 text-sm font-semibold text-[#1e3a8a] hover:underline mb-3">
         <span class="material-symbols-outlined text-[18px]">arrow_back</span>
         Volver a la bitácora principal
@@ -134,9 +100,9 @@
             <label for="departamento_id" class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
               Departamento de destino <span class="text-red-500">*</span>
             </label>
-            <select 
-              id="departamento_id" 
-              name="departamento_id" 
+            <select
+              id="departamento_id"
+              name="departamento_id"
               required
               @class([
                 'w-full rounded-lg border px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors',
@@ -160,13 +126,13 @@
             <label for="nombre_visitante" class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
               Nombre completo de la visita <span class="text-red-500">*</span>
             </label>
-            <input 
-              id="nombre_visitante" 
-              name="nombre_visitante" 
-              type="text" 
-              value="{{ old('nombre_visitante') }}" 
-              required 
-              maxlength="150" 
+            <input
+              id="nombre_visitante"
+              name="nombre_visitante"
+              type="text"
+              value="{{ old('nombre_visitante') }}"
+              required
+              maxlength="150"
               placeholder="Ej.: Carolina Morales R."
               @class([
                 'w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors',
@@ -183,12 +149,12 @@
             <label for="rut_visitante" class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
               RUT / Documento de identificación <span class="text-gray-400 font-normal">(Opcional)</span>
             </label>
-            <input 
-              id="rut_visitante" 
-              name="rut_visitante" 
-              type="text" 
-              value="{{ old('rut_visitante') }}" 
-              maxlength="20" 
+            <input
+              id="rut_visitante"
+              name="rut_visitante"
+              type="text"
+              value="{{ old('rut_visitante') }}"
+              maxlength="20"
               placeholder="Ej.: 12.345.678-9 o Pasaporte"
               @class([
                 'w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors',
@@ -206,11 +172,11 @@
               <label for="fecha" class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
                 Fecha de ingreso
               </label>
-              <input 
-                id="fecha" 
-                name="fecha" 
-                type="date" 
-                value="{{ old('fecha', date('Y-m-d')) }}" 
+              <input
+                id="fecha"
+                name="fecha"
+                type="date"
+                value="{{ old('fecha', date('Y-m-d')) }}"
                 @class([
                   'w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors',
                   'border-red-400 bg-red-50' => $errors->has('fecha'),
@@ -222,11 +188,11 @@
               <label for="hora" class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
                 Hora de ingreso
               </label>
-              <input 
-                id="hora" 
-                name="hora" 
-                type="time" 
-                value="{{ old('hora', date('H:i')) }}" 
+              <input
+                id="hora"
+                name="hora"
+                type="time"
+                value="{{ old('hora', date('H:i')) }}"
                 @class([
                   'w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors',
                   'border-red-400 bg-red-50' => $errors->has('hora'),
@@ -240,11 +206,11 @@
             <label for="observaciones" class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
               Observaciones / Motivo <span class="text-gray-400 font-normal">(Opcional)</span>
             </label>
-            <textarea 
-              id="observaciones" 
-              name="observaciones" 
-              rows="3" 
-              maxlength="500" 
+            <textarea
+              id="observaciones"
+              name="observaciones"
+              rows="3"
+              maxlength="500"
               placeholder="Ej.: Técnico de internet, familiar, entrega especial..."
               class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
             >{{ old('observaciones') }}</textarea>
@@ -253,8 +219,8 @@
             @enderror
           </div>
 
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             class="w-full bg-[#1e3a8a] hover:bg-blue-900 text-white font-semibold text-sm py-2.5 px-4 rounded-lg shadow-sm transition-all hover:shadow flex items-center justify-center gap-2 mt-2"
           >
             <span class="material-symbols-outlined text-[18px]">how_to_reg</span>
@@ -274,19 +240,19 @@
 
             {{-- Filtros Rápidos --}}
             <div class="flex items-center gap-1.5 bg-gray-100 p-1 rounded-lg text-xs font-medium">
-              <a 
+              <a
                 href="{{ route('conserje.visitas.index', ['filtro' => 'todas', 'busqueda' => $busqueda]) }}"
                 class="px-2.5 py-1 rounded-md transition-colors {{ $filtro === 'todas' ? 'bg-white text-gray-900 shadow-sm font-semibold' : 'text-gray-600 hover:text-gray-900' }}"
               >
                 Todas
               </a>
-              <a 
+              <a
                 href="{{ route('conserje.visitas.index', ['filtro' => 'en_recinto', 'busqueda' => $busqueda]) }}"
                 class="px-2.5 py-1 rounded-md transition-colors {{ $filtro === 'en_recinto' ? 'bg-white text-emerald-800 shadow-sm font-semibold' : 'text-gray-600 hover:text-gray-900' }}"
               >
                 En Recinto
               </a>
-              <a 
+              <a
                 href="{{ route('conserje.visitas.index', ['filtro' => 'finalizadas', 'busqueda' => $busqueda]) }}"
                 class="px-2.5 py-1 rounded-md transition-colors {{ $filtro === 'finalizadas' ? 'bg-white text-gray-900 shadow-sm font-semibold' : 'text-gray-600 hover:text-gray-900' }}"
               >
@@ -300,11 +266,11 @@
             <input type="hidden" name="filtro" value="{{ $filtro }}"/>
             <div class="relative flex-1">
               <span class="material-symbols-outlined absolute left-3 top-2.5 text-gray-400 text-[18px]">search</span>
-              <input 
-                type="text" 
-                name="busqueda" 
-                value="{{ $busqueda }}" 
-                placeholder="Buscar por nombre, RUT o departamento..." 
+              <input
+                type="text"
+                name="busqueda"
+                value="{{ $busqueda }}"
+                placeholder="Buscar por nombre, RUT o departamento..."
                 class="w-full pl-9 pr-3 py-2 text-xs rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
               />
             </div>
@@ -380,8 +346,8 @@
 
                     <td class="py-3 px-3.5 whitespace-nowrap text-right">
                       @if ($visita->estado === 'En Recinto')
-                        <form 
-                          action="{{ route('conserje.visitas.salida', $visita) }}" 
+                        <form
+                          action="{{ route('conserje.visitas.salida', $visita) }}"
                           method="POST"
                           data-swal-confirm="¿Registrar salida de la visita?"
                           data-swal-text="Se registrará la fecha y hora de egreso de {{ $visita->nombre_visitante }} (Depto. {{ $visita->departamento?->numero ?? 'N/A' }})."
@@ -389,8 +355,8 @@
                         >
                           @csrf
                           @method('PATCH')
-                          <button 
-                            type="submit" 
+                          <button
+                            type="submit"
                             class="inline-flex items-center gap-1 bg-amber-50 hover:bg-amber-100 text-amber-900 font-semibold px-2.5 py-1.5 rounded-lg border border-amber-200 transition-colors text-xs"
                           >
                             <span class="material-symbols-outlined text-[16px]">door_front</span>
@@ -426,11 +392,5 @@
         </div>
       </section>
     </div>
-  </main>
-
-  <footer class="bg-white border-t border-gray-200 py-4 text-center text-xs text-gray-500 mt-auto">
-    © 2026 EdiConnect - Plataforma de Gestión de Comunidades Residenciales
-  </footer>
-  @include('components.alertas')
-</body>
-</html>
+</div>
+@endsection

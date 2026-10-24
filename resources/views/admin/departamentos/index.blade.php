@@ -1,42 +1,8 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Departamentos - EdiConnect</title>
-  <link href="https://fonts.googleapis.com" rel="preconnect"/>
-  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-[#f9fafb] font-['Inter',sans-serif] text-gray-900 min-h-screen flex flex-col">
-  <header class="bg-[#1e3a8a] text-white shadow-md">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <span class="material-symbols-outlined text-3xl">apartment</span>
-        <a href="{{ route('admin.dashboard') }}" class="font-bold text-xl tracking-tight">EdiConnect</a>
-        <span class="text-xs bg-blue-900 text-blue-200 px-2 py-0.5 rounded-full font-medium ml-2">Panel de Administración</span>
-      </div>
-      <div class="flex items-center gap-4">
-        <div class="text-right hidden sm:block">
-          <div class="font-semibold text-sm">{{ auth()->user()->nombre }}</div>
-          <div class="text-xs text-blue-200">{{ auth()->user()->rol?->nombre }}</div>
-        </div>
-        <a href="{{ route('perfil.editar') }}" class="text-xs font-semibold hover:underline whitespace-nowrap">Mi perfil</a>
-        <form action="{{ route('logout') }}" method="POST">
-          @csrf
-          <button type="submit" class="bg-blue-800 hover:bg-blue-700 text-white text-xs px-3 py-2 rounded-lg flex items-center gap-1 transition-colors">
-            <span class="material-symbols-outlined text-[16px]">logout</span>
-            <span>Salir</span>
-          </button>
-        </form>
-      </div>
-    </div>
-  </header>
-
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full">
-    <div class="mb-6">
+@extends('layouts.app')
+@section('title', 'Departamentos')
+@section('content')
+<div class="legacy-page">
+<div class="mb-6">
       <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center gap-1 text-sm font-semibold text-[#1e3a8a] hover:underline mb-3">
         <span class="material-symbols-outlined text-[18px]">arrow_back</span>
         Volver al panel
@@ -126,13 +92,13 @@
             <label for="numero" class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
               Número de Unidad <span class="text-red-500">*</span>
             </label>
-            <input 
-              id="numero" 
-              name="numero" 
-              type="text" 
-              value="{{ old('numero') }}" 
-              required 
-              maxlength="50" 
+            <input
+              id="numero"
+              name="numero"
+              type="text"
+              value="{{ old('numero') }}"
+              required
+              maxlength="50"
               placeholder="Ej.: 101, 204-B, PH-1"
               @class([
                 'w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-700',
@@ -149,14 +115,14 @@
             <label for="piso" class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
               Piso <span class="text-red-500">*</span>
             </label>
-            <input 
-              id="piso" 
-              name="piso" 
-              type="number" 
-              value="{{ old('piso') }}" 
-              required 
-              min="-10" 
-              max="200" 
+            <input
+              id="piso"
+              name="piso"
+              type="number"
+              value="{{ old('piso') }}"
+              required
+              min="-10"
+              max="200"
               placeholder="Ej.: 1, 2, -1 (Subterráneo)"
               @class([
                 'w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-700',
@@ -173,9 +139,9 @@
             <label for="estado" class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
               Estado Inicial
             </label>
-            <select 
-              id="estado" 
-              name="estado" 
+            <select
+              id="estado"
+              name="estado"
               class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-700"
             >
               <option value="activo" @selected(old('estado', 'activo') === 'activo')>Activo (Permite residentes)</option>
@@ -184,8 +150,8 @@
             <p class="text-[11px] text-gray-500 mt-1">Los departamentos inactivos no admiten asignación de residentes (HU-08).</p>
           </div>
 
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             class="w-full bg-[#1e3a8a] hover:bg-blue-900 text-white font-semibold text-sm rounded-lg px-4 py-2.5 flex items-center justify-center gap-2 transition-colors shadow-sm"
           >
             <span class="material-symbols-outlined text-[18px]">add_circle</span>
@@ -201,18 +167,18 @@
           <form method="GET" action="{{ route('admin.departamentos.index') }}" class="flex flex-1 w-full gap-2 items-center">
             <div class="relative flex-1">
               <span class="material-symbols-outlined absolute left-3 top-2.5 text-gray-400 text-[18px]">search</span>
-              <input 
-                type="text" 
-                name="buscar" 
-                value="{{ $busqueda }}" 
-                placeholder="Buscar por número o piso..." 
+              <input
+                type="text"
+                name="buscar"
+                value="{{ $busqueda }}"
+                placeholder="Buscar por número o piso..."
                 class="w-full pl-9 pr-3 py-2 text-xs rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-700"
               />
             </div>
 
-            <select 
-              name="estado" 
-              onchange="this.form.submit()" 
+            <select
+              name="estado"
+              onchange="this.form.submit()"
               class="text-xs rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-700"
             >
               <option value="">Todos los estados</option>
@@ -280,8 +246,8 @@
                     </td>
                     <td class="px-5 py-4 text-right whitespace-nowrap">
                       <div class="flex items-center justify-end gap-2">
-                        <a 
-                          href="{{ route('admin.departamentos.show', $depto) }}" 
+                        <a
+                          href="{{ route('admin.departamentos.show', $depto) }}"
                           class="bg-blue-50 hover:bg-blue-100 text-[#1e3a8a] text-xs font-semibold px-2.5 py-1.5 rounded-lg flex items-center gap-1 transition-colors"
                           title="Ficha técnica y residentes"
                         >
@@ -290,9 +256,9 @@
                         </a>
 
                         {{-- Cambio rápido de estado (HU-08) con SweetAlert2 --}}
-                        <form 
-                          action="{{ route('admin.departamentos.estado', $depto) }}" 
-                          method="POST" 
+                        <form
+                          action="{{ route('admin.departamentos.estado', $depto) }}"
+                          method="POST"
                           class="inline"
                           @if ($depto->estaActivo())
                             data-swal-confirm="¿Desactivar el Departamento {{ $depto->numero }}?"
@@ -309,8 +275,8 @@
                           @method('PATCH')
                           @if ($depto->estaActivo())
                             <input type="hidden" name="estado" value="inactivo"/>
-                            <button 
-                              type="submit" 
+                            <button
+                              type="submit"
                               class="text-xs text-gray-600 hover:text-red-700 px-2 py-1.5 rounded hover:bg-gray-100 transition-colors"
                               title="Desactivar departamento"
                             >
@@ -318,8 +284,8 @@
                             </button>
                           @else
                             <input type="hidden" name="estado" value="activo"/>
-                            <button 
-                              type="submit" 
+                            <button
+                              type="submit"
                               class="text-xs text-emerald-700 hover:text-emerald-900 font-medium px-2 py-1.5 rounded hover:bg-emerald-50 transition-colors"
                               title="Activar departamento"
                             >
@@ -353,11 +319,5 @@
         </div>
       </section>
     </div>
-  </main>
-
-  <footer class="bg-white border-t border-gray-200 py-4 text-center text-xs text-gray-500 mt-auto">
-    © 2026 EdiConnect - Plataforma de Gestión de Comunidades Residenciales
-  </footer>
-  @include('components.alertas')
-</body>
-</html>
+</div>
+@endsection

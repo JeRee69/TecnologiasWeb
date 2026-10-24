@@ -1,24 +1,17 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Disponibilidad de espacios - EdiConnect</title>
-  <style>
+@extends('layouts.app')
+@section('title', 'Disponibilidad de espacios')
+@push('styles')
+<style>
+@scope (.legacy-page) {
+
     *{box-sizing:border-box}body{margin:0;background:#f9fafb;color:#111827;font-family:Inter,system-ui,sans-serif}header{background:#1e3a8a;color:white}header>div,main{max-width:1050px;margin:auto;padding:24px}header>div,.nav,.filters{display:flex;gap:20px;align-items:center;justify-content:space-between}header a{color:white}a{color:#1e3a8a}header form{margin:0}.brand{font-size:22px;font-weight:700;text-decoration:none}h1{font-size:28px;margin-bottom:8px}h2{font-size:21px}.muted{color:#4b5563;font-size:14px}.panel{background:white;border:1px solid #d1d5db;border-radius:12px;padding:24px;margin-top:24px}.filters{align-items:end;flex-wrap:wrap;justify-content:flex-start}.field{flex:1;min-width:200px}label.field-label{display:block;font-size:14px;font-weight:600;margin-bottom:8px}select,input[type=date]{width:100%;padding:12px;border:1px solid #9ca3af;border-radius:8px;font:inherit}button{cursor:pointer;border:0;border-radius:8px;padding:13px 20px;background:#1e3a8a;color:white;font:inherit;font-weight:600}.legend{display:flex;flex-wrap:wrap;gap:16px;font-size:14px;margin:20px 0}.legend span{padding:6px 12px;border-radius:6px}.available{background:#ecfdf5;color:#065f46}.occupied{background:#fff1f2;color:#9f1239}.past{background:#f3f4f6;color:#4b5563}.blocks{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;border:0;padding:0;margin:20px 0}.blocks legend{font-weight:600;padding:0;margin-bottom:16px}.slot{display:flex;align-items:center;gap:10px;padding:16px;border:1px solid #a7f3d0;border-radius:8px;cursor:pointer}.slot small{display:block;margin-top:6px}.slot:has(input:checked){outline:3px solid #1e3a8a;outline-offset:2px}.slot:has(input:disabled){cursor:not-allowed;border-color:#d1d5db}input[type=radio]{accent-color:#1e3a8a;width:18px;height:18px;flex-shrink:0}:focus-visible{outline:3px solid #2563eb;outline-offset:3px}.rules{white-space:pre-line;overflow-wrap:anywhere}.error{color:#991b1b;background:#fef2f2;border:1px solid #fecaca;padding:16px;border-radius:8px}#seleccion{font-weight:600;color:#1e3a8a}h2{overflow-wrap:anywhere}@media(max-width:600px){header>div{align-items:flex-start}.nav{gap:12px;flex-wrap:wrap;justify-content:flex-end}main{padding:20px 16px}.panel{padding:18px}h1{font-size:24px}}
-  </style>
-</head>
-<body>
-  <header><div>
-    <a class="brand" href="{{ route('residente.dashboard') }}">EdiConnect</a>
-    <nav class="nav" aria-label="Cuenta">
-      <a href="{{ route('perfil.editar') }}">Mi perfil</a>
-      <a href="{{ route('residente.reservas.index') }}">Mis reservas</a>
-      <form action="{{ route('logout') }}" method="POST">@csrf<button type="submit">Salir</button></form>
-    </nav>
-  </div></header>
-  <main>
-    <a href="{{ route('residente.dashboard') }}">← Volver al portal</a>
+
+}
+</style>
+@endpush
+@section('content')
+<div class="legacy-page">
+<a href="{{ route('residente.dashboard') }}">← Volver al portal</a>
     <h1>Disponibilidad de espacios comunes</h1>
     <p class="muted">Elige un espacio y una fecha en el calendario para consultar sus horarios.</p>
     @if ($errors->any() || $errors->reserva->any())
@@ -79,8 +72,8 @@
         </section>
       @endif
     @endif
-  </main>
-  <script>
+
+<script>
     document.querySelectorAll('input[name="bloque"]:not(:disabled)').forEach(input => {
       input.addEventListener('change', () => {
         document.getElementById('seleccion').textContent = 'Bloque seleccionado: ' + input.value + '. Envía la solicitud para que el administrador la revise.';
@@ -97,5 +90,5 @@
       });
     });
   </script>
-</body>
-</html>
+</div>
+@endsection
