@@ -6,10 +6,12 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\UsuarioController;
 use App\Http\Controllers\Admin\EspacioComunController;
 use App\Http\Controllers\Admin\DepartamentoController;
+use App\Http\Controllers\Admin\ComprobantePagoController as AdminComprobanteController;
 use App\Http\Controllers\Conserje\EncomiendaController as ConserjeEncomiendaController;
 use App\Http\Controllers\Conserje\VisitaController as ConserjeVisitaController;
 use App\Http\Controllers\Conserje\VehiculoAutorizadoController as ConserjeVehiculoController;
 use App\Http\Controllers\Residente\EncomiendaController as ResidenteEncomiendaController;
+use App\Http\Controllers\Residente\GastoComunController as ResidenteGastoComunController;
 use App\Http\Controllers\PerfilController;
 use App\Http\Controllers\Residente\DisponibilidadController;
 use App\Http\Controllers\Residente\ReservaController;
@@ -65,6 +67,12 @@ Route::middleware(['auth', 'rol:Administrador'])->prefix('admin')->name('admin.'
     Route::delete('/departamentos/{departamento}/residentes/{usuario}', [DepartamentoController::class, 'desasociarResidente'])->name('departamentos.residentes.desasociar');
     Route::post('/departamentos/{departamento}/contactos', [DepartamentoController::class, 'storeContacto'])->name('departamentos.contactos.store');
     Route::delete('/departamentos/{departamento}/contactos/{contacto}', [DepartamentoController::class, 'destroyContacto'])->name('departamentos.contactos.destroy');
+
+    // Revisión y Aprobación de Comprobantes de Pago (HU-17, HU-18)
+    Route::get('/comprobantes', [AdminComprobanteController::class, 'index'])->name('comprobantes.index');
+    Route::patch('/comprobantes/{comprobante}/aprobar', [AdminComprobanteController::class, 'aprobar'])->name('comprobantes.aprobar');
+    Route::patch('/comprobantes/{comprobante}/rechazar', [AdminComprobanteController::class, 'rechazar'])->name('comprobantes.rechazar');
+    Route::get('/comprobantes/{comprobante}/archivo', [AdminComprobanteController::class, 'verArchivo'])->name('comprobantes.archivo');
 });
 
 // Módulo Conserje (HU-02, HU-25, HU-27, HU-29, HU-30)
@@ -88,7 +96,7 @@ Route::middleware(['auth', 'rol:Conserje'])->prefix('conserje')->name('conserje.
     Route::patch('/vehiculos/{vehiculo}/estado', [ConserjeVehiculoController::class, 'cambiarEstado'])->name('vehiculos.estado');
 });
 
-// Módulo Residente (HU-02, HU-26)
+// Módulo Residente (HU-02, HU-16, HU-26)
 Route::middleware(['auth', 'rol:Residente'])->prefix('residente')->name('residente.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'residente'])->name('dashboard');
     Route::get('/encomiendas', [ResidenteEncomiendaController::class, 'index'])->name('encomiendas.index');
@@ -96,4 +104,9 @@ Route::middleware(['auth', 'rol:Residente'])->prefix('residente')->name('residen
     Route::get('/reservas', [ReservaController::class, 'index'])->name('reservas.index');
     Route::post('/reservas', [ReservaController::class, 'store'])->name('reservas.store');
     Route::patch('/reservas/{reserva}/cancelacion', [ReservaController::class, 'cancelar'])->whereNumber('reserva')->name('reservas.cancelar');
+
+    // Gastos Comunes y Carga de Comprobantes (HU-16)
+    Route::get('/gastos-comunes', [ResidenteGastoComunController::class, 'index'])->name('gastos-comunes.index');
+    Route::post('/gastos-comunes/{gasto}/comprobante', [ResidenteGastoComunController::class, 'storeComprobante'])->name('gastos-comunes.comprobante.store');
+    Route::get('/comprobantes/{comprobante}/archivo', [ResidenteGastoComunController::class, 'verArchivo'])->name('comprobantes.archivo');
 });

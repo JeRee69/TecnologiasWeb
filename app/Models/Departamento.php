@@ -51,6 +51,16 @@ class Departamento extends Model
         return $this->hasMany(VehiculoAutorizado::class, 'departamento_id');
     }
 
+    public function gastosComunes(): HasMany
+    {
+        return $this->hasMany(GastoComun::class, 'departamento_id');
+    }
+
+    public function comprobantesPago(): HasMany
+    {
+        return $this->hasMany(ComprobantePago::class, 'departamento_id');
+    }
+
     public function scopeActivos(Builder $query): Builder
     {
         return $query->where('estado', 'activo');

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\ComprobanteApiController;
 use App\Http\Controllers\Api\EncomiendaApiController;
 use App\Http\Controllers\Auth\AutenticacionController;
 use App\Http\Controllers\Auth\RecuperarContrasenaController;
@@ -12,4 +13,6 @@ Route::prefix('v1')->group(function () {
     });
 
     Route::post('/encomiendas', [EncomiendaApiController::class, 'store']);
+    Route::get('/gastos-comunes', [ComprobanteApiController::class, 'listarGastos']);
+    Route::post('/comprobantes', [ComprobanteApiController::class, 'store']);
 });

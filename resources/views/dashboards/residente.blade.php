@@ -48,23 +48,29 @@
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow transition-shadow">
-        <div class="w-12 h-12 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center mb-4">
+      <a href="{{ route('residente.gastos-comunes.index') }}" class="group bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:border-emerald-300 transition-all block">
+        <div class="w-12 h-12 rounded-lg bg-emerald-100 text-emerald-800 group-hover:bg-emerald-600 group-hover:text-white flex items-center justify-center mb-4 transition-colors">
           <span class="material-symbols-outlined text-2xl">account_balance_wallet</span>
         </div>
-        <h2 class="text-lg font-semibold text-gray-900 mb-1">Mis Gastos Comunes</h2>
-        <p class="text-sm text-gray-600 mb-4">Revisa tu saldo vigente, histórico de cobros y descarga el desglose en PDF.</p>
-        <span class="text-xs font-semibold text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-md">Estado Financiero</span>
-      </div>
+        <div class="flex items-center justify-between">
+          <h2 class="text-lg font-semibold text-gray-900 group-hover:text-emerald-800 transition-colors mb-1">Mis Gastos Comunes</h2>
+          <span class="material-symbols-outlined text-gray-400 group-hover:text-emerald-800 text-[20px] transition-colors">arrow_forward</span>
+        </div>
+        <p class="text-sm text-gray-600 mb-4">Revisa tu saldo vigente, cobros mensuales y estado de cuenta de tu unidad.</p>
+        <span class="text-xs font-semibold text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-md">Ver Estado Financiero</span>
+      </a>
 
-      <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow transition-shadow">
-        <div class="w-12 h-12 rounded-lg bg-blue-100 text-blue-800 flex items-center justify-center mb-4">
+      <a href="{{ route('residente.gastos-comunes.index') }}" class="group bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:border-blue-300 transition-all block">
+        <div class="w-12 h-12 rounded-lg bg-blue-100 text-blue-800 group-hover:bg-blue-600 group-hover:text-white flex items-center justify-center mb-4 transition-colors">
           <span class="material-symbols-outlined text-2xl">upload_file</span>
         </div>
-        <h2 class="text-lg font-semibold text-gray-900 mb-1">Cargar Comprobante</h2>
-        <p class="text-sm text-gray-600 mb-4">Sube tu comprobante de transferencia bancaria para validación del administrador.</p>
-        <span class="text-xs font-semibold text-[#1e3a8a] bg-blue-50 px-2.5 py-1 rounded-md">Validación de Pagos</span>
-      </div>
+        <div class="flex items-center justify-between">
+          <h2 class="text-lg font-semibold text-gray-900 group-hover:text-[#1e3a8a] transition-colors mb-1">Cargar Comprobante</h2>
+          <span class="material-symbols-outlined text-gray-400 group-hover:text-[#1e3a8a] text-[20px] transition-colors">arrow_forward</span>
+        </div>
+        <p class="text-sm text-gray-600 mb-4">Sube tu comprobante de transferencia bancaria (PDF, JPG, PNG) para validación del administrador.</p>
+        <span class="text-xs font-semibold text-[#1e3a8a] bg-blue-50 px-2.5 py-1 rounded-md">Cargar Transferencia</span>
+      </a>
 
       <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow transition-shadow">
         <div class="w-12 h-12 rounded-lg bg-purple-100 text-purple-800 flex items-center justify-center mb-4">

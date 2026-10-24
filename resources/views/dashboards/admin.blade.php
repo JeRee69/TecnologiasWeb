@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-  <title>Dashboard Administrador - EdiConnect</title>
+  <title>Panel de Administración - EdiConnect</title>
   <link href="https://fonts.googleapis.com" rel="preconnect"/>
   <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
@@ -16,7 +16,7 @@
       <div class="flex items-center gap-3">
         <span class="material-symbols-outlined text-3xl">apartment</span>
         <span class="font-bold text-xl tracking-tight">EdiConnect</span>
-        <span class="text-xs bg-blue-900 text-blue-200 px-2 py-0.5 rounded-full font-medium ml-2">Panel de Administración</span>
+        <span class="text-xs bg-blue-900 text-blue-200 px-2 py-0.5 rounded-full font-medium ml-2">Panel Administrador</span>
       </div>
       <div class="flex items-center gap-4">
         <div class="text-right hidden sm:block">
@@ -39,11 +39,11 @@
     <div class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
       <div>
         <h1 class="text-2xl font-bold text-gray-900">Bienvenido, {{ $usuario->nombre }}</h1>
-        <p class="text-sm text-gray-500">Módulos autorizados para el rol Administrador</p>
+        <p class="text-sm text-gray-500">Gestión global de la comunidad residencial</p>
       </div>
-      <div class="inline-flex items-center gap-2 bg-emerald-50 text-emerald-800 px-3 py-1.5 rounded-lg border border-emerald-200 text-xs font-medium">
-        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-        Cuenta activa y verificada
+      <div class="inline-flex items-center gap-2 bg-blue-50 text-blue-800 px-3 py-1.5 rounded-lg border border-blue-200 text-xs font-medium">
+        <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+        Sistema Operativo
       </div>
     </div>
 
@@ -76,7 +76,9 @@
         </div>
         <h3 class="text-lg font-semibold text-gray-900 mb-1">Gastos Comunes</h3>
         <p class="text-sm text-gray-600 mb-4">Emisión mensual de cobros, desglose financiero y aprobación de comprobantes.</p>
-        <span class="text-xs font-semibold text-amber-800 bg-amber-50 px-2.5 py-1 rounded-md">Gestión Financiera</span>
+        <a href="{{ route('admin.comprobantes.index') }}" class="inline-flex items-center gap-1 text-sm font-semibold text-[#1e3a8a] hover:underline">
+          Revisar comprobantes de pago <span class="material-symbols-outlined text-[18px]" aria-hidden="true">arrow_forward</span>
+        </a>
       </div>
 
       <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow transition-shadow">
@@ -88,7 +90,7 @@
         <a href="{{ route('admin.espacios-comunes.index') }}" class="inline-flex items-center gap-1 text-sm font-semibold text-[#1e3a8a] hover:underline">
           Administrar espacios <span class="material-symbols-outlined text-[18px]" aria-hidden="true">arrow_forward</span>
         </a>
-          <a href="{{ route('admin.reservas.index', ['estado' => 'pendiente']) }}" class="block mt-3 text-sm font-semibold text-[#1e3a8a] hover:underline">Gestionar solicitudes y reservas →</a>
+        <a href="{{ route('admin.reservas.index', ['estado' => 'pendiente']) }}" class="block mt-3 text-sm font-semibold text-[#1e3a8a] hover:underline">Gestionar solicitudes y reservas →</a>
       </div>
 
       <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow transition-shadow">
@@ -102,11 +104,11 @@
 
       <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow transition-shadow">
         <div class="w-12 h-12 rounded-lg bg-rose-100 text-rose-800 flex items-center justify-center mb-4">
-          <span class="material-symbols-outlined text-2xl">assignment_late</span>
+          <span class="material-symbols-outlined text-2xl">build</span>
         </div>
-        <h3 class="text-lg font-semibold text-gray-900 mb-1">Incidencias y Reclamos</h3>
-        <p class="text-sm text-gray-600 mb-4">Revisión y actualización del estado de las solicitudes reportadas por residentes.</p>
-        <span class="text-xs font-semibold text-rose-800 bg-rose-50 px-2.5 py-1 rounded-md">Atención Vecinal</span>
+        <h3 class="text-lg font-semibold text-gray-900 mb-1">Mantenimiento e Incidencias</h3>
+        <p class="text-sm text-gray-600 mb-4">Control de órdenes de trabajo, proveedores y solicitudes de residentes.</p>
+        <span class="text-xs font-semibold text-rose-800 bg-rose-50 px-2.5 py-1 rounded-md">Operaciones</span>
       </div>
     </div>
   </main>

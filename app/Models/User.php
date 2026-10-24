@@ -3,12 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
@@ -31,6 +31,7 @@ class User extends Authenticatable
     ];
 
     protected $casts = [
+        'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
 
@@ -54,6 +55,16 @@ class User extends Authenticatable
     public function vehiculosRegistrados(): HasMany
     {
         return $this->hasMany(VehiculoAutorizado::class, 'conserje_id');
+    }
+
+    public function comprobantesPago(): HasMany
+    {
+        return $this->hasMany(ComprobantePago::class, 'user_id');
+    }
+
+    public function comprobantesRevisados(): HasMany
+    {
+        return $this->hasMany(ComprobantePago::class, 'revisado_por');
     }
 
     public function tieneRol(string $nombreRol): bool
