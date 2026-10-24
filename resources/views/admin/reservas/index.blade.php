@@ -1,10 +1,9 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Reservas y cancelaciones - EdiConnect</title>
-  <style>
+@extends('layouts.app')
+@section('title', 'Reservas y cancelaciones')
+@push('styles')
+<style>
+@scope (.legacy-page) {
+
     * { box-sizing: border-box; }
     body { margin: 0; background: #f9fafb; color: #111827; font-family: Inter, system-ui, sans-serif; }
     header { background: #1e3a8a; color: white; }
@@ -36,18 +35,13 @@
     .pagination { margin-top: 20px; justify-content: flex-start; }
     :focus-visible { outline: 3px solid #2563eb; outline-offset: 3px; }
     @media(max-width:600px) { main { padding: 20px 16px; } .panel { padding: 16px; } }
-  </style>
-</head>
-<body>
-  <header><div>
-    <a class="brand" href="{{ route('admin.dashboard') }}">EdiConnect</a>
-    <nav aria-label="Cuenta">
-      <a href="{{ route('perfil.editar') }}">Mi perfil</a>
-      <form action="{{ route('logout') }}" method="POST">@csrf<button type="submit">Salir</button></form>
-    </nav>
-  </div></header>
-  <main>
-    <a href="{{ route('admin.dashboard') }}">← Volver al panel</a>
+
+}
+</style>
+@endpush
+@section('content')
+<div class="legacy-page">
+<a href="{{ route('admin.dashboard') }}">← Volver al panel</a>
     <h1>Reservas y cancelaciones</h1>
     <p class="muted">Revisa solicitudes, aprueba o rechaza las pendientes y consulta el historial. Fechas y horarios de Santiago.</p>
     <p><a href="{{ route('admin.reservas.index', ['estado' => 'pendiente']) }}">Ver solicitudes pendientes ({{ $pendientes }})</a></p>
@@ -137,14 +131,13 @@
         @endif
       </section>
     @endif
-  </main>
-  @include('components.alertas')
-  <script>
+
+<script>
     document.querySelectorAll('.gestion select[name="estado"]').forEach(select => {
       const update = () => { select.form.querySelector('textarea').required = ['rechazada', 'cancelada'].includes(select.value); };
       select.addEventListener('change', update);
       update();
     });
   </script>
-</body>
-</html>
+</div>
+@endsection

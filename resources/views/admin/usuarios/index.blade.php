@@ -1,29 +1,8 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Usuarios - EdiConnect</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-[#f9fafb] font-['Inter',sans-serif] text-gray-900 min-h-screen">
-  <header class="bg-[#1e3a8a] text-white shadow-md">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex flex-wrap items-center justify-between gap-4">
-      <a href="{{ route('admin.dashboard') }}" class="font-bold text-xl">EdiConnect</a>
-      <div class="flex items-center gap-4">
-        <span class="text-sm">{{ auth()->user()->nombre }}</span>
-        <a href="{{ route('perfil.editar') }}" class="text-sm font-semibold hover:underline whitespace-nowrap">Mi perfil</a>
-        <form action="{{ route('logout') }}" method="POST">
-          @csrf
-          <button type="submit" class="bg-blue-800 hover:bg-blue-700 rounded-lg px-3 py-2 text-sm">Salir</button>
-        </form>
-      </div>
-    </div>
-  </header>
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 py-8">
-    <a href="{{ route('admin.dashboard') }}" class="text-sm text-blue-800 hover:underline inline-flex items-center gap-1 mb-3">
+@extends('layouts.app')
+@section('title', 'Usuarios')
+@section('content')
+<div class="legacy-page">
+<a href="{{ route('admin.dashboard') }}" class="text-sm text-blue-800 hover:underline inline-flex items-center gap-1 mb-3">
       <span class="material-symbols-outlined text-[18px]">arrow_back</span>
       Volver al panel
     </a>
@@ -94,13 +73,13 @@
             <label for="nombre" class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
               Nombre completo <span class="text-red-500">*</span>
             </label>
-            <input 
-              id="nombre" 
-              name="nombre" 
-              type="text" 
-              value="{{ old('nombre') }}" 
-              required 
-              maxlength="150" 
+            <input
+              id="nombre"
+              name="nombre"
+              type="text"
+              value="{{ old('nombre') }}"
+              required
+              maxlength="150"
               placeholder="Ej.: Carlos Silva Pérez"
               @class([
                 'w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-700',
@@ -117,13 +96,13 @@
             <label for="email" class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
               Correo electrónico <span class="text-red-500">*</span>
             </label>
-            <input 
-              id="email" 
-              name="email" 
-              type="email" 
-              value="{{ old('email') }}" 
-              required 
-              maxlength="255" 
+            <input
+              id="email"
+              name="email"
+              type="email"
+              value="{{ old('email') }}"
+              required
+              maxlength="255"
               placeholder="ejemplo@correo.cl"
               @class([
                 'w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-700',
@@ -140,9 +119,9 @@
             <label for="rol_id" class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
               Rol asignado <span class="text-red-500">*</span>
             </label>
-            <select 
-              id="rol_id" 
-              name="rol_id" 
+            <select
+              id="rol_id"
+              name="rol_id"
               required
               @class([
                 'w-full rounded-lg border px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-700',
@@ -166,12 +145,12 @@
             <label for="rut" class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
               RUT <span class="text-xs text-gray-400 font-normal lowercase">(opcional)</span>
             </label>
-            <input 
-              id="rut" 
-              name="rut" 
-              type="text" 
-              value="{{ old('rut') }}" 
-              maxlength="20" 
+            <input
+              id="rut"
+              name="rut"
+              type="text"
+              value="{{ old('rut') }}"
+              maxlength="20"
               placeholder="12.345.678-9"
               @class([
                 'w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-700',
@@ -188,12 +167,12 @@
             <label for="telefono" class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
               Teléfono <span class="text-xs text-gray-400 font-normal lowercase">(opcional)</span>
             </label>
-            <input 
-              id="telefono" 
-              name="telefono" 
-              type="text" 
-              value="{{ old('telefono') }}" 
-              maxlength="20" 
+            <input
+              id="telefono"
+              name="telefono"
+              type="text"
+              value="{{ old('telefono') }}"
+              maxlength="20"
               placeholder="+56 9 1234 5678"
               @class([
                 'w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-700',
@@ -210,12 +189,12 @@
             <label for="password" class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
               Contraseña inicial <span class="text-xs text-gray-400 font-normal lowercase">(opcional)</span>
             </label>
-            <input 
-              id="password" 
-              name="password" 
-              type="password" 
+            <input
+              id="password"
+              name="password"
+              type="password"
               minlength="6"
-              maxlength="100" 
+              maxlength="100"
               placeholder="Dejar en blanco para autogenerar"
               @class([
                 'w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-700',
@@ -229,8 +208,8 @@
             @enderror
           </div>
 
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             class="w-full bg-[#1e3a8a] hover:bg-blue-900 text-white font-semibold text-sm py-2.5 px-4 rounded-lg shadow-sm transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
           >
             <span class="material-symbols-outlined text-[18px]">person_add</span>
@@ -307,7 +286,5 @@
         @endif
       </section>
     </div>
-  </main>
-  @include('components.alertas')
-</body>
-</html>
+</div>
+@endsection

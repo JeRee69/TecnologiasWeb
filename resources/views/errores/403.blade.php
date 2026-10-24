@@ -1,17 +1,7 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="utf-8"/>
-  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-  <title>Acceso No Autorizado (403) - EdiConnect</title>
-  <link href="https://fonts.googleapis.com" rel="preconnect"/>
-  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-[#fbf8fa] font-['Inter',sans-serif] text-gray-900 antialiased min-h-screen flex items-center justify-center p-4">
-  <div class="max-w-md w-full bg-white rounded-xl shadow-lg p-8 text-center border border-gray-100">
+@extends('layouts.auth')
+@section('title', 'Acceso No Autorizado (403)')
+@section('content')
+<div class="max-w-md w-full bg-white rounded-xl shadow-lg p-8 text-center border border-gray-100">
     <div class="w-16 h-16 rounded-full bg-red-100 text-red-600 flex items-center justify-center mx-auto mb-4">
       <span class="material-symbols-outlined text-3xl">block</span>
     </div>
@@ -38,5 +28,4 @@
       </form>
     </div>
   </div>
-</body>
-</html>
+@endsection

@@ -1,24 +1,8 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Configurar {{ $espacio->nombre }} - EdiConnect</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-[#f9fafb] font-['Inter',sans-serif] text-gray-900 min-h-screen">
-  <header class="bg-[#1e3a8a] text-white shadow-md">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between gap-4">
-      <a href="{{ route('admin.dashboard') }}" class="font-bold text-xl">EdiConnect</a>
-      <div class="flex items-center gap-4">
-        <a href="{{ route('perfil.editar') }}" class="text-sm font-semibold hover:underline">Mi perfil</a>
-        <form action="{{ route('logout') }}" method="POST">@csrf<button type="submit" class="bg-blue-800 hover:bg-blue-700 rounded-lg px-3 py-2 text-sm">Salir</button></form>
-      </div>
-    </div>
-  </header>
-  <main class="max-w-4xl mx-auto px-4 sm:px-6 py-8">
-    <a href="{{ route('admin.espacios-comunes.index') }}" class="text-sm text-blue-800 hover:underline">← Volver a espacios comunes</a>
+@extends('layouts.app')
+@section('title', 'Configurar '.e($espacio->nombre))
+@section('content')
+<div class="legacy-page">
+<a href="{{ route('admin.espacios-comunes.index') }}" class="text-sm text-blue-800 hover:underline">← Volver a espacios comunes</a>
     <h1 class="text-2xl font-bold mt-6 break-words">Configurar {{ $espacio->nombre }}</h1>
     <p class="text-sm text-gray-600 mt-2 mb-6">Define las condiciones de uso de este espacio.</p>
     @if (session('estado'))
@@ -66,7 +50,5 @@
         </div>
       </form>
     </div>
-  </main>
-  @include('components.alertas')
-</body>
-</html>
+</div>
+@endsection

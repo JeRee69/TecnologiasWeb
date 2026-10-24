@@ -1,40 +1,8 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Bitácora de Encomiendas - EdiConnect</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-[#f9fafb] font-['Inter',sans-serif] text-gray-900 min-h-screen flex flex-col">
-  <header class="bg-[#1e3a8a] text-white shadow-md">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <span class="material-symbols-outlined text-3xl">apartment</span>
-        <a href="{{ route('conserje.dashboard') }}" class="font-bold text-xl tracking-tight">EdiConnect</a>
-        <span class="text-xs bg-blue-900 text-blue-200 px-2 py-0.5 rounded-full font-medium ml-2">Módulo de Conserjería</span>
-      </div>
-      <div class="flex items-center gap-4">
-        <div class="text-right hidden sm:block">
-          <div class="font-semibold text-sm">{{ auth()->user()->nombre }}</div>
-          <div class="text-xs text-blue-200">{{ auth()->user()->rol?->nombre }}</div>
-        </div>
-        <a href="{{ route('perfil.editar') }}" class="text-xs font-semibold hover:underline whitespace-nowrap">Mi perfil</a>
-        <form action="{{ route('logout') }}" method="POST">
-          @csrf
-          <button type="submit" class="bg-blue-800 hover:bg-blue-700 text-white text-xs px-3 py-2 rounded-lg flex items-center gap-1 transition-colors">
-            <span class="material-symbols-outlined text-[16px]">logout</span>
-            <span>Salir</span>
-          </button>
-        </form>
-      </div>
-    </div>
-  </header>
-
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full">
-    <div class="mb-6">
+@extends('layouts.app')
+@section('title', 'Bitácora de Encomiendas')
+@section('content')
+<div class="legacy-page">
+<div class="mb-6">
       <a href="{{ route('conserje.dashboard') }}" class="inline-flex items-center gap-1 text-sm font-semibold text-[#1e3a8a] hover:underline mb-3">
         <span class="material-symbols-outlined text-[18px]">arrow_back</span>
         Volver a la bitácora
@@ -124,9 +92,9 @@
             <label for="departamento_id" class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
               Departamento destinatario <span class="text-red-500">*</span>
             </label>
-            <select 
-              id="departamento_id" 
-              name="departamento_id" 
+            <select
+              id="departamento_id"
+              name="departamento_id"
               required
               @class([
                 'w-full rounded-lg border px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-700',
@@ -150,14 +118,14 @@
             <label for="empresa_delivery" class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
               Empresa de delivery / Courier <span class="text-red-500">*</span>
             </label>
-            <input 
-              id="empresa_delivery" 
-              name="empresa_delivery" 
-              type="text" 
+            <input
+              id="empresa_delivery"
+              name="empresa_delivery"
+              type="text"
               list="empresas-list"
-              value="{{ old('empresa_delivery') }}" 
-              required 
-              maxlength="100" 
+              value="{{ old('empresa_delivery') }}"
+              required
+              maxlength="100"
               placeholder="Ej.: Chilexpress, Starken, Mercado Libre..."
               @class([
                 'w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-700',
@@ -187,11 +155,11 @@
               <label for="fecha" class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
                 Fecha de recepción
               </label>
-              <input 
-                id="fecha" 
-                name="fecha" 
-                type="date" 
-                value="{{ old('fecha', date('Y-m-d')) }}" 
+              <input
+                id="fecha"
+                name="fecha"
+                type="date"
+                value="{{ old('fecha', date('Y-m-d')) }}"
                 @class([
                   'w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-700',
                   'border-red-400 bg-red-50' => $errors->has('fecha'),
@@ -207,11 +175,11 @@
               <label for="hora" class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
                 Hora de recepción
               </label>
-              <input 
-                id="hora" 
-                name="hora" 
-                type="time" 
-                value="{{ old('hora', date('H:i')) }}" 
+              <input
+                id="hora"
+                name="hora"
+                type="time"
+                value="{{ old('hora', date('H:i')) }}"
                 @class([
                   'w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-700',
                   'border-red-400 bg-red-50' => $errors->has('hora'),
@@ -228,12 +196,12 @@
             <label for="codigo_seguimiento" class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
               Código de rastreo / paquete <span class="text-xs text-gray-400 font-normal lowercase">(opcional)</span>
             </label>
-            <input 
-              id="codigo_seguimiento" 
-              name="codigo_seguimiento" 
-              type="text" 
-              value="{{ old('codigo_seguimiento') }}" 
-              maxlength="100" 
+            <input
+              id="codigo_seguimiento"
+              name="codigo_seguimiento"
+              type="text"
+              value="{{ old('codigo_seguimiento') }}"
+              maxlength="100"
               placeholder="Ej.: CHX-99887766"
               @class([
                 'w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-700',
@@ -250,11 +218,11 @@
             <label for="descripcion" class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
               Descripción u observación <span class="text-xs text-gray-400 font-normal lowercase">(opcional)</span>
             </label>
-            <textarea 
-              id="descripcion" 
-              name="descripcion" 
-              rows="2" 
-              maxlength="500" 
+            <textarea
+              id="descripcion"
+              name="descripcion"
+              rows="2"
+              maxlength="500"
               placeholder="Ej.: Sobre sellado, caja mediana frágil..."
               @class([
                 'w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-700',
@@ -267,8 +235,8 @@
             @enderror
           </div>
 
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             class="w-full bg-[#1e3a8a] hover:bg-blue-900 text-white font-semibold text-sm py-2.5 px-4 rounded-lg shadow-sm transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
           >
             <span class="material-symbols-outlined text-[18px]">add_box</span>
@@ -307,13 +275,13 @@
             </a>
 
             @if ($filtro === 'prolongadas')
-              <a href="{{ route('conserje.encomiendas.index', ['orden' => $orden]) }}" 
+              <a href="{{ route('conserje.encomiendas.index', ['orden' => $orden]) }}"
                  class="ml-1 px-2 py-1 bg-rose-50 text-rose-800 border border-rose-200 rounded-md font-semibold hover:bg-rose-100 inline-flex items-center gap-1">
                 <span>Filtro: &gt; 3 días</span>
                 <span class="material-symbols-outlined text-[13px]">close</span>
               </a>
             @else
-              <a href="{{ route('conserje.encomiendas.index', ['orden' => $orden, 'filtro' => 'prolongadas']) }}" 
+              <a href="{{ route('conserje.encomiendas.index', ['orden' => $orden, 'filtro' => 'prolongadas']) }}"
                  class="ml-1 px-2 py-1 bg-gray-50 text-gray-700 border border-gray-200 rounded-md hover:bg-rose-50 hover:text-rose-800 hover:border-rose-200 transition-colors">
                 Solo prolongadas (&gt; 3d)
               </a>
@@ -409,7 +377,7 @@
                         data-swal-danger="false">
                         @csrf
                         @method('PATCH')
-                        <button type="submit" 
+                        <button type="submit"
                           aria-label="Registrar retiro de encomienda para Depto. {{ $encomienda->departamento?->numero }}"
                           class="inline-flex items-center gap-1 rounded-lg border border-emerald-300 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 px-3 py-1.5 text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer shadow-sm">
                           <span class="material-symbols-outlined text-[16px]">done_all</span>
@@ -438,11 +406,5 @@
         @endif
       </section>
     </div>
-  </main>
-
-  <footer class="bg-white border-t border-gray-200 py-4 text-center text-xs text-gray-500">
-    © 2026 EdiConnect - Plataforma de Gestión de Comunidades Residenciales
-  </footer>
-  @include('components.alertas')
-</body>
-</html>
+</div>
+@endsection

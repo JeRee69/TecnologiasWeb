@@ -1,118 +1,24 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="utf-8"/>
-  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-  <title>Dashboard Conserje - EdiConnect</title>
-  <link href="https://fonts.googleapis.com" rel="preconnect"/>
-  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-[#f9fafb] font-['Inter',sans-serif] text-gray-900 antialiased min-h-screen flex flex-col">
-  <header class="bg-[#1e3a8a] text-white shadow-md">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <span class="material-symbols-outlined text-3xl">apartment</span>
-        <span class="font-bold text-xl tracking-tight">EdiConnect</span>
-        <span class="text-xs bg-blue-900 text-blue-200 px-2 py-0.5 rounded-full font-medium ml-2">Panel Operativo de Conserjería</span>
-      </div>
-      <div class="flex items-center gap-4">
-        <div class="text-right hidden sm:block">
-          <div class="font-semibold text-sm">{{ $usuario->nombre }}</div>
-          <div class="text-xs text-blue-200">{{ $usuario->rol?->nombre }}</div>
-        </div>
-        <a href="{{ route('perfil.editar') }}" class="text-xs font-semibold hover:underline whitespace-nowrap">Mi perfil</a>
-        <form action="{{ route('logout') }}" method="POST">
-          @csrf
-          <button type="submit" class="bg-blue-800 hover:bg-blue-700 text-white text-xs px-3 py-2 rounded-lg flex items-center gap-1 transition-colors">
-            <span class="material-symbols-outlined text-[16px]">logout</span>
-            <span>Salir</span>
-          </button>
-        </form>
-      </div>
-    </div>
-  </header>
-
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full">
-    <div class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-      <div>
-        <h1 class="text-2xl font-bold text-gray-900">Bienvenido al turno, {{ $usuario->nombre }}</h1>
-        <p class="text-sm text-gray-500">Panel de control de operaciones diarias y bitácora del edificio</p>
-      </div>
-      <div class="inline-flex items-center gap-2 bg-emerald-50 text-emerald-800 px-3 py-1.5 rounded-lg border border-emerald-200 text-xs font-medium">
-        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-        Turno activo en garita
-      </div>
-    </div>
-
-    {{-- Feedback de sesión si existiese --}}
-    @if (session('estado') || session('exito'))
-      <div data-swal-feedback role="status" class="mb-6 rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-900 p-4 text-sm flex items-center gap-3 shadow-sm">
-        <span class="material-symbols-outlined text-emerald-600 text-[22px]">check_circle</span>
-        <span class="font-medium">{{ session('estado') ?? session('exito') }}</span>
-      </div>
-    @endif
-
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      {{-- Recepción de Encomiendas (HU-25, HU-27, HU-28) --}}
-      <a href="{{ route('conserje.encomiendas.index') }}" class="group bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:border-blue-300 transition-all block">
-        <div class="w-12 h-12 rounded-lg bg-blue-100 text-blue-800 group-hover:bg-[#1e3a8a] group-hover:text-white flex items-center justify-center mb-4 transition-colors">
-          <span class="material-symbols-outlined text-2xl">inventory_2</span>
-        </div>
-        <div class="flex items-center justify-between">
-          <h2 class="text-lg font-semibold text-gray-900 group-hover:text-[#1e3a8a] transition-colors mb-1">Recepción Encomiendas</h2>
-          <span class="material-symbols-outlined text-gray-400 group-hover:text-[#1e3a8a] text-[20px] transition-colors">arrow_forward</span>
-        </div>
-        <p class="text-sm text-gray-600 mb-4">Registro de paquetes recibidos con departamento de destino y empresa de delivery.</p>
-        <span class="text-xs font-semibold text-[#1e3a8a] bg-blue-50 px-2.5 py-1 rounded-md">Abrir Bitácora</span>
-      </a>
-
-      {{-- Control de Visitas (HU-29) --}}
-      <a href="{{ route('conserje.visitas.index') }}" class="group bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:border-emerald-300 transition-all block">
-        <div class="w-12 h-12 rounded-lg bg-emerald-100 text-emerald-800 group-hover:bg-emerald-700 group-hover:text-white flex items-center justify-center mb-4 transition-colors">
-          <span class="material-symbols-outlined text-2xl">badge</span>
-        </div>
-        <div class="flex items-center justify-between">
-          <h2 class="text-lg font-semibold text-gray-900 group-hover:text-emerald-800 transition-colors mb-1">Control de Visitas</h2>
-          <span class="material-symbols-outlined text-gray-400 group-hover:text-emerald-800 text-[20px] transition-colors">arrow_forward</span>
-        </div>
-        <p class="text-sm text-gray-600 mb-4">Registro inmediato de visitas con RUT, nombre, departamento de destino y egreso.</p>
-        <span class="text-xs font-semibold text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-md">Abrir Accesos</span>
-      </a>
-
-      {{-- Registro Vehicular (HU-30) --}}
-      <a href="{{ route('conserje.vehiculos.index') }}" class="group bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:border-amber-300 transition-all block">
-        <div class="w-12 h-12 rounded-lg bg-amber-100 text-amber-800 group-hover:bg-amber-600 group-hover:text-white flex items-center justify-center mb-4 transition-colors">
-          <span class="material-symbols-outlined text-2xl">directions_car</span>
-        </div>
-        <div class="flex items-center justify-between">
-          <h2 class="text-lg font-semibold text-gray-900 group-hover:text-amber-800 transition-colors mb-1">Registro Vehicular</h2>
-          <span class="material-symbols-outlined text-gray-400 group-hover:text-amber-800 text-[20px] transition-colors">arrow_forward</span>
-        </div>
-        <p class="text-sm text-gray-600 mb-4">Verificación rápida de patentes autorizadas para estacionamientos de visitas y residentes.</p>
-        <span class="text-xs font-semibold text-amber-800 bg-amber-50 px-2.5 py-1 rounded-md">Control de Portón</span>
-      </a>
-
-      {{-- Incidencias Vecinales (HU-36, HU-37) --}}
-      <a href="{{ route('conserje.incidencias.index') }}" class="group bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:border-rose-300 transition-all block">
-        <div class="w-12 h-12 rounded-lg bg-rose-100 text-rose-800 group-hover:bg-rose-700 group-hover:text-white flex items-center justify-center mb-4 transition-colors">
-          <span class="material-symbols-outlined text-2xl">report_problem</span>
-        </div>
-        <div class="flex items-center justify-between">
-          <h2 class="text-lg font-semibold text-gray-900 group-hover:text-rose-800 transition-colors mb-1">Incidencias Vecinales</h2>
-          <span class="material-symbols-outlined text-gray-400 group-hover:text-rose-800 text-[20px] transition-colors">arrow_forward</span>
-        </div>
-        <p class="text-sm text-gray-600 mb-4">Atención operativa de reportes sobre fallas en áreas comunes y servicios del edificio.</p>
-        <span class="text-xs font-semibold text-rose-800 bg-rose-50 px-2.5 py-1 rounded-md">Atender Reportes</span>
-      </a>
-    </div>
-  </main>
-
-  <footer class="bg-white border-t border-gray-200 py-4 text-center text-xs text-gray-500">
-    © 2026 EdiConnect - Plataforma de Gestión de Comunidades Residenciales
-  </footer>
-  @include('components.alertas')
-</body>
-</html>
+@extends('layouts.app')
+@section('title', 'Dashboard Conserje')
+@section('content')
+<div class="page-heading"><div><div class="eyebrow">Conserjería y accesos</div><h1>Bienvenido, {{ $usuario->nombre }}</h1><p>Gestiona la recepción de encomiendas y el control de accesos de la comunidad.</p></div><a href="{{ route('conserje.encomiendas.index') }}" class="ui-button"><span class="material-symbols-outlined" aria-hidden="true">add</span>Registrar encomienda</a></div>
+<div class="stat-grid">
+  @foreach ([['inventory_2','Encomiendas en custodia',$metricas['encomiendas']],['shield_person','Visitas en recinto',$metricas['visitas']],['directions_car','Vehículos autorizados',$metricas['vehiculos']],['apartment','Departamentos activos',$metricas['departamentos']]] as [$icono, $etiqueta, $valor])
+    <section class="stat-card"><span class="material-symbols-outlined" aria-hidden="true">{{ $icono }}</span><div class="metric-label">{{ $etiqueta }}</div><div class="metric-value">{{ $valor }}</div></section>
+  @endforeach
+</div>
+<div class="module-grid mb-6">
+  @include('components.module-card', ['icono'=>'inventory_2','titulo'=>'Recepción de Encomiendas','descripcion'=>'Registra paquetes y correspondencia y confirma su retiro por el residente.','destino'=>'conserje.encomiendas.index','accion'=>'Gestionar encomiendas'])
+  @include('components.module-card', ['icono'=>'shield_person','titulo'=>'Control de Visitas','descripcion'=>'Registra ingresos, consulta visitas en recinto y confirma sus salidas.','destino'=>'conserje.visitas.index','accion'=>'Gestionar visitas'])
+  @include('components.module-card', ['icono'=>'directions_car','titulo'=>'Registro Vehicular','descripcion'=>'Consulta patentes y administra los vehículos autorizados de la comunidad.','destino'=>'conserje.vehiculos.index','accion'=>'Gestionar vehículos'])
+</div>
+<section class="ui-card"><div class="ui-card-title"><h2><span class="material-symbols-outlined" aria-hidden="true">inventory_2</span>Últimas encomiendas en custodia</h2><a href="{{ route('conserje.encomiendas.index') }}" class="ui-link">Ver todas →</a></div>
+  <div class="grid sm:grid-cols-2 xl:grid-cols-4 gap-3">
+    @forelse ($encomiendasRecientes as $encomienda)
+      <div class="soft-list-item"><strong>{{ $encomienda->empresa_delivery }}</strong><p>Depto. {{ $encomienda->departamento->numero }} · {{ $encomienda->estado }}</p><p>{{ $encomienda->fecha_ingreso->format('d/m/Y H:i') }}</p></div>
+    @empty
+      <p class="empty-state sm:col-span-2 xl:col-span-4">No hay encomiendas pendientes de retiro.</p>
+    @endforelse
+  </div>
+</section>
+@endsection

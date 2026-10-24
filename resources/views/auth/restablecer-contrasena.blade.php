@@ -1,33 +1,7 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="utf-8"/>
-  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-  <title>Restablecer Contraseña - EdiConnect</title>
-  <link href="https://fonts.googleapis.com" rel="preconnect"/>
-  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            primary: '#091426',
-            secondary: '#0058be',
-            'on-secondary-fixed': '#001a42',
-            'surface-container-lowest': '#ffffff',
-            'surface-container-low': '#f5f3f4',
-            'secondary-fixed': '#d8e2ff'
-          }
-        }
-      }
-    }
-  </script>
-</head>
-<body class="bg-[#fbf8fa] font-['Inter',sans-serif] text-[#1b1b1d] antialiased min-h-screen flex items-center justify-center p-4">
-  <div class="relative w-full max-w-[480px] bg-white rounded-xl shadow-xl p-6 md:p-8 flex flex-col gap-5 border border-gray-100">
+@extends('layouts.auth')
+@section('title', 'Restablecer Contraseña')
+@section('content')
+<div class="relative w-full max-w-[480px] bg-white rounded-xl shadow-xl p-6 md:p-8 flex flex-col gap-5 border border-gray-100">
     <div class="flex flex-col items-center text-center">
       <div class="w-12 h-12 rounded-xl bg-[#091426] flex items-center justify-center text-white shadow-md mb-2">
         <span class="material-symbols-outlined text-[26px]">key</span>
@@ -67,10 +41,10 @@
             lock
           </span>
           <input class="w-full bg-[#f5f3f4] text-[#1b1b1d] text-sm rounded-lg pl-10 pr-3 py-2.5 focus:outline-none focus:bg-white border border-transparent focus:border-secondary transition-colors"
-                 id="password" 
-                 name="password" 
-                 type="password" 
-                 placeholder="Mínimo 6 caracteres" 
+                 id="password"
+                 name="password"
+                 type="password"
+                 placeholder="Mínimo 6 caracteres"
                  required/>
         </div>
       </div>
@@ -84,21 +58,19 @@
             lock_clock
           </span>
           <input class="w-full bg-[#f5f3f4] text-[#1b1b1d] text-sm rounded-lg pl-10 pr-3 py-2.5 focus:outline-none focus:bg-white border border-transparent focus:border-secondary transition-colors"
-                 id="password_confirmation" 
-                 name="password_confirmation" 
-                 type="password" 
-                 placeholder="Repite la contraseña" 
+                 id="password_confirmation"
+                 name="password_confirmation"
+                 type="password"
+                 placeholder="Repite la contraseña"
                  required/>
         </div>
       </div>
 
-      <button class="w-full bg-[#0058be] hover:bg-[#001a42] text-white font-semibold text-sm py-3 rounded-lg transition-all flex items-center justify-center gap-2 shadow-sm cursor-pointer mt-1" 
+      <button class="w-full bg-[#0058be] hover:bg-[#001a42] text-white font-semibold text-sm py-3 rounded-lg transition-all flex items-center justify-center gap-2 shadow-sm cursor-pointer mt-1"
               type="submit">
         <span>Actualizar contraseña</span>
         <span class="material-symbols-outlined text-[18px]">check_circle</span>
       </button>
     </form>
   </div>
-  @include('components.alertas')
-</body>
-</html>
+@endsection

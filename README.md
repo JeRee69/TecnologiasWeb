@@ -2,7 +2,84 @@
 
 Plataforma de gestión de comunidades residenciales con PHP 8.2, Laravel 12, Nginx y MySQL 8.
 
+## HU-11: generación de gastos comunes
+
+Como administrador activo, abre **Gastos Comunes → Generar gastos comunes** desde el panel (`/admin/gastos-comunes`). Selecciona un departamento activo, el período mensual y el monto entero en CLP (1 a 999999999999). Genera un cobro por departamento y mes, asociado a la unidad y con estado inicial **Pendiente**. El período admite desde enero de 1900 hasta diciembre de 9999 y se almacena como el primer día del mes.
+
+El listado muestra departamento, período, monto y estado; permite filtrar por mes y está paginado. Los departamentos sin residentes también pueden recibir cobros. Los inactivos no admiten nuevos cobros; sus registros anteriores se conservan. Repetir o enviar simultáneamente la generación del mismo departamento y período se rechaza sin sobrescribir el monto original. Se usa una transacción con bloqueo del departamento y una restricción única en la base. El estado inicial se fija en el servidor. Esta HU cubre generación y consulta administrativa; los pagos y desgloses corresponden a las siguientes historias.
+
+Reconstruye para aplicar la migración y ejecuta la prueba de integración, que elimina sus datos temporales al terminar:
+
+```powershell
+docker compose up -d --build
+docker compose exec -T app php tests/docker-hu11.php
+```
+
+## HU-12: desglose de gastos comunes
+
+En **Gastos Comunes**, abre **Registrar desglose** o **Ver y editar desglose** en el cobro correspondiente. Registra hasta 50 conceptos con nombre (hasta 200 caracteres) y monto positivo entero en CLP. Se sugieren fondo de reserva, mantenciones y consumos básicos; puedes agregar conceptos propios o quitar los que no correspondan. La pantalla calcula el total y la diferencia con el monto asignado.
+
+El servidor exige que la suma coincida exactamente con el monto del cobro. Un error conserva los datos escritos y no modifica el desglose anterior. Guardar reemplaza todos los conceptos en una transacción con bloqueo del cobro, evitando mezclas entre ediciones simultáneas; no modifica monto, departamento, período ni estado. Solo acceden administradores activos, con CSRF para guardar. Los cobros anteriores aparecen sin desglose hasta que se registre, sin crear conceptos ficticios; también se pueden detallar cobros de unidades desactivadas.
+
+```powershell
+docker compose up -d --build
+docker compose exec -T app php tests/docker-hu12.php
+docker compose exec -T app php tests/docker-hu11.php
+```
+
+La prueba HU-12 comprueba persistencia, edición, sumas distintas, límites y entradas malformadas, conservación del desglose anterior, aislamiento entre cobros, texto seguro, permisos, CSRF y ediciones simultáneas. Elimina sus datos temporales al terminar.
+
+## HU-13: consulta de gastos comunes del residente
+
+Desde el portal del residente, abre **Mis Gastos Comunes → Consultar mis gastos comunes** (`/residente/gastos-comunes`). El historial muestra departamento, período, monto en CLP y estado. **Ver detalle del cobro** despliega los conceptos y sus montos, sin depender de JavaScript. Si todavía no existe desglose, se indica que está pendiente de registro por la administración.
+
+La consulta usa exclusivamente las asociaciones vigentes de la cuenta autenticada, sin aceptar identificadores de residentes o departamentos del navegador. Incluye todas sus unidades, tanto para titulares como habitantes, y conserva la consulta de cobros de departamentos inactivos mientras mantengan su asociación. Desasociar al residente revoca el acceso a los cobros de esa unidad. El historial se ordena por período descendente y muestra 10 cobros por página, con respuesta privada sin caché. Solo acceden residentes activos. Se muestran avisos cuando no hay departamento asociado o cobros registrados.
+
+```powershell
+docker compose up -d --build
+docker compose exec -T app php tests/docker-hu13.php
+```
+
+La prueba verifica columnas y conceptos contra MySQL, privacidad entre residentes, parámetros manipulados, varias unidades, habitantes, unidades compartidas e inactivas, paginación, estados vacíos, desasociación, permisos, texto seguro y actualización del desglose desde administración. Elimina sus datos temporales al terminar.
+
+## HU-14: estado vigente de gastos comunes
+
+El portal y **Mis gastos comunes** muestran estados con texto y color: **Al día (Pagado)**, **Pendiente** o **Moroso**. El resumen abarca todos los cobros de las unidades asociadas, incluidas deudas fuera de la página actual. Si hay algún moroso, el estado general es moroso; si solo hay impagos sin vencer, pendiente; si todos están pagados, al día. Sin cobros se muestra **Sin cobros registrados**.
+
+El administrador elige opcionalmente la fecha de vencimiento al generar un cobro o desde **Gestionar estado y pago** en el listado. Un impago vence al terminar esa fecha en `America/Santiago` y se muestra moroso desde el día siguiente, sin necesitar una tarea programada. Los cobros anteriores conservan su estado y quedan sin vencimiento hasta configurarlo; no se inventa una fecha para ellos.
+
+En **Gestionar estado y pago → Validar pago recibido**, el administrador registra el monto recibido completo y una referencia obligatoria del pago que verificó. La validación guarda estado pagado, responsable, fecha y referencia, y el residente ve el estado actualizado en su siguiente consulta. Esta validación manual no incluye carga de comprobantes ni pagos parciales. Solo accede un administrador activo, con CSRF. La operación usa bloqueo transaccional; una segunda validación se rechaza y no reemplaza los datos originales. Un cobro pagado conserva su vencimiento y su estado, aunque la fecha ya haya pasado.
+
+```powershell
+docker compose up -d --build
+docker compose exec -T app php tests/docker-hu14.php
+docker compose exec -T app php tests/docker-hu13.php
+```
+
+La prueba HU-14 cubre vencimiento y medianoche en Santiago, resumen fuera de la primera página, validación y persistencia del pago, permisos, CSRF, montos incorrectos, concurrencia, referencias escapadas y privacidad entre residentes. Los datos temporales se eliminan al terminar.
+
+## HU-15: descarga de gasto común en PDF
+
+En **Mis gastos comunes**, pulsa **Descargar PDF** en el cobro correspondiente. El documento A4 incluye número de cobro, departamento, período, vencimiento, estado vigente, conceptos con sus montos, total en CLP y fecha de emisión en horario de Santiago. Incluye numeración de páginas y aviso cuando aún no existe desglose. Cada descarga vuelve a leer la información, por lo que refleja la validación de un pago o el vencimiento más recientes.
+
+La ruta `/residente/gastos-comunes/{gasto}/pdf` exige residente activo y asociación vigente a la unidad. Un cobro ajeno o inexistente devuelve 404; las unidades inactivas conservan su historial mientras exista la asociación. Se envía como archivo adjunto con nombre seguro, respuesta privada sin caché y sin guardar copias públicas. La generación usa Dompdf, con recursos remotos y ejecución de PHP/JavaScript deshabilitados y datos escapados.
+
+```powershell
+docker compose up -d --build
+docker compose exec -T app php tests/docker-hu15.php
+```
+
+La prueba comprueba descarga HTTP, permisos, aislamiento entre residentes, desasociación, estados antes y después de validar un pago, unidades inactivas y desgloses vacíos y de 50 conceptos. Elimina sus datos temporales y deja PDFs de prueba en `storage/app/hu15-qa` (almacenamiento privado) para revisar contenido y presentación. `tests/verificar_pdf_hu15.py` permite verificar esos archivos y renderizarlos con pypdf, pdfplumber y Poppler.
+
 ## Ejecutar con Docker
+
+El frontend usa la referencia visual del prototipo Stitch de EdiConnect: navegación lateral blanca con sección activa azul marino, acciones azules, fondo claro, tarjetas y tipografía Inter. Las pantallas web comparten `layouts.app` y las públicas `layouts.auth`; estilos y menú móvil están en `public/css/ediconnect.css` y `public/js/ediconnect.js`. Los menús se construyen según el rol autenticado. Los paneles muestran datos persistidos, sin incorporar cuentas bancarias, residentes ni cifras ficticias del prototipo. El menú se convierte en un panel desplegable en móvil, con cierre por Escape y navegación de teclado.
+
+Para comprobar renderizado de las pantallas, navegación por rol y privacidad de los datos del panel con cuentas temporales:
+
+```powershell
+docker compose exec -T app php tests/docker-front.php
+```
 
 Con Docker Desktop instalado e iniciado (contenedores Linux), abre una terminal en esta carpeta y ejecuta:
 
