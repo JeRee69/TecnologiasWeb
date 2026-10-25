@@ -123,6 +123,73 @@ button:disabled {
 .sidebar-link.is-active>.material-symbols-outlined {
   color:#adc6ff
 }
+.sidebar-group > summary {
+  list-style:none;
+  cursor:pointer
+}
+.sidebar-group > summary::-webkit-details-marker {
+  display:none
+}
+.sidebar-chevron {
+  margin-left:auto;
+  transition:transform .15s
+}
+.sidebar-group[open] > summary .sidebar-chevron {
+  transform:rotate(180deg)
+}
+.sidebar-submenu {
+  margin:6px 0 12px 24px;
+  padding-left:12px;
+  border-left:1px solid var(--border)
+}
+.sidebar-submenu .sidebar-link {
+  font-size:12px;
+  min-height:40px;
+  padding:10px 12px
+}
+.sidebar-submenu .sidebar-link.is-active {
+  color:#004395;
+  background:#eaf1ff
+}
+.reservation-status {
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:600;
+  white-space:nowrap;
+  background:#f3f4f6;
+  color:#4b5563
+}
+.reservation-status-dot {
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:currentColor
+}
+.reservation-status[data-estado-reserva=confirmada] {
+  background:#dcfce7;
+  color:#166534
+}
+.reservation-status[data-estado-reserva=rechazada] {
+  background:#ffe4e6;
+  color:#9f1239
+}
+.reservation-status[data-estado-reserva=pendiente] {
+  background:#fef3c7;
+  color:#92400e
+}
+.reservation-row[data-estado-reserva=confirmada] > td {
+  background:#f0fdf4
+}
+.reservation-row[data-estado-reserva=rechazada] > td {
+  background:#fff1f2
+}
+.reservation-row[data-estado-reserva=pendiente] > td {
+  background:#fffbeb
+}
 .sidebar-account {
   margin:12px;
   padding:14px 12px 10px;
@@ -499,6 +566,9 @@ button:disabled {
 .app-content table {
   font-variant-numeric:tabular-nums
 }
+.app-content .grid > * {
+  min-width:0
+}
 .app-content [class*="bg-[#1e3a8a]"],.app-content button.bg-blue-900,.app-content button.bg-blue-800 {
   background-color:var(--blue)
 }
@@ -544,16 +614,10 @@ button:disabled {
 .legacy-page h2 {
   font-weight:600
 }
-.legacy-page a {
-  color:var(--blue)
-}
 .legacy-page .panel {
   border-color:var(--border);
   border-radius:15px;
   box-shadow:0 2px 3px #09142604
-}
-.legacy-page button {
-  background-color:var(--blue)
 }
 .legacy-page .scroll {
   overflow-x:auto

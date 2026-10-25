@@ -14,9 +14,11 @@ class EncomiendaApiController extends Controller
     public function store(Request $request): JsonResponse
     {
         $validador = Validator::make($request->all(), [
-            'departamento_id' => ['required', 'exists:departamentos,id'],
+            'departamento_id' => ['required', 'integer', 'exists:departamentos,id'],
             'empresa_delivery' => ['required', 'string', 'max:100'],
             'fecha_ingreso' => ['nullable', 'date'],
+            'codigo_seguimiento' => ['nullable', 'string', 'max:100'],
+            'descripcion' => ['nullable', 'string', 'max:1000'],
         ]);
 
         if ($validador->fails()) {
@@ -45,7 +47,7 @@ class EncomiendaApiController extends Controller
             'estado' => 'Ingresado',
             'codigo_seguimiento' => $request->codigo_seguimiento ? trim($request->codigo_seguimiento) : null,
             'descripcion' => $request->descripcion ? trim($request->descripcion) : null,
-            'conserje_id' => $request->user()?->id,
+            'conserje_id' => $request->user()->id,
         ]);
 
         return response()->json([

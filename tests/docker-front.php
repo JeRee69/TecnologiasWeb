@@ -9,6 +9,8 @@ use App\Models\Departamento;
 use App\Models\EspacioComun;
 use App\Models\Reserva;
 use App\Models\Encomienda;
+use App\Models\Aviso;
+use App\Models\Incidencia;
 use App\Models\Rol;
 use App\Models\User;
 use GuzzleHttp\Client;
@@ -40,6 +42,9 @@ function page(Client $client, string $url, string $zone): string
     $document = new DOMDocument;
     @$document->loadHTML('<?xml encoding="UTF-8">'.$html);
     $xpath = new DOMXPath($document);
+    $ids = [];
+    foreach ($xpath->query('//*[@id]') as $element) $ids[] = $element->getAttribute('id');
+    verify(count($ids) === count(array_unique($ids)), 'Identificadores únicos para etiquetas y navegación accesible');
     $menuCorrecto = true;
     foreach ($xpath->query('//aside[@id="app-sidebar"]//a[@href]') as $link) {
         $path = parse_url($link->getAttribute('href'), PHP_URL_PATH);
@@ -50,7 +55,7 @@ function page(Client $client, string $url, string $zone): string
     return $html;
 }
 
-$users=[]; $departamentos=[]; $espacio=null;
+$users=[]; $departamentos=[]; $espacio=null; $aviso=null; $incidencia=null;
 $suffix=bin2hex(random_bytes(5));
 try {
     foreach (['admin'=>'Administrador','conserje'=>'Conserje','a'=>'Residente','b'=>'Residente'] as $key=>$role) {
@@ -67,12 +72,17 @@ try {
     $admin=login($users['admin']);
     $conserje=login($users['conserje']);
     $resident=login($users['a']);
+    $aviso=Aviso::create(['autor_id'=>$users['admin']->id,'titulo'=>"Aviso Front $suffix",'contenido'=>'Comunicado de prueba visual','prioridad'=>'Media','estado'=>'Publicado','fecha_publicacion'=>now()]);
+    $incidencia=Incidencia::create(['user_id'=>$users['a']->id,'departamento_id'=>$departamentos['a']->id,'categoria'=>'Espacios Comunes','titulo'=>"Incidencia Front $suffix",'descripcion'=>'Reporte de prueba visual','estado'=>'Pendiente']);
     foreach (['/admin/dashboard','/admin/departamentos','/admin/usuarios','/admin/gastos-comunes','/admin/espacios-comunes','/admin/reservas','/perfil',
         '/admin/departamentos/'.$departamentos['a']->id,'/admin/espacios-comunes/'.$espacio->id.'/configuracion'] as $url) page($admin,$url,'admin');
     $gasto=$departamentos['a']->gastosComunes()->first();
     foreach (['/admin/gastos-comunes/'.$gasto->id.'/desglose','/admin/gastos-comunes/'.$gasto->id.'/estado'] as $url) page($admin,$url,'admin');
+    foreach (['/admin/comprobantes','/admin/avisos','/admin/avisos/'.$aviso->id.'/editar','/admin/incidencias','/admin/incidencias/'.$incidencia->id] as $url) page($admin,$url,'admin');
     foreach (['/conserje/dashboard','/conserje/encomiendas','/conserje/visitas','/conserje/vehiculos','/perfil'] as $url) page($conserje,$url,'conserje');
+    foreach (['/conserje/incidencias','/conserje/incidencias/'.$incidencia->id] as $url) page($conserje,$url,'conserje');
     foreach (['/residente/dashboard','/residente/gastos-comunes','/residente/encomiendas','/residente/reservas','/residente/espacios-comunes/disponibilidad','/perfil'] as $url) page($resident,$url,'residente');
+    foreach (['/residente/mural','/residente/incidencias','/residente/incidencias/crear','/residente/incidencias/'.$incidencia->id] as $url) page($resident,$url,'residente');
     $html=page($resident,'/residente/dashboard','residente');
     verify(str_contains($html,"EMPRESA-a-$suffix") && str_contains($html,"FRONT-a-$suffix") && !str_contains($html,"EMPRESA-b-$suffix") && !str_contains($html,"FRONT-b-$suffix"), 'Panel del residente muestra solo sus unidades y encomiendas');
     verify(str_contains($html,'$12.345') && str_contains($html,"Espacio Front $suffix"), 'Panel muestra monto y próxima reserva persistidos');
@@ -82,6 +92,8 @@ try {
     verify($resident->get('/admin/departamentos')->getStatusCode()===403,'Ocultar módulos no sustituye la protección del servidor');
     echo "Frontend por roles verificado.\n";
 } finally {
+    $incidencia?->delete();
+    $aviso?->delete();
     foreach ($users as $user) { $user->departamentos()->detach(); Reserva::where('user_id',$user->id)->delete(); }
     foreach ($departamentos as $departamento) { Encomienda::where('departamento_id',$departamento->id)->delete(); $departamento->gastosComunes()->delete(); $departamento->delete(); }
     if ($espacio) $espacio->delete();

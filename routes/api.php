@@ -12,7 +12,10 @@ Route::prefix('v1')->group(function () {
         Route::post('/forgot-password', [RecuperarContrasenaController::class, 'apiForgotPassword']);
     });
 
-    Route::post('/encomiendas', [EncomiendaApiController::class, 'store']);
-    Route::get('/gastos-comunes', [ComprobanteApiController::class, 'listarGastos']);
-    Route::post('/comprobantes', [ComprobanteApiController::class, 'store']);
+    Route::post('/encomiendas', [EncomiendaApiController::class, 'store'])
+        ->middleware(['auth:sanctum', 'rol:Conserje']);
+    Route::middleware(['auth:sanctum', 'rol:Residente'])->group(function () {
+        Route::get('/gastos-comunes', [ComprobanteApiController::class, 'listarGastos']);
+        Route::post('/comprobantes', [ComprobanteApiController::class, 'store']);
+    });
 });

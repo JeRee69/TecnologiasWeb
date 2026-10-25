@@ -62,12 +62,7 @@ class PerfilController extends Controller
             'current_password' => ['bail', 'required', 'string', 'current_password:web'],
             'password' => [
                 'bail', 'required', 'string', 'min:12', 'confirmed', 'different:current_password',
-                function (string $attribute, mixed $value, Closure $fail) {
-                    // Bcrypt admite hasta 72 bytes, también para caracteres multibyte.
-                    if (strlen($value) > 72 || str_contains($value, "\0")) {
-                        $fail('La contraseña debe ocupar como máximo 72 bytes y no contener caracteres nulos.');
-                    }
-                },
+                new \App\Rules\LimiteContrasenaBcrypt,
             ],
         ], [
             'current_password.required' => 'Ingresa tu contraseña actual.',

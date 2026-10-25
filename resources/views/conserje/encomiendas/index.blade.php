@@ -76,7 +76,7 @@
       </div>
     @endif
 
-    <div class="grid lg:grid-cols-5 gap-8 items-start">
+    <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
       {{-- Formulario para registrar encomienda recibida (HU-25) --}}
       <section aria-labelledby="registro-encomienda-heading" class="lg:col-span-2 bg-white border border-gray-200 rounded-xl p-5 sm:p-6 shadow-sm">
         <div class="flex items-center gap-2 mb-2">

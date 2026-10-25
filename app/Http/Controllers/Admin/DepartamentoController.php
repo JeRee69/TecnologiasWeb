@@ -212,18 +212,18 @@ class DepartamentoController extends Controller
                 'required',
                 'string',
                 'max:30',
-                'regex:/^(\+?)[0-9\s\-\(\)]{7,20}$/',
+                'regex:/^(?=(?:\D*\d){7,15}\D*$)\+?[0-9\s()\-]+$/D',
             ],
             'relacion' => ['bail', 'nullable', 'string', 'max:100'],
-            'user_id' => ['bail', 'nullable', 'integer', 'exists:users,id'],
+            'user_id' => ['bail', 'nullable', 'integer', Rule::exists('departamento_user', 'user_id')->where('departamento_id', $departamento->id)],
         ], [
             'nombre.required' => 'Ingresa el nombre del contacto de emergencia.',
             'nombre.max' => 'El nombre no puede superar los 150 caracteres.',
             'telefono.required' => 'Ingresa el teléfono del contacto de emergencia.',
-            'telefono.regex' => 'Ingresa un formato de teléfono válido (ej: +56912345678 o 912345678).',
+            'telefono.regex' => 'Ingresa un teléfono con entre 7 y 15 dígitos (ej.: +56912345678).',
             'telefono.max' => 'El teléfono no puede superar los 30 caracteres.',
             'relacion.max' => 'La relación o parentesco no puede superar los 100 caracteres.',
-            'user_id.exists' => 'El residente seleccionado no es válido.',
+            'user_id.exists' => 'El residente seleccionado debe estar asociado a este departamento.',
         ]);
 
         $departamento->contactosEmergencia()->create([

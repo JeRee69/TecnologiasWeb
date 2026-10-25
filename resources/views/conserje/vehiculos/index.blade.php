@@ -34,7 +34,7 @@
             placeholder="Ej.: BBCL12 o AB1234"
             maxlength="10"
             required
-            class="flex-1 px-4 py-2.5 rounded-xl bg-white text-gray-900 font-mono font-bold tracking-wider uppercase text-sm border-2 border-transparent focus:outline-none focus:ring-2 focus:ring-amber-400"
+            class="flex-1 min-w-0 px-4 py-2.5 rounded-xl bg-white text-gray-900 font-mono font-bold tracking-wider uppercase text-sm border-2 border-transparent focus:outline-none focus:ring-2 focus:ring-amber-400"
           />
           <button
             type="submit"
@@ -163,7 +163,7 @@
       </div>
     @endif
 
-    <div class="grid lg:grid-cols-5 gap-8 items-start">
+    <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
       {{-- Formulario para autorizar vehículo (HU-30) --}}
       <section aria-labelledby="registro-vehiculo-heading" class="lg:col-span-2 bg-white border border-gray-200 rounded-xl p-5 sm:p-6 shadow-sm">
         <div class="flex items-center gap-2 mb-2">
@@ -355,7 +355,7 @@
           {{-- Buscador en la tabla --}}
           <form method="GET" action="{{ route('conserje.vehiculos.index') }}" class="mb-4 flex gap-2">
             <input type="hidden" name="filtro" value="{{ $filtro }}"/>
-            <div class="relative flex-1">
+            <div class="relative flex-1 min-w-0">
               <span class="material-symbols-outlined absolute left-3 top-2.5 text-gray-400 text-[18px]">search</span>
               <input
                 type="text"

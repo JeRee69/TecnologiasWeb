@@ -57,7 +57,7 @@
       </div>
     @endif
 
-    <div class="grid lg:grid-cols-5 gap-8 items-start">
+    <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
       {{-- Formulario para registrar usuario y asignar rol (HU-03) --}}
       <section aria-labelledby="registro-usuario-heading" class="lg:col-span-2 bg-white border border-gray-200 rounded-xl p-5 sm:p-6 shadow-sm">
         <div class="flex items-center gap-2 mb-2">
@@ -193,7 +193,7 @@
               id="password"
               name="password"
               type="password"
-              minlength="6"
+              minlength="12"
               maxlength="100"
               placeholder="Dejar en blanco para autogenerar"
               @class([

@@ -1,0 +1,9 @@
+# Usar con: docker compose -p ediconnect-qa -f docker-compose.yml -f tests/compose.qa.yml up -d --build
+# Los volúmenes se crean bajo el proyecto ediconnect-qa, separados de la aplicación habitual.
+services:
+  app:
+    environment:
+      APP_URL: http://localhost:8001
+  web:
+    ports: !override
+      - "127.0.0.1:8001:80"

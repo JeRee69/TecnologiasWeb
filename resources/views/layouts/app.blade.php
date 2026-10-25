@@ -35,7 +35,6 @@
       ['residente.dashboard','home','Dashboard Residente','residente.dashboard'],
       ['residente.gastos-comunes.index','payments','Gastos Comunes','residente.gastos-comunes.*'],
       ['residente.encomiendas.index','inventory_2','Mis Encomiendas','residente.encomiendas.*'],
-      ['residente.espacios-comunes.disponibilidad','calendar_month','Reserva de Espacios','residente.espacios-comunes.*'],
       ['residente.reservas.index','event_available','Mis Reservas','residente.reservas.*'],
       ['residente.mural.index','campaign','Mural Informativo','residente.mural.*'],
       ['residente.incidencias.index','report_problem','Mis Incidencias','residente.incidencias.*'],
@@ -52,9 +51,21 @@
     <nav class="sidebar-nav">
       <p class="nav-caption">{{ $portal }}</p>
       @foreach ($menu as [$destino, $icono, $etiqueta, $patron])
+        @if ($destino === 'residente.reservas.index')
+          <details class="sidebar-group" @if(request()->routeIs('residente.reservas.*', 'residente.espacios-comunes.*')) open @endif>
+            <summary @class(['sidebar-link', 'is-active' => request()->routeIs('residente.reservas.*', 'residente.espacios-comunes.*')])>
+              <span class="material-symbols-outlined" aria-hidden="true">event_available</span><span>Mis reservas</span><span class="material-symbols-outlined sidebar-chevron" aria-hidden="true">expand_more</span>
+            </summary>
+            <div class="sidebar-submenu">
+              <a href="{{ route('residente.reservas.index') }}" @class(['sidebar-link', 'is-active' => request()->routeIs('residente.reservas.*')]) @if(request()->routeIs('residente.reservas.*')) aria-current="page" @endif>Mis reservas</a>
+              <a href="{{ route('residente.espacios-comunes.disponibilidad') }}" @class(['sidebar-link', 'is-active' => request()->routeIs('residente.espacios-comunes.*')]) @if(request()->routeIs('residente.espacios-comunes.*')) aria-current="page" @endif>Ver espacios disponibles</a>
+            </div>
+          </details>
+        @else
         <a href="{{ route($destino) }}" @class(['sidebar-link', 'is-active' => request()->routeIs($patron)]) @if(request()->routeIs($patron)) aria-current="page" @endif>
           <span class="material-symbols-outlined" aria-hidden="true">{{ $icono }}</span><span>{{ $etiqueta }}</span>
         </a>
+        @endif
       @endforeach
       <p class="nav-caption mt-6">Mi cuenta</p>
       <a href="{{ route('perfil.editar') }}" @class(['sidebar-link', 'is-active' => request()->routeIs('perfil.*')]) @if(request()->routeIs('perfil.*')) aria-current="page" @endif><span class="material-symbols-outlined" aria-hidden="true">account_circle</span><span>Mi Perfil</span></a>

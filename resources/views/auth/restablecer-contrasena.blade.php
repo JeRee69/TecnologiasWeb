@@ -44,7 +44,8 @@
                  id="password"
                  name="password"
                  type="password"
-                 placeholder="Mínimo 6 caracteres"
+                 placeholder="Mínimo 12 caracteres"
+                 minlength="12"
                  required/>
         </div>
       </div>

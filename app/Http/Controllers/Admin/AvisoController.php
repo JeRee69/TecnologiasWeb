@@ -13,9 +13,14 @@ class AvisoController extends Controller
 {
     public function index(Request $request): View
     {
-        $filtroEstado = $request->query('estado');
-        $filtroPrioridad = $request->query('prioridad');
-        $busqueda = trim($request->query('busqueda', ''));
+        $filtros = $request->validate([
+            'estado' => ['nullable', 'string', Rule::in(array_keys(Aviso::ESTADOS))],
+            'prioridad' => ['nullable', 'string', Rule::in(array_keys(Aviso::PRIORIDADES))],
+            'busqueda' => ['nullable', 'string', 'max:150'],
+        ], ['busqueda.string' => 'La búsqueda debe ser texto.']);
+        $filtroEstado = $filtros['estado'] ?? null;
+        $filtroPrioridad = $filtros['prioridad'] ?? null;
+        $busqueda = trim($filtros['busqueda'] ?? '');
 
         $query = Aviso::with('autor');
 

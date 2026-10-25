@@ -341,8 +341,8 @@ Desde el portal del residente, accede a **Mis Gastos Comunes** (`/residente/gast
 - Permite consultar el desglose de cobro mensual de la unidad habitacional asignada.
 - Permite cargar comprobantes de transferencia bancaria para gastos en estado **Pendiente** o **Moroso**.
 - Valida estrictamente formatos permitidos (`PDF`, `JPG`, `JPEG`, `PNG`) y tamaño máximo definido (`5 MB`).
-- Tras la carga exitosa, el comprobante se almacena y queda en estado **En revisión**, actualizando el gasto común a dicho estado.
-- Expone el endpoint `POST /api/v1/comprobantes` y `GET /api/v1/gastos-comunes`.
+- Tras la carga exitosa, el comprobante queda **En revisión**. El cobro conserva su estado pendiente o moroso hasta la validación administrativa. Web y API impiden duplicar comprobantes en revisión mediante bloqueo del cobro.
+- Expone `POST /api/v1/comprobantes` y `GET /api/v1/gastos-comunes` para residentes activos autenticados con Sanctum (`Authorization: Bearer <token>`). La consulta y la carga se limitan a sus unidades. `POST /api/v1/encomiendas` requiere un token de conserje activo. Obtén el token con `POST /api/v1/auth/login` enviando `email` y `password`.
 
 ### HU-17: Revisión de Comprobantes por Administrador
 Desde el panel del administrador, accede a **Gastos Comunes → Revisar comprobantes de pago** (`/admin/comprobantes`).
@@ -353,7 +353,7 @@ Desde el panel del administrador, accede a **Gastos Comunes → Revisar comproba
 
 ### HU-18: Aprobación o Rechazo de Pagos
 Desde la interfaz de revisión de comprobantes, un administrador puede:
-- **Aprobar:** Cambia el comprobante a estado **Aprobado** y actualiza el gasto común asociado a estado **Pagado**, registrando la fecha y el administrador auditor.
+- **Aprobar:** exige que el monto del comprobante coincida exactamente con el total del cobro. Cambia el comprobante a **Aprobado** y el gasto a **Pagado**, registrando la fecha y el administrador auditor. Un importe diferente debe rechazarse para que el residente lo corrija; no se admiten abonos parciales en esta operación.
 - **Rechazar:** Requiere ingresar obligatoriamente un motivo de rechazo. El comprobante pasa a estado **Rechazado**, el gasto común se mantiene en estado **Pendiente**, y el motivo queda informado y visible para el residente en su portal de gastos comunes para que pueda corregir su pago.
 
 Para ejecutar la suite de pruebas automatizadas:

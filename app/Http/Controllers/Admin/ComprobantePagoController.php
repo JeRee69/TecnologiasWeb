@@ -50,9 +50,17 @@ class ComprobantePagoController extends Controller
     public function aprobar(Request $request, ComprobantePago $comprobante): RedirectResponse
     {
         DB::transaction(function () use ($request, $comprobante) {
+            // Mismo orden de bloqueo que la carga: cobro antes del comprobante.
+            $gasto = GastoComun::whereKey($comprobante->gasto_comun_id)->lockForUpdate()->firstOrFail();
             $actual = ComprobantePago::whereKey($comprobante->id)->lockForUpdate()->firstOrFail();
             if ($actual->estado !== 'en_revision') {
                 throw ValidationException::withMessages(['comprobante' => 'Este comprobante ya fue revisado.']);
+            }
+            if ($gasto->estado === 'pagado') {
+                throw ValidationException::withMessages(['comprobante' => 'El gasto común ya tiene un pago validado.']);
+            }
+            if ($actual->monto !== $gasto->monto) {
+                throw ValidationException::withMessages(['comprobante' => 'El monto del comprobante debe coincidir exactamente con el total del cobro. Rechaza el comprobante indicando la diferencia para que el residente lo corrija.']);
             }
 
             $actual->update([
@@ -62,14 +70,11 @@ class ComprobantePagoController extends Controller
                 'revisado_at' => now(),
             ]);
 
-            $gasto = GastoComun::whereKey($actual->gasto_comun_id)->lockForUpdate()->first();
-            if ($gasto && $gasto->estado !== 'pagado') {
-                $gasto->estado = 'pagado';
-                $gasto->pago_validado_at = now();
-                $gasto->pago_validado_por = $request->user()->id;
-                $gasto->referencia_pago = 'Comprobante #'.$actual->id;
-                $gasto->save();
-            }
+            $gasto->estado = 'pagado';
+            $gasto->pago_validado_at = now();
+            $gasto->pago_validado_por = $request->user()->id;
+            $gasto->referencia_pago = 'Comprobante #'.$actual->id;
+            $gasto->save();
         }, 3);
 
         return back()->with('estado', 'Comprobante aprobado. El gasto común quedó Al día (Pagado).');

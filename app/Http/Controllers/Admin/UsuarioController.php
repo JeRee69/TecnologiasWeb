@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
+use App\Rules\LimiteContrasenaBcrypt;
 
 class UsuarioController extends Controller
 {
@@ -31,7 +32,7 @@ class UsuarioController extends Controller
             'rut' => ['nullable', 'string', 'max:20', 'unique:users,rut'],
             'telefono' => ['nullable', 'string', 'max:20'],
             'rol_id' => ['required', 'exists:roles,id'],
-            'password' => ['nullable', 'string', 'min:6', 'max:100'],
+            'password' => ['bail', 'nullable', 'string', 'min:12', new LimiteContrasenaBcrypt],
         ], [
             'nombre.required' => 'El nombre del usuario es obligatorio.',
             'nombre.max' => 'El nombre no puede exceder los 150 caracteres.',
@@ -41,12 +42,12 @@ class UsuarioController extends Controller
             'rut.unique' => 'El RUT ingresado ya se encuentra registrado.',
             'rol_id.required' => 'Debes seleccionar un rol para el usuario.',
             'rol_id.exists' => 'El rol seleccionado no es válido.',
-            'password.min' => 'La contraseña debe contener al menos 6 caracteres.',
+            'password.min' => 'La contraseña debe contener al menos 12 caracteres.',
         ]);
 
         $passwordPlano = !empty($datos['password'])
             ? $datos['password']
-            : Str::random(10);
+            : Str::random(16);
 
         $usuario = User::create([
             'nombre' => trim($datos['nombre']),

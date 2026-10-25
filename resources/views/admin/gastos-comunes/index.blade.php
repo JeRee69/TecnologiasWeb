@@ -22,7 +22,7 @@
       </div>
     @endif
 
-    <div class="grid lg:grid-cols-3 gap-6 items-start">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
       <section class="bg-white border rounded-xl p-6 shadow-sm" aria-labelledby="generar-heading">
         <h2 id="generar-heading" class="text-lg font-bold mb-2">Generar gasto común</h2>
         <p class="text-sm text-gray-600 mb-5">Ingresa el monto correspondiente a una unidad activa. Cada departamento admite un cobro por mes. Su estado vigente considera el vencimiento y la validación del pago.</p>

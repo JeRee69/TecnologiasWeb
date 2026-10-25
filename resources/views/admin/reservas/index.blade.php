@@ -6,17 +6,17 @@
 
     * { box-sizing: border-box; }
     body { margin: 0; background: #f9fafb; color: #111827; font-family: Inter, system-ui, sans-serif; }
-    header { background: #1e3a8a; color: white; }
+    header { background: var(--blue); color: white; }
     header > div, main { max-width: 1250px; margin: auto; padding: 24px; }
     header > div, nav, .filters { display: flex; gap: 20px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
-    header a { color: white; } a { color: #1e3a8a; }
+    header a { color: white; } a { color: var(--blue); }
     .brand { font-size: 22px; font-weight: 700; text-decoration: none; }
     .panel { padding: 24px; margin-top: 24px; background: white; border: 1px solid #d1d5db; border-radius: 12px; }
     .filters { align-items: end; justify-content: flex-start; }
     .field { flex: 1; min-width: 180px; }
     label { display: block; font-weight: 600; margin-bottom: 8px; }
     input, select { width: 100%; padding: 12px; border: 1px solid #9ca3af; border-radius: 8px; font: inherit; }
-    button { cursor: pointer; padding: 12px 18px; border: 0; border-radius: 8px; background: #1e3a8a; color: white; font: inherit; }
+    button { cursor: pointer; padding: 12px 18px; border: 0; border-radius: 8px; background: var(--blue); color: white; font: inherit; }
     .muted { font-size: 14px; color: #4b5563; }
     .scroll { overflow-x: auto; }
     table { width: 100%; border-collapse: collapse; text-align: left; }
@@ -79,13 +79,13 @@
             <thead><tr><th scope="col">N.º</th><th scope="col">Residente</th><th scope="col">Espacio</th><th scope="col">Fecha</th><th scope="col">Horario</th><th scope="col">Estado</th><th scope="col">Cancelación</th><th scope="col">Gestión e historial</th></tr></thead>
             <tbody>
               @foreach ($reservas as $reserva)
-                <tr>
+                <tr class="reservation-row" data-estado-reserva="{{ $reserva->estado }}">
                   <td>#{{ $reserva->id }}</td>
                   <td class="text">{{ $reserva->usuario->nombre }}<p class="muted">{{ $reserva->usuario->email }}</p></td>
                   <td class="text">{{ $reserva->espacioComun->nombre }}</td>
                   <td>{{ $reserva->fecha->format('d/m/Y') }}</td>
                   <td>{{ substr($reserva->hora_inicio, 0, 5) }}–{{ substr($reserva->hora_fin, 0, 5) }}</td>
-                  <td><span class="badge {{ $reserva->estado }}">{{ \App\Models\Reserva::ESTADOS[$reserva->estado] }}</span></td>
+                  <td>@include('components.estado-reserva', ['estadoReserva' => $reserva->estado])</td>
                   <td class="text">
                     @if ($reserva->estado === 'cancelada')
                       @if ($reserva->cancelada_at)<p class="muted">{{ $reserva->cancelada_at->format('d/m/Y H:i') }}</p>@endif

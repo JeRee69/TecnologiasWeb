@@ -6,13 +6,13 @@
 
     * { box-sizing: border-box; }
     body { margin: 0; background: #f9fafb; color: #111827; font-family: Inter, system-ui, sans-serif; }
-    header { background: #1e3a8a; color: white; }
+    header { background: var(--blue); color: white; }
     header > div, main { max-width: 1050px; margin: auto; padding: 24px; }
     header > div, nav { display: flex; gap: 20px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
     header a { color: white; }
-    a { color: #1e3a8a; }
+    a { color: var(--blue); }
     .brand { font-size: 22px; font-weight: 700; text-decoration: none; }
-    button { background: #1e3a8a; color: white; border: 1px solid #93c5fd; border-radius: 8px; padding: 10px 16px; cursor: pointer; }
+    button { background: var(--blue); color: white; border: 1px solid #93c5fd; border-radius: 8px; padding: 10px 16px; cursor: pointer; }
     .panel { margin-top: 24px; background: white; border: 1px solid #d1d5db; border-radius: 12px; padding: 24px; }
     .muted { color: #4b5563; }
     .success { padding: 16px; border: 1px solid #a7f3d0; border-radius: 8px; color: #065f46; background: #ecfdf5; }
@@ -37,9 +37,13 @@
 @section('content')
 <div class="legacy-page">
 <a href="{{ route('residente.dashboard') }}">← Volver al portal</a>
-    <h1>Mis reservas</h1>
-    <p class="muted">Consulta tus solicitudes y reservas. Solo las confirmadas han sido aprobadas por el administrador. Horarios de Santiago.</p>
-    <a href="{{ route('residente.espacios-comunes.disponibilidad') }}">Consultar disponibilidad y reservar →</a>
+    <div class="page-heading mt-4">
+      <div>
+        <h1>Mis reservas</h1>
+        <p class="muted">Consulta tus solicitudes y reservas. Solo las confirmadas han sido aprobadas por el administrador. Horarios de Santiago.</p>
+      </div>
+      <a class="ui-button shrink-0" href="{{ route('residente.espacios-comunes.disponibilidad') }}"><span class="material-symbols-outlined" aria-hidden="true">calendar_month</span>Ver espacios disponibles</a>
+    </div>
     @if (session('estado'))
       <p class="success" data-swal-feedback role="status">{{ session('estado') }}</p>
     @endif
@@ -59,11 +63,11 @@
             <thead><tr><th scope="col">Espacio</th><th scope="col">Fecha</th><th scope="col">Horario</th><th scope="col">Estado</th><th scope="col">N.º</th><th scope="col">Cancelación</th></tr></thead>
             <tbody>
               @foreach ($reservas as $reserva)
-                <tr>
+                <tr class="reservation-row" data-estado-reserva="{{ $reserva->estado }}">
                   <td>{{ $reserva->espacioComun->nombre }}</td>
                   <td>{{ $reserva->fecha->format('d/m/Y') }}</td>
                   <td>{{ substr($reserva->hora_inicio, 0, 5) }}–{{ substr($reserva->hora_fin, 0, 5) }}</td>
-                  <td>{{ \App\Models\Reserva::ESTADOS[$reserva->estado] }}</td>
+                  <td>@include('components.estado-reserva', ['estadoReserva' => $reserva->estado])</td>
                   <td>#{{ $reserva->id }}</td>
                   <td>
                     @if ($reserva->puedeCancelarse())

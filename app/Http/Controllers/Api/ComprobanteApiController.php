@@ -3,19 +3,20 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\ComprobantePago;
 use App\Models\GastoComun;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use App\Services\RegistrarComprobante;
 
 class ComprobanteApiController extends Controller
 {
     public function listarGastos(Request $request): JsonResponse
     {
-        $departamentoId = $request->query('departamento_id');
+        $datos = $request->validate(['departamento_id' => ['nullable', 'integer', 'min:1']]);
+        $departamentoId = $datos['departamento_id'] ?? null;
 
-        $query = GastoComun::query();
+        $query = GastoComun::whereIn('departamento_id', $request->user()->departamentos()->select('departamentos.id'));
         if ($departamentoId) {
             $query->where('departamento_id', $departamentoId);
         }
@@ -29,10 +30,10 @@ class ComprobanteApiController extends Controller
             ];
         });
 
-        return response()->json($gastos, 200);
+        return response()->json($gastos, 200)->header('Cache-Control', 'private, no-store');
     }
 
-    public function store(Request $request): JsonResponse
+    public function store(Request $request, RegistrarComprobante $registro): JsonResponse
     {
         $gastoId = $request->input('gasto_id') ?? $request->input('gasto_comun_id');
         $archivo = $request->file('file') ?? $request->file('comprobante');
@@ -40,9 +41,13 @@ class ComprobanteApiController extends Controller
         $validator = Validator::make([
             'gasto_id' => $gastoId,
             'file' => $archivo,
+            'monto' => $request->input('monto'),
+            'fecha_pago' => $request->input('fecha_pago'),
         ], [
-            'gasto_id' => ['required', 'exists:gastos_comunes,id'],
+            'gasto_id' => ['required', 'integer', 'min:1'],
             'file' => ['required', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:5120'],
+            'monto' => ['nullable', 'integer', 'min:1', 'max:999999999999'],
+            'fecha_pago' => ['nullable', 'date_format:Y-m-d', 'before_or_equal:today'],
         ], [
             'gasto_id.required' => 'El identificador del gasto es obligatorio.',
             'gasto_id.exists' => 'El gasto común indicado no existe.',
@@ -58,23 +63,9 @@ class ComprobanteApiController extends Controller
             ], 422);
         }
 
-        $gasto = GastoComun::findOrFail($gastoId);
-        $rutaArchivo = $archivo->store('comprobantes', 'public');
-
-        $usuarioId = $request->user()?->id ?? 3;
-
-        $comprobante = ComprobantePago::create([
-            'gasto_comun_id' => $gasto->id,
-            'departamento_id' => $gasto->departamento_id,
-            'user_id' => $usuarioId,
-            'archivo_path' => $rutaArchivo,
-            'archivo_nombre_original' => $archivo->getClientOriginalName(),
-            'archivo_mime' => $archivo->getMimeType() ?: $archivo->getClientMimeType(),
-            'archivo_tamano' => $archivo->getSize(),
-            'monto' => $gasto->monto,
-            'fecha_pago' => today('America/Santiago')->toDateString(),
-            'estado' => 'en_revision',
-        ]);
+        $datos = $validator->validated();
+        $comprobante = $registro->registrar($request->user(), (int) $datos['gasto_id'], $archivo,
+            isset($datos['monto']) ? (int) $datos['monto'] : null, $datos['fecha_pago'] ?? null);
 
         return response()->json([
             'id' => $comprobante->id,

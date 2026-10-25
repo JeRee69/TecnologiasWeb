@@ -6,13 +6,18 @@ use App\Http\Controllers\Controller;
 use App\Models\Aviso;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Illuminate\Validation\Rule;
 
 class MuralController extends Controller
 {
     public function index(Request $request): View
     {
-        $filtroPrioridad = $request->query('prioridad');
-        $busqueda = trim($request->query('busqueda', ''));
+        $filtros = $request->validate([
+            'prioridad' => ['nullable', 'string', Rule::in(array_keys(Aviso::PRIORIDADES))],
+            'busqueda' => ['nullable', 'string', 'max:150'],
+        ], ['busqueda.string' => 'La búsqueda debe ser texto.']);
+        $filtroPrioridad = $filtros['prioridad'] ?? null;
+        $busqueda = trim($filtros['busqueda'] ?? '');
 
         $query = Aviso::with('autor')->vigentes();
 

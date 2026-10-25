@@ -11,19 +11,21 @@ class VerificarRol
 {
     public function handle(Request $request, Closure $next, ...$roles): Response
     {
-        if (!Auth::check()) {
+        if (!$request->user()) {
             if ($request->expectsJson()) {
                 return response()->json(['mensaje' => 'No autenticado'], 401);
             }
             return redirect()->route('login')->withErrors(['identifier' => 'Debes iniciar sesión para continuar.']);
         }
 
-        $usuario = Auth::user();
+        $usuario = $request->user();
 
         if (!$usuario->estaActivo()) {
-            Auth::logout();
-            $request->session()->invalidate();
-            $request->session()->regenerateToken();
+            if ($request->hasSession()) {
+                Auth::guard('web')->logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+            }
 
             if ($request->expectsJson()) {
                 return response()->json(['mensaje' => 'Tu cuenta se encuentra inactiva. Contacta al administrador.'], 403);

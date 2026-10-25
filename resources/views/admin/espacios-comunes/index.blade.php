@@ -19,7 +19,7 @@
       </div>
     @endif
 
-    <div class="grid lg:grid-cols-5 gap-6 items-start">
+    <div class="grid grid-cols-1 lg:grid-cols-5 gap-6 items-start">
       <section aria-labelledby="registro-heading" class="lg:col-span-2 bg-white border border-gray-200 rounded-xl p-5 sm:p-6 shadow-sm">
         <h2 id="registro-heading" class="text-lg font-semibold mb-5">Registrar espacio</h2>
         <form action="{{ route('admin.espacios-comunes.store') }}" method="POST" class="space-y-5">

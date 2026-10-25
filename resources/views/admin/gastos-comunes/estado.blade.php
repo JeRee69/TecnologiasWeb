@@ -27,7 +27,7 @@
         @endif
       </section>
     @else
-      <div class="grid md:grid-cols-2 gap-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <section class="bg-white border rounded-xl p-6">
           <h2 class="text-lg font-bold mb-3">Configurar vencimiento</h2>
           <p class="text-sm text-gray-600 mb-4">El cobro impago será moroso desde el día siguiente. Sin fecha permanece pendiente.</p>

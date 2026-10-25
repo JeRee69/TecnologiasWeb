@@ -146,20 +146,22 @@ verify(str_contains($htmlRevision, 'En revisión'), 'Estado "En revisión" visib
 
 // Endpoint API: POST /api/v1/comprobantes
 $apiClient = new Client(['base_uri' => 'http://web', 'http_errors' => false]);
+$apiLogin = $apiClient->post('/api/v1/auth/login', ['json' => ['email' => 'residente@ediconnect.cl', 'password' => 'Password123!']]);
+$apiToken = json_decode((string) $apiLogin->getBody(), true)['token'];
 $validPng = base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==');
 $resApi = $apiClient->post('/api/v1/comprobantes', [
     'multipart' => [
         ['name' => 'gasto_id', 'contents' => (string) $gastoId],
         ['name' => 'file', 'contents' => $validPng, 'filename' => 'comprobante_banco.png', 'headers' => ['Content-Type' => 'image/png']],
     ],
-    'headers' => ['Accept' => 'application/json'],
+    'headers' => ['Accept' => 'application/json', 'Authorization' => 'Bearer '.$apiToken],
 ]);
-verify($resApi->getStatusCode() === 201, 'Endpoint API POST /api/v1/comprobantes responde HTTP 201 Created');
+verify($resApi->getStatusCode() === 422, 'API rechaza segundo comprobante cuando ya existe uno en revisión');
 $jsonApi = json_decode((string) $resApi->getBody(), true);
-verify(isset($jsonApi['estado']) && $jsonApi['estado'] === 'en_revision', 'API retorna { id, estado: "en_revision" }');
+verify(isset($jsonApi['errors']), 'API informa el conflicto de comprobante en revisión');
 
 // Endpoint API: GET /api/v1/gastos-comunes?departamento_id=X
-$resApiGastos = $apiClient->get("/api/v1/gastos-comunes?departamento_id={$deptoId}", ['headers' => ['Accept' => 'application/json']]);
+$resApiGastos = $apiClient->get("/api/v1/gastos-comunes?departamento_id={$deptoId}", ['headers' => ['Accept' => 'application/json', 'Authorization' => 'Bearer '.$apiToken]]);
 verify($resApiGastos->getStatusCode() === 200, 'Endpoint API GET /api/v1/gastos-comunes responde HTTP 200 OK');
 
 // -------------------------------------------------------------

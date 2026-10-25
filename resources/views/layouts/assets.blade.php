@@ -12,4 +12,4 @@ tailwind.config = { theme: { extend: {
   fontSize:{'body-md':['14px','20px'],'label-md':['12px','16px'],'headline-md':['20px','28px'],'headline-lg':['28px','36px']}
 } } };
 </script>
-<link href="{{ asset('css/ediconnect.css') }}" rel="stylesheet">
+<link href="{{ asset('css/ediconnect.css') }}?v={{ filemtime(public_path('css/ediconnect.css')) }}" rel="stylesheet">

@@ -77,7 +77,7 @@
       </div>
     </div>
 
-    <div class="grid lg:grid-cols-3 gap-8 items-start">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
       {{-- Formulario Registro de Departamento (HU-07) --}}
       <section aria-labelledby="form-registro-heading" class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm lg:sticky lg:top-6">
         <div class="flex items-center gap-2 mb-4">
@@ -161,11 +161,11 @@
       </section>
 
       {{-- Listado de Departamentos --}}
-      <section aria-labelledby="listado-heading" class="lg:col-span-2 space-y-4">
+      <section aria-labelledby="listado-heading" class="min-w-0 lg:col-span-2 space-y-4">
         {{-- Filtros y búsqueda --}}
         <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm flex flex-col sm:flex-row gap-3 items-center justify-between">
-          <form method="GET" action="{{ route('admin.departamentos.index') }}" class="flex flex-1 w-full gap-2 items-center">
-            <div class="relative flex-1">
+          <form method="GET" action="{{ route('admin.departamentos.index') }}" class="flex flex-wrap flex-1 min-w-0 w-full gap-2 items-center">
+            <div class="relative flex-1 min-w-0 basis-full sm:basis-0">
               <span class="material-symbols-outlined absolute left-3 top-2.5 text-gray-400 text-[18px]">search</span>
               <input
                 type="text"

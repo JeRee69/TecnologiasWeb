@@ -179,7 +179,7 @@
                     <form action="{{ route('admin.comprobantes.aprobar', $comp) }}" method="POST">
                       @csrf
                       @method('PATCH')
-                      <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-3 py-1.5 rounded-lg flex items-center gap-1 shadow-sm transition-colors">
+                      <button type="submit" @disabled(!$comp->gastoComun || $comp->gastoComun->estado === 'pagado' || $comp->monto !== $comp->gastoComun->monto) class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-3 py-1.5 rounded-lg flex items-center gap-1 shadow-sm transition-colors">
                         <span class="material-symbols-outlined text-[16px]" aria-hidden="true">check</span>
                         <span>Aprobar</span>
                       </button>
@@ -191,6 +191,9 @@
                       <span>Rechazar</span>
                     </button>
                   </div>
+                  @if ($comp->gastoComun && $comp->monto !== $comp->gastoComun->monto)
+                    <p class="text-xs text-rose-700 mt-2 max-w-xs">El monto no coincide con el total del cobro. Rechaza el comprobante para que el residente lo corrija.</p>
+                  @endif
                 @else
                   <div class="text-[11px] text-gray-500">
                     Revisado por {{ $comp->revisor?->nombre ?? 'Admin' }}<br/>
@@ -223,7 +226,7 @@
 
 {{-- Modal para Rechazo de Comprobante --}}
 <div id="modalRechazo" class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-  <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-gray-100">
+  <div role="dialog" aria-modal="true" aria-label="Rechazar comprobante de pago" class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-gray-100 max-h-[calc(100dvh-2rem)] overflow-y-auto">
     <div class="flex items-center justify-between border-b border-gray-100 pb-3 mb-4">
       <div class="flex items-center gap-2 text-rose-700 font-bold text-base">
         <span class="material-symbols-outlined" aria-hidden="true">report</span>

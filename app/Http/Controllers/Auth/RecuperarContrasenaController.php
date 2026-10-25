@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
+use App\Rules\LimiteContrasenaBcrypt;
+use Illuminate\Validation\ValidationException;
 
 class RecuperarContrasenaController extends Controller
 {
@@ -90,41 +92,25 @@ class RecuperarContrasenaController extends Controller
     public function restablecerContrasena(Request $request): RedirectResponse
     {
         $request->validate([
-            'token' => 'required',
+            'token' => 'required|string',
             'email' => 'required|email',
-            'password' => 'required|confirmed|min:6',
+            'password' => ['bail', 'required', 'string', 'confirmed', 'min:12', new LimiteContrasenaBcrypt],
         ], [
             'password.required' => 'La nueva contraseña es obligatoria.',
             'password.confirmed' => 'La confirmación de la contraseña no coincide.',
-            'password.min' => 'La contraseña debe contener al menos 6 caracteres.',
+            'password.min' => 'La contraseña debe contener al menos 12 caracteres.',
         ]);
-
-        $registro = DB::table('password_reset_tokens')->where('email', $request->email)->first();
-
-        if (!$registro) {
-            return back()->withErrors(['email' => 'La solicitud de recuperación no existe.']);
-        }
-
-        $creadoEl = Carbon::parse($registro->created_at);
-        if ($creadoEl->addMinutes(self::MINUTOS_VIGENCIA)->isPast()) {
-            DB::table('password_reset_tokens')->where('email', $request->email)->delete();
-            return redirect()->route('password.request')
-                ->withErrors(['email' => 'El enlace de recuperación ha expirado. Solicita uno nuevo.']);
-        }
-
-        if (!Hash::check($request->token, $registro->token)) {
-            return back()->withErrors(['email' => 'El token de recuperación no es válido.']);
-        }
-
-        $usuario = User::where('email', $request->email)->first();
-        if (!$usuario) {
-            return back()->withErrors(['email' => 'No se encontró el usuario.']);
-        }
-
-        $usuario->password = Hash::make($request->password);
-        $usuario->save();
-
-        DB::table('password_reset_tokens')->where('email', $request->email)->delete();
+        DB::transaction(function () use ($request) {
+            $usuario = User::where('email', $request->email)->lockForUpdate()->first();
+            $registro = DB::table('password_reset_tokens')->where('email', $request->email)->lockForUpdate()->first();
+            if (!$usuario || !$registro || Carbon::parse($registro->created_at)->addMinutes(self::MINUTOS_VIGENCIA)->isPast()
+                || !Hash::check($request->token, $registro->token)) {
+                throw ValidationException::withMessages(['email' => 'El enlace de recuperación es inválido o ha expirado. Solicita uno nuevo.']);
+            }
+            $usuario->forceFill(['password' => Hash::make($request->password), 'remember_token' => Str::random(60)])->save();
+            $usuario->tokens()->delete();
+            DB::table('password_reset_tokens')->where('email', $usuario->email)->delete();
+        }, 3);
 
         return redirect()->route('login')->with('estado', 'Tu contraseña ha sido restablecida con éxito. Puedes iniciar sesión ahora.');
     }

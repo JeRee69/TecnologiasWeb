@@ -173,7 +173,10 @@ try {
         'http_errors' => false,
         'headers' => ['Accept' => 'application/json'],
     ]);
+    $apiLogin = $apiClient->post('/api/v1/auth/login', ['json' => ['email' => $conserjeEmail, 'password' => 'PruebaHU25!123']]);
+    $apiToken = json_decode((string) $apiLogin->getBody(), true)['token'];
     $apiRes = $apiClient->post('/api/v1/encomiendas', [
+        'headers' => ['Authorization' => 'Bearer '.$apiToken],
         'json' => [
             'departamento_id' => $deptoActivoId,
             'empresa_delivery' => 'Blue Express',
@@ -186,6 +189,7 @@ try {
 
     // 11. Endpoint API: payload inválido responde 400
     $apiBadRes = $apiClient->post('/api/v1/encomiendas', [
+        'headers' => ['Authorization' => 'Bearer '.$apiToken],
         'json' => [
             'departamento_id' => 999999, // Inexistente
             'empresa_delivery' => '',

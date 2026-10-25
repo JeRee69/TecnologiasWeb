@@ -115,7 +115,7 @@
       </div>
     @endif
 
-    <div class="grid lg:grid-cols-2 gap-8 items-start">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
       {{-- SECCIÓN RESIDENTES (HU-09) --}}
       <section aria-labelledby="residentes-heading" class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm space-y-6">
         <div class="flex items-center justify-between border-b border-gray-100 pb-4">

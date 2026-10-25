@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\ComprobantePago;
 use App\Models\GastoComun;
 use App\Services\GastoComunPdf;
+use App\Services\RegistrarComprobante;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -49,7 +50,7 @@ class GastoComunController extends Controller
             ->header('Cache-Control', 'private, no-store');
     }
 
-    public function storeComprobante(Request $request, int $gasto): RedirectResponse
+    public function storeComprobante(Request $request, int $gasto, RegistrarComprobante $registro): RedirectResponse
     {
         $cobro = GastoComun::whereIn('departamento_id', $request->user()->departamentos()->select('departamentos.id'))
             ->findOrFail($gasto);
@@ -77,21 +78,8 @@ class GastoComunController extends Controller
             'fecha_pago.before_or_equal' => 'La fecha de pago no puede ser futura.',
         ]);
 
-        $archivo = $request->file('comprobante');
-        $ruta = $archivo->store('comprobantes', 'public');
-
-        ComprobantePago::create([
-            'gasto_comun_id' => $cobro->id,
-            'departamento_id' => $cobro->departamento_id,
-            'user_id' => $request->user()->id,
-            'archivo_path' => $ruta,
-            'archivo_nombre_original' => $archivo->getClientOriginalName(),
-            'archivo_mime' => $archivo->getMimeType() ?: $archivo->getClientMimeType(),
-            'archivo_tamano' => $archivo->getSize(),
-            'monto' => $datos['monto'] ?? $cobro->monto,
-            'fecha_pago' => $datos['fecha_pago'] ?? today('America/Santiago')->toDateString(),
-            'estado' => 'en_revision',
-        ]);
+        $registro->registrar($request->user(), $cobro->id, $request->file('comprobante'),
+            isset($datos['monto']) ? (int) $datos['monto'] : null, $datos['fecha_pago'] ?? null);
 
         return redirect()->route('residente.gastos-comunes.index')
             ->with('estado', 'Comprobante cargado. Quedó asociado al cobro con estado "En revisión".');
