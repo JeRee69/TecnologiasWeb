@@ -17,7 +17,6 @@
       </div>
     </div>
 
-    {{-- Feedback de sesión si no carga SweetAlert2 --}}
     @if (session('estado') || session('exito'))
       <div data-swal-feedback role="status" class="mb-6 rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-900 p-4 text-sm flex items-center gap-3 shadow-sm">
         <span class="material-symbols-outlined text-emerald-600">check_circle</span>
@@ -25,7 +24,6 @@
       </div>
     @endif
 
-    {{-- Métricas Rápidas --}}
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
       <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
         <p class="text-xs font-medium text-gray-500 uppercase tracking-wider">Total en Bitácora</p>
@@ -45,7 +43,6 @@
       </div>
     </div>
 
-    {{-- Filtros y Búsqueda --}}
     <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm mb-6 flex flex-col sm:flex-row gap-3 items-center justify-between">
       <form method="GET" action="{{ route('conserje.incidencias.index') }}" class="flex flex-wrap items-center gap-2 w-full">
         <input type="text" name="busqueda" value="{{ $busqueda }}" placeholder="Buscar por título, depto o residente..."
@@ -75,7 +72,6 @@
       </form>
     </div>
 
-    {{-- Tabla de Incidencias en Conserjería --}}
     <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
       @if ($incidencias->isEmpty())
         <div class="p-12 text-center">

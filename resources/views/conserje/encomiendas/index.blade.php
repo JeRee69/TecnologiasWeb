@@ -15,8 +15,7 @@
       </div>
     </div>
 
-    {{-- Métricas de Permanencia para Conserjería (HU-28) --}}
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
       <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex items-center gap-3">
         <div class="w-10 h-10 rounded-lg bg-blue-100 text-[#1e3a8a] flex items-center justify-center shrink-0">
           <span class="material-symbols-outlined text-2xl">package_2</span>
@@ -24,22 +23,6 @@
         <div>
           <div class="text-xl font-bold text-gray-900">{{ $metricas['total_pendientes'] }}</div>
           <div class="text-xs text-gray-500 font-medium">En custodia pendiente</div>
-        </div>
-      </div>
-
-      <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex items-center gap-3">
-        <div class="w-10 h-10 rounded-lg bg-amber-100 text-amber-800 flex items-center justify-center shrink-0">
-          <span class="material-symbols-outlined text-2xl">hourglass_top</span>
-        </div>
-        <div>
-          <div class="text-sm font-bold text-gray-900">
-            @if ($metricas['mayor_permanencia'])
-              Depto. {{ $metricas['mayor_permanencia']->departamento?->numero }} ({{ $metricas['mayor_permanencia']->tiempoTranscurrido() }})
-            @else
-              Sin paquetes
-            @endif
-          </div>
-          <div class="text-xs text-gray-500 font-medium">Mayor tiempo en custodia</div>
         </div>
       </div>
 
@@ -54,7 +37,6 @@
       </div>
     </div>
 
-    {{-- Feedback de operaciones --}}
     @if (session('estado'))
       <div data-swal-feedback role="status" class="mb-6 rounded-lg border border-emerald-200 bg-emerald-50 text-emerald-900 p-4 text-sm flex items-center gap-2 shadow-sm">
         <span class="material-symbols-outlined text-emerald-600 text-[20px]">check_circle</span>
@@ -77,7 +59,6 @@
     @endif
 
     <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
-      {{-- Formulario para registrar encomienda recibida (HU-25) --}}
       <section aria-labelledby="registro-encomienda-heading" class="lg:col-span-2 bg-white border border-gray-200 rounded-xl p-5 sm:p-6 shadow-sm">
         <div class="flex items-center gap-2 mb-2">
           <span class="material-symbols-outlined text-[#1e3a8a] text-[22px]">inventory_2</span>
@@ -245,7 +226,6 @@
         </form>
       </section>
 
-      {{-- Listado de la Bitácora de Encomiendas con control de permanencia (HU-28) --}}
       <section aria-labelledby="listado-encomiendas-heading" class="lg:col-span-3 bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
         <div class="p-4 sm:p-5 border-b border-gray-200 flex flex-wrap items-center justify-between gap-3">
           <div>
@@ -253,7 +233,6 @@
             <span class="text-xs text-gray-500">Mostrando {{ $encomiendas->count() }} de {{ $encomiendas->total() }} encomiendas</span>
           </div>
 
-          {{-- Opciones de ordenamiento y filtrado de permanencia (HU-28) --}}
           <div class="flex flex-wrap items-center gap-1 text-xs">
             <span class="text-gray-500 font-medium mr-1">Ordenar:</span>
             <a href="{{ route('conserje.encomiendas.index', ['orden' => 'recientes', 'filtro' => $filtro]) }}"
@@ -321,7 +300,6 @@
                     <div class="font-medium text-gray-800">{{ $encomienda->fecha_ingreso?->format('d/m/Y') }}</div>
                     <div class="text-gray-500">{{ $encomienda->fecha_ingreso?->format('H:i') }} hrs</div>
                   </td>
-                  {{-- Tiempo de Permanencia Calculado (HU-28) --}}
                   <td class="p-4 whitespace-nowrap">
                     @if ($encomienda->estado !== 'Retirado')
                       @if ($encomienda->tienePermanenciaProlongada(3))
@@ -369,7 +347,6 @@
                         </div>
                       </div>
                     @else
-                      {{-- Formulario para registrar el retiro de la encomienda (HU-27) --}}
                       <form action="{{ route('conserje.encomiendas.retiro', $encomienda) }}" method="POST"
                         data-swal-confirm="¿Registrar retiro de encomienda?"
                         data-swal-text="Se cambiará el estado a Retirado y se almacenará la fecha y hora del retiro en la bitácora."

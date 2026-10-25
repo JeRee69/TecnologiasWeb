@@ -18,7 +18,6 @@
       </div>
     @endif
 
-    {{-- Banner de credenciales generadas para el nuevo usuario (HU-03) --}}
     @if (session('credencial_generada'))
       <div class="mb-6 rounded-xl border border-blue-200 bg-blue-50 p-5 text-sm text-blue-950 shadow-sm">
         <div class="flex items-center gap-2 font-bold text-base text-[#1e3a8a] mb-2">
@@ -58,7 +57,6 @@
     @endif
 
     <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
-      {{-- Formulario para registrar usuario y asignar rol (HU-03) --}}
       <section aria-labelledby="registro-usuario-heading" class="lg:col-span-2 bg-white border border-gray-200 rounded-xl p-5 sm:p-6 shadow-sm">
         <div class="flex items-center gap-2 mb-2">
           <span class="material-symbols-outlined text-[#1e3a8a] text-[22px]">person_add</span>
@@ -218,7 +216,6 @@
         </form>
       </section>
 
-      {{-- Listado de Usuarios y Gestión de Estados (HU-04) --}}
       <section aria-labelledby="listado-usuarios-heading" class="lg:col-span-3 bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
         <div class="p-4 sm:p-5 border-b border-gray-200 flex items-center justify-between">
           <h2 id="listado-usuarios-heading" class="text-base font-bold text-gray-900">Usuarios registrados</h2>

@@ -15,7 +15,6 @@
       </div>
     </div>
 
-    {{-- Feedback de sesión si no carga SweetAlert2 --}}
     @if (session('estado') || session('exito'))
       <div data-swal-feedback role="status" class="mb-6 rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-900 p-4 text-sm flex items-center gap-3 shadow-sm">
         <span class="material-symbols-outlined text-emerald-600">check_circle</span>
@@ -23,7 +22,6 @@
       </div>
     @endif
 
-    {{-- Métricas Rápidas --}}
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
       <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
         <p class="text-xs font-medium text-gray-500 uppercase tracking-wider">Total Avisos</p>
@@ -44,7 +42,6 @@
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-      {{-- Formulario de Publicación (HU-31) --}}
       <div class="lg:col-span-1">
         <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 sticky top-6">
           <div class="flex items-center gap-2 mb-4 pb-3 border-b border-gray-100">
@@ -94,9 +91,7 @@
         </div>
       </div>
 
-      {{-- Listado y Gestión de Avisos (HU-31, HU-32) --}}
       <div class="lg:col-span-2 space-y-4">
-        {{-- Filtros y Búsqueda --}}
         <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex flex-col sm:flex-row gap-3 items-center justify-between">
           <form method="GET" action="{{ route('admin.avisos.index') }}" class="flex flex-wrap items-center gap-2 w-full">
             <input type="text" name="busqueda" value="{{ $busqueda }}" placeholder="Buscar por título o texto..."
@@ -125,7 +120,6 @@
           </form>
         </div>
 
-        {{-- Lista de Avisos --}}
         @if ($avisos->isEmpty())
           <div class="bg-white rounded-xl border border-gray-200 p-12 text-center shadow-sm">
             <span class="material-symbols-outlined text-gray-300 text-5xl mb-3">campaign</span>
@@ -171,7 +165,6 @@
                   </div>
                 </div>
 
-                {{-- Acciones (HU-32: Edición y Retiro) --}}
                 <div class="flex items-center gap-2 shrink-0">
                   <a href="{{ route('admin.avisos.edit', $aviso) }}" class="inline-flex items-center gap-1 text-xs font-medium bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 rounded-lg transition-colors">
                     <span class="material-symbols-outlined text-[15px]">edit</span>

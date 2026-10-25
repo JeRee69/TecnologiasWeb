@@ -15,8 +15,7 @@
       </div>
     </div>
 
-    {{-- Tarjetas de Métricas Operativas --}}
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
       <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex items-center gap-4">
         <div class="w-11 h-11 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0">
           <span class="material-symbols-outlined text-2xl">person_pin</span>
@@ -36,19 +35,8 @@
           <div class="text-xs text-gray-500 font-medium">Ingresos registrados hoy</div>
         </div>
       </div>
-
-      <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex items-center gap-4">
-        <div class="w-11 h-11 rounded-lg bg-gray-100 text-gray-700 flex items-center justify-center shrink-0">
-          <span class="material-symbols-outlined text-2xl">history</span>
-        </div>
-        <div>
-          <div class="text-2xl font-bold text-gray-900">{{ $metricas['total_historico'] }}</div>
-          <div class="text-xs text-gray-500 font-medium">Histórico total registrado</div>
-        </div>
-      </div>
     </div>
 
-    {{-- Feedback de operaciones / Notificaciones Flash --}}
     @if (session('estado') || session('exito'))
       <div data-swal-feedback role="status" class="mb-6 rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-900 p-4 text-sm flex items-center gap-3 shadow-sm">
         <span class="material-symbols-outlined text-emerald-600 text-[22px]">check_circle</span>
@@ -85,7 +73,6 @@
     @endif
 
     <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
-      {{-- Formulario para registrar visita recibida (HU-29) --}}
       <section aria-labelledby="registro-visita-heading" class="lg:col-span-2 bg-white border border-gray-200 rounded-xl p-5 sm:p-6 shadow-sm">
         <div class="flex items-center gap-2 mb-2">
           <span class="material-symbols-outlined text-[#1e3a8a] text-[22px]">badge</span>
@@ -229,7 +216,6 @@
         </form>
       </section>
 
-      {{-- Listado y Bitácora de Visitas --}}
       <section aria-labelledby="bitacora-visitas-heading" class="lg:col-span-3 space-y-4">
         <div class="bg-white border border-gray-200 rounded-xl p-4 sm:p-5 shadow-sm">
           <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
@@ -238,7 +224,6 @@
               <span>Bitácora de Accesos</span>
             </h2>
 
-            {{-- Filtros Rápidos --}}
             <div class="flex items-center gap-1.5 bg-gray-100 p-1 rounded-lg text-xs font-medium">
               <a
                 href="{{ route('conserje.visitas.index', ['filtro' => 'todas', 'busqueda' => $busqueda]) }}"
@@ -261,7 +246,6 @@
             </div>
           </div>
 
-          {{-- Buscador --}}
           <form method="GET" action="{{ route('conserje.visitas.index') }}" class="mb-4 flex gap-2">
             <input type="hidden" name="filtro" value="{{ $filtro }}"/>
             <div class="relative flex-1 min-w-0">
@@ -284,7 +268,6 @@
             @endif
           </form>
 
-          {{-- Tabla de Registros --}}
           <div class="overflow-x-auto rounded-lg border border-gray-100">
             <table class="w-full text-left border-collapse text-xs">
               <thead>
@@ -383,7 +366,6 @@
             </table>
           </div>
 
-          {{-- Paginación --}}
           @if ($visitas->hasPages())
             <div class="mt-4 pt-3 border-t border-gray-100">
               {{ $visitas->links() }}

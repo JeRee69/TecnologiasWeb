@@ -15,7 +15,6 @@
       </div>
     </div>
 
-    {{-- BARRA DESTACADA DE VERIFICACIÓN RÁPIDA DE PATENTE (HU-30) --}}
     <div class="bg-gradient-to-r from-blue-900 to-indigo-900 text-white rounded-2xl p-6 mb-8 shadow-md">
       <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
@@ -46,7 +45,6 @@
         </form>
       </div>
 
-      {{-- Resultado de la Verificación en tiempo real --}}
       @if ($resultadoVerificacion)
         <div class="mt-4 pt-4 border-t border-blue-800">
           @if ($resultadoVerificacion['encontrado'] && $resultadoVerificacion['autorizado'])
@@ -94,7 +92,6 @@
       @endif
     </div>
 
-    {{-- Métricas Operativas --}}
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
       <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex items-center gap-4">
         <div class="w-11 h-11 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0">
@@ -127,7 +124,6 @@
       </div>
     </div>
 
-    {{-- Feedback de operaciones / Notificaciones Flash --}}
     @if (session('estado') || session('exito'))
       <div data-swal-feedback role="status" class="mb-6 rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-900 p-4 text-sm flex items-center gap-3 shadow-sm">
         <span class="material-symbols-outlined text-emerald-600 text-[22px]">check_circle</span>
@@ -164,7 +160,6 @@
     @endif
 
     <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
-      {{-- Formulario para autorizar vehículo (HU-30) --}}
       <section aria-labelledby="registro-vehiculo-heading" class="lg:col-span-2 bg-white border border-gray-200 rounded-xl p-5 sm:p-6 shadow-sm">
         <div class="flex items-center gap-2 mb-2">
           <span class="material-symbols-outlined text-[#1e3a8a] text-[22px]">directions_car</span>
@@ -320,7 +315,6 @@
         </form>
       </section>
 
-      {{-- Listado del Padrón de Vehículos --}}
       <section aria-labelledby="padron-vehicular-heading" class="lg:col-span-3 space-y-4">
         <div class="bg-white border border-gray-200 rounded-xl p-4 sm:p-5 shadow-sm">
           <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
@@ -329,7 +323,6 @@
               <span>Padrón de Vehículos Registrados</span>
             </h2>
 
-            {{-- Filtros Rápidos --}}
             <div class="flex items-center gap-1.5 bg-gray-100 p-1 rounded-lg text-xs font-medium">
               <a
                 href="{{ route('conserje.vehiculos.index', ['filtro' => 'todos', 'busqueda' => $busqueda]) }}"
@@ -352,7 +345,6 @@
             </div>
           </div>
 
-          {{-- Buscador en la tabla --}}
           <form method="GET" action="{{ route('conserje.vehiculos.index') }}" class="mb-4 flex gap-2">
             <input type="hidden" name="filtro" value="{{ $filtro }}"/>
             <div class="relative flex-1 min-w-0">
@@ -375,7 +367,6 @@
             @endif
           </form>
 
-          {{-- Tabla de Registros --}}
           <div class="overflow-x-auto rounded-lg border border-gray-100">
             <table class="w-full text-left border-collapse text-xs">
               <thead>
@@ -486,7 +477,6 @@
             </table>
           </div>
 
-          {{-- Paginación --}}
           @if ($vehiculos->hasPages())
             <div class="mt-4 pt-3 border-t border-gray-100">
               {{ $vehiculos->links() }}

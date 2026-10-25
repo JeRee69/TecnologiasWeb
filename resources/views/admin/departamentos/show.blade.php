@@ -2,7 +2,6 @@
 @section('title', 'Departamento '.e($departamento->numero))
 @section('content')
 <div class="legacy-page">
-{{-- Navegación superior --}}
     <div class="mb-6">
       <a href="{{ route('admin.departamentos.index') }}" class="inline-flex items-center gap-1 text-sm font-semibold text-[#1e3a8a] hover:underline mb-3">
         <span class="material-symbols-outlined text-[18px]">arrow_back</span>
@@ -19,7 +18,6 @@
           </div>
         </div>
 
-        {{-- Control rápido de estado (HU-08) con SweetAlert2 --}}
         <div class="flex items-center gap-3">
           @if ($departamento->estaActivo())
             <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
@@ -73,7 +71,6 @@
       </div>
     </div>
 
-    {{-- Feedback y notificaciones --}}
     @if (session('estado') || session('exito'))
       <div data-swal-feedback role="status" class="mb-6 rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-900 p-4 text-sm flex items-center gap-3 shadow-sm">
         <span class="material-symbols-outlined text-emerald-600">check_circle</span>
@@ -102,7 +99,6 @@
       </div>
     @endif
 
-    {{-- Advertencia especial HU-08 si está inactivo --}}
     @if (! $departamento->estaActivo())
       <div class="mb-6 bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-xl shadow-sm flex items-start gap-3">
         <span class="material-symbols-outlined text-amber-600 shrink-0 mt-0.5">warning</span>
@@ -116,7 +112,6 @@
     @endif
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-      {{-- SECCIÓN RESIDENTES (HU-09) --}}
       <section aria-labelledby="residentes-heading" class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm space-y-6">
         <div class="flex items-center justify-between border-b border-gray-100 pb-4">
           <div class="flex items-center gap-2">
@@ -128,7 +123,6 @@
           </span>
         </div>
 
-        {{-- Formulario de asociación (HU-09) --}}
         <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
           <h3 class="text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Asociar Nueva Cuenta de Residente</h3>
 
@@ -184,7 +178,6 @@
           @endif
         </div>
 
-        {{-- Lista de residentes actuales --}}
         <div class="space-y-3">
           @forelse ($departamento->residentes as $residente)
             <div class="flex items-center justify-between p-3.5 rounded-lg border border-gray-200 bg-white hover:border-blue-200 transition-colors">
@@ -212,7 +205,6 @@
                 </div>
               </div>
 
-              {{-- Botón desasociar con SweetAlert2 --}}
               <form
                 action="{{ route('admin.departamentos.residentes.desasociar', [$departamento, $residente]) }}"
                 method="POST"
@@ -242,7 +234,6 @@
         </div>
       </section>
 
-      {{-- SECCIÓN CONTACTOS DE EMERGENCIA (HU-10) --}}
       <section aria-labelledby="contactos-heading" class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm space-y-6">
         <div class="flex items-center justify-between border-b border-gray-100 pb-4">
           <div class="flex items-center gap-2">
@@ -254,7 +245,6 @@
           </span>
         </div>
 
-        {{-- Formulario nuevo contacto (HU-10) --}}
         <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
           <h3 class="text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Registrar Contacto de Emergencia</h3>
 
@@ -339,7 +329,6 @@
           </form>
         </div>
 
-        {{-- Lista de contactos de emergencia registrados --}}
         <div class="space-y-3">
           @forelse ($departamento->contactosEmergencia as $contacto)
             <div class="flex items-center justify-between p-3.5 rounded-lg border border-gray-200 bg-white hover:border-amber-200 transition-colors">
@@ -369,7 +358,6 @@
                 </div>
               </div>
 
-              {{-- Botón eliminar contacto con SweetAlert2 --}}
               <form
                 action="{{ route('admin.departamentos.contactos.destroy', [$departamento, $contacto]) }}"
                 method="POST"

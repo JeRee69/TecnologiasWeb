@@ -20,7 +20,6 @@
             data-swal-button="Enviar Reporte">
         @csrf
 
-        {{-- Selección de Departamento Asociado --}}
         <div>
           <label for="departamento_id" class="block text-xs font-semibold text-gray-700 mb-1">
             Departamento Origen del Reporte
@@ -46,7 +45,6 @@
           @endif
         </div>
 
-        {{-- Categoría del Problema --}}
         <div>
           <label for="categoria" class="block text-xs font-semibold text-gray-700 mb-1">
             Categoría del Problema <span class="text-red-500">*</span>
@@ -64,7 +62,6 @@
           @enderror
         </div>
 
-        {{-- Asunto / Título --}}
         <div>
           <label for="titulo" class="block text-xs font-semibold text-gray-700 mb-1">
             Título / Resumen breve <span class="text-red-500">*</span>
@@ -77,7 +74,6 @@
           @enderror
         </div>
 
-        {{-- Descripción detallada --}}
         <div>
           <label for="descripcion" class="block text-xs font-semibold text-gray-700 mb-1">
             Descripción Detallada <span class="text-red-500">*</span>

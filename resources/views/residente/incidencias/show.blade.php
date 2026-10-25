@@ -27,7 +27,6 @@
     </div>
 
     <div class="space-y-6">
-      {{-- Tarjeta de Datos de la Incidencia --}}
       <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pb-4 mb-4 border-b border-gray-100 text-xs text-gray-600">
           <div>
@@ -46,7 +45,6 @@
         </div>
       </div>
 
-      {{-- Tarjeta de Respuesta de la Administración / Conserjería --}}
       <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
         <div class="flex items-center gap-2 mb-3">
           <span class="material-symbols-outlined text-[#1e3a8a]">support_agent</span>

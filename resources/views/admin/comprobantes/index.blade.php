@@ -35,7 +35,6 @@
     </div>
   @endif
 
-  {{-- Métricas superiores --}}
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
     <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
       <div class="text-xs font-semibold text-gray-500 uppercase">Total Comprobantes</div>
@@ -62,7 +61,6 @@
     </div>
   </div>
 
-  {{-- Filtros --}}
   <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm mb-6 flex flex-wrap items-center justify-between gap-4">
     <form action="{{ route('admin.comprobantes.index') }}" method="GET" class="flex flex-wrap items-center gap-3 w-full sm:w-auto">
       <div>
@@ -98,7 +96,6 @@
     </form>
   </div>
 
-  {{-- Tabla de comprobantes --}}
   <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
     <div class="overflow-x-auto">
       <table class="w-full text-left text-sm text-gray-600">
@@ -224,7 +221,6 @@
   </div>
 </div>
 
-{{-- Modal para Rechazo de Comprobante --}}
 <div id="modalRechazo" class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
   <div role="dialog" aria-modal="true" aria-label="Rechazar comprobante de pago" class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-gray-100 max-h-[calc(100dvh-2rem)] overflow-y-auto">
     <div class="flex items-center justify-between border-b border-gray-100 pb-3 mb-4">

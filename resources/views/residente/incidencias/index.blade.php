@@ -26,7 +26,6 @@
       </div>
     @endif
 
-    {{-- Métricas Rápidas --}}
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
       <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
         <p class="text-xs font-medium text-gray-500 uppercase tracking-wider">Total Reportadas</p>
@@ -46,7 +45,6 @@
       </div>
     </div>
 
-    {{-- Filtros --}}
     <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm mb-6 flex flex-wrap items-center gap-3">
       <form method="GET" action="{{ route('residente.incidencias.index') }}" class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
         <select name="estado" class="rounded-lg border border-gray-300 px-3 py-1.5 text-xs text-gray-700 focus:border-[#1e3a8a] outline-none">
@@ -73,7 +71,6 @@
       </form>
     </div>
 
-    {{-- Listado de Incidencias --}}
     @if ($incidencias->isEmpty())
       <div class="bg-white rounded-xl border border-gray-200 p-12 text-center shadow-sm">
         <div class="w-16 h-16 rounded-full bg-gray-100 text-gray-400 flex items-center justify-center mx-auto mb-4">

@@ -19,6 +19,10 @@ services:
       DB_PASSWORD: ${DB_PASSWORD:-secret}
     volumes:
       - ediconnect_storage:/var/www/html/storage
+      - ./public:/var/www/html/public
+      - ./resources:/var/www/html/resources
+      - ./app:/var/www/html/app
+      - ./routes:/var/www/html/routes
     networks:
       - ediconnect_network
     depends_on:

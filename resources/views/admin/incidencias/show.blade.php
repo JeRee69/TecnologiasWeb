@@ -30,7 +30,6 @@
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-      {{-- Columna Izquierda: Información de la Incidencia y Solicitante --}}
       <div class="lg:col-span-2 space-y-6">
         <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
           <h2 class="text-lg font-bold text-gray-900 mb-3">{{ $incidencia->titulo }}</h2>
@@ -39,7 +38,6 @@
           </div>
         </div>
 
-        {{-- Respuesta actual y trazabilidad --}}
         <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
           <h3 class="text-sm font-semibold text-gray-900 mb-3 flex items-center gap-2">
             <span class="material-symbols-outlined text-[#1e3a8a] text-[20px]">history_edu</span>
@@ -62,9 +60,7 @@
         </div>
       </div>
 
-      {{-- Columna Derecha: Panel de Actualización de Estado (HU-37) y Solicitante --}}
       <div class="lg:col-span-1 space-y-6">
-        {{-- Datos del Residente --}}
         <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
           <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Datos del Residente</h3>
           <div class="space-y-2 text-sm">
@@ -89,7 +85,6 @@
           </div>
         </div>
 
-        {{-- Formulario de Transición de Estado (HU-37) --}}
         <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
           <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3 flex items-center gap-1.5">
             <span class="material-symbols-outlined text-[18px] text-gray-700">edit_note</span>

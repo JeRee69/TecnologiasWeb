@@ -17,7 +17,6 @@
       </div>
     </div>
 
-    {{-- Feedback de sesión si no carga SweetAlert2 --}}
     @if (session('estado') || session('exito'))
       <div data-swal-feedback role="status" class="mb-6 rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-900 p-4 text-sm flex items-center gap-3 shadow-sm">
         <span class="material-symbols-outlined text-emerald-600">check_circle</span>
@@ -25,7 +24,6 @@
       </div>
     @endif
 
-    {{-- Métricas Rápidas --}}
     <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
       <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
         <p class="text-xs font-medium text-gray-500 uppercase tracking-wider">Total Registradas</p>
@@ -49,7 +47,6 @@
       </div>
     </div>
 
-    {{-- Barra de Búsqueda y Filtros --}}
     <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm mb-6 flex flex-col sm:flex-row gap-3 items-center justify-between">
       <form method="GET" action="{{ route('admin.incidencias.index') }}" class="flex flex-wrap items-center gap-2 w-full">
         <input type="text" name="busqueda" value="{{ $busqueda }}" placeholder="Buscar por título, depto o residente..."
@@ -79,7 +76,6 @@
       </form>
     </div>
 
-    {{-- Tabla de Incidencias (HU-36) --}}
     <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
       @if ($incidencias->isEmpty())
         <div class="p-12 text-center">

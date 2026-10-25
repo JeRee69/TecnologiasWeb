@@ -15,7 +15,6 @@
       </div>
     </div>
 
-    {{-- Notificaciones y feedback --}}
     @if (session('estado') || session('exito'))
       <div data-swal-feedback role="status" class="mb-6 rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-900 p-4 text-sm flex items-center gap-3 shadow-sm">
         <span class="material-symbols-outlined text-emerald-600">check_circle</span>
@@ -44,7 +43,6 @@
       </div>
     @endif
 
-    {{-- Métricas de unidades --}}
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
       <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex items-center gap-4">
         <div class="w-12 h-12 rounded-lg bg-blue-100 text-blue-800 flex items-center justify-center shrink-0">
@@ -78,7 +76,6 @@
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-      {{-- Formulario Registro de Departamento (HU-07) --}}
       <section aria-labelledby="form-registro-heading" class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm lg:sticky lg:top-6">
         <div class="flex items-center gap-2 mb-4">
           <span class="material-symbols-outlined text-[#1e3a8a]">add_home</span>
@@ -160,9 +157,7 @@
         </form>
       </section>
 
-      {{-- Listado de Departamentos --}}
       <section aria-labelledby="listado-heading" class="min-w-0 lg:col-span-2 space-y-4">
-        {{-- Filtros y búsqueda --}}
         <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm flex flex-col sm:flex-row gap-3 items-center justify-between">
           <form method="GET" action="{{ route('admin.departamentos.index') }}" class="flex flex-wrap flex-1 min-w-0 w-full gap-2 items-center">
             <div class="relative flex-1 min-w-0 basis-full sm:basis-0">
@@ -195,7 +190,6 @@
           </form>
         </div>
 
-        {{-- Tabla / Cards de Departamentos --}}
         <div class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
           <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
@@ -255,7 +249,6 @@
                           <span>Gestionar</span>
                         </a>
 
-                        {{-- Cambio rápido de estado (HU-08) con SweetAlert2 --}}
                         <form
                           action="{{ route('admin.departamentos.estado', $depto) }}"
                           method="POST"

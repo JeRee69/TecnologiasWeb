@@ -356,7 +356,3 @@ Desde la interfaz de revisión de comprobantes, un administrador puede:
 - **Aprobar:** exige que el monto del comprobante coincida exactamente con el total del cobro. Cambia el comprobante a **Aprobado** y el gasto a **Pagado**, registrando la fecha y el administrador auditor. Un importe diferente debe rechazarse para que el residente lo corrija; no se admiten abonos parciales en esta operación.
 - **Rechazar:** Requiere ingresar obligatoriamente un motivo de rechazo. El comprobante pasa a estado **Rechazado**, el gasto común se mantiene en estado **Pendiente**, y el motivo queda informado y visible para el residente en su portal de gastos comunes para que pueda corregir su pago.
 
-Para ejecutar la suite de pruebas automatizadas:
-```powershell
-docker compose exec -T app php tests/docker-comprobantes.php
-```

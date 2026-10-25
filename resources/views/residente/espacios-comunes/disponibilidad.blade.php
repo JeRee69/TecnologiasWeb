@@ -79,7 +79,6 @@
         document.getElementById('seleccion').textContent = 'Bloque seleccionado: ' + input.value + '. Envía la solicitud para que el administrador la revise.';
       });
     });
-    // Una modificación de filtros descarta el resultado anterior hasta volver a consultar.
     document.querySelectorAll('#espacio_id, #fecha').forEach(input => {
       input.addEventListener('change', () => {
         const resultados = document.querySelector('section[aria-labelledby="horarios"]');

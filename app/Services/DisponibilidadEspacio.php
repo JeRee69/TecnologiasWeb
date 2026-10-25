@@ -26,7 +26,6 @@ class DisponibilidadEspacio
 
         for ($inicio = $minutos($espacio->hora_apertura); $inicio < $cierre; $inicio = $fin) {
             $fin = min($inicio + 60, $cierre);
-            // Intervalos semiabiertos [inicio, fin). Conservar segundos de las reservas
             // evita ofrecer un bloque que aún está ocupado durante parte de su primer minuto.
             $ocupado = $reservas->contains(fn ($reserva) =>
                 $reserva->hora_inicio < $formato($fin).':00'
