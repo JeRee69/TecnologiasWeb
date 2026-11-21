@@ -7,7 +7,9 @@ use App\Models\Departamento;
 use App\Models\Incidencia;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class IncidenciaController extends Controller
@@ -56,7 +58,8 @@ class IncidenciaController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $usuario = $request->user();
-        $departamentosUsuarioIds = $usuario->departamentos()->pluck('departamentos.id')->toArray();
+        $departamentosUsuarioIds = $usuario->departamentos()->activos()
+            ->orderBy('numero')->pluck('departamentos.id')->toArray();
 
         $validated = $request->validate([
             'departamento_id' => [
@@ -77,7 +80,7 @@ class IncidenciaController extends Controller
             'titulo.required' => 'Indica un título o asunto breve para la incidencia.',
             'titulo.max' => 'El título no puede superar los 150 caracteres.',
             'descripcion.required' => 'Describe detalladamente la situación o problema ocurrido.',
-            'departamento_id.in' => 'El departamento seleccionado debe ser uno al que estés asignado.',
+            'departamento_id.in' => 'Selecciona un departamento activo al que estés asignado.',
         ]);
 
         $departamentoId = $validated['departamento_id'] ?? null;
@@ -85,14 +88,26 @@ class IncidenciaController extends Controller
             $departamentoId = $departamentosUsuarioIds[0];
         }
 
-        $incidencia = Incidencia::create([
-            'user_id' => $usuario->id,
-            'departamento_id' => $departamentoId,
-            'categoria' => $validated['categoria'],
-            'titulo' => $validated['titulo'],
-            'descripcion' => $validated['descripcion'],
-            'estado' => 'Pendiente',
-        ]);
+        $incidencia = DB::transaction(function () use ($usuario, $departamentoId, $validated) {
+            // Revalidar bajo bloqueo por si la unidad cambió después de abrir el formulario.
+            if ($departamentoId !== null) {
+                $departamento = $usuario->departamentos()->whereKey($departamentoId)->lockForUpdate()->first();
+                if (!$departamento || !$departamento->estaActivo()) {
+                    throw ValidationException::withMessages([
+                        'departamento_id' => 'Selecciona un departamento activo al que estés asignado.',
+                    ]);
+                }
+            }
+
+            return Incidencia::create([
+                'user_id' => $usuario->id,
+                'departamento_id' => $departamentoId,
+                'categoria' => $validated['categoria'],
+                'titulo' => $validated['titulo'],
+                'descripcion' => $validated['descripcion'],
+                'estado' => 'Pendiente',
+            ]);
+        }, 3);
 
         return redirect()->route('residente.incidencias.index')
             ->with('exito', "Incidencia #{$incidencia->id} registrada exitosamente bajo estado 'Pendiente'.");

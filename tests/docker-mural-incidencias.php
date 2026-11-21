@@ -246,6 +246,28 @@ try {
     verify((int) $incidenciaA['departamento_id'] === $deptoAId, 'departamento_id asociado a la unidad del residente');
     $createdIncidenciaIds[] = $incidenciaAId = (int) $incidenciaA['id'];
 
+    // HU-08: un formulario antiguo o manipulado no vincula registros nuevos a una unidad inactiva.
+    $db->prepare("UPDATE departamentos SET estado = 'inactivo' WHERE id = ?")->execute([$deptoAId]);
+    $rechazoUnidad = $residenteAClient->post('/residente/incidencias', [
+        'headers' => ['Accept' => 'application/json'],
+        'form_params' => ['_token' => $csrfTokenInc, 'departamento_id' => $deptoAId,
+            'categoria' => 'Otro', 'titulo' => "Unidad inactiva $suffix", 'descripcion' => 'Formulario enviado tras desactivación.'],
+    ]);
+    verify($rechazoUnidad->getStatusCode() === 422, 'HU-08: servidor rechaza incidencia asociada a unidad inactiva');
+    $sinUnidad = $residenteAClient->post('/residente/incidencias', [
+        'form_params' => ['_token' => $csrfTokenInc, 'categoria' => 'Otro',
+            'titulo' => "Reporte personal $suffix", 'descripcion' => 'Incidencia común sin unidad activa.'],
+    ]);
+    $personal = $db->prepare('SELECT id, departamento_id FROM incidencias WHERE titulo = ?');
+    $personal->execute(["Reporte personal $suffix"]);
+    $reportePersonal = $personal->fetch(PDO::FETCH_ASSOC);
+    if ($reportePersonal) { $createdIncidenciaIds[] = (int) $reportePersonal['id']; }
+    verify($sinUnidad->getStatusCode() === 302 && $reportePersonal && $reportePersonal['departamento_id'] === null,
+        'HU-08: reporte personal permitido sin asociar automáticamente una unidad inactiva');
+    verify($residenteAClient->get("/residente/incidencias/$incidenciaAId")->getStatusCode() === 200,
+        'HU-08: desactivar la unidad conserva la consulta de incidencias anteriores');
+    $db->prepare("UPDATE departamentos SET estado = 'activo' WHERE id = ?")->execute([$deptoAId]);
+
     // =========================================================================
     // SUITE 4: HU-35 - Seguimiento y Aislamiento Estricto entre Residentes
     // =========================================================================

@@ -32,7 +32,7 @@
         <div>
           <h2 class="text-base font-bold mb-1">Sin departamento asociado</h2>
           <p class="text-sm text-amber-800">
-            Aún no tienes una unidad habitacional activa asignada a tu cuenta de residente. Contacta a la administración para vincular tu departamento y poder visualizar tus encomiendas.
+            Aún no tienes una unidad habitacional asignada a tu cuenta de residente. Contacta a la administración para vincular tu departamento y poder visualizar tus encomiendas.
           </p>
         </div>
       </div>

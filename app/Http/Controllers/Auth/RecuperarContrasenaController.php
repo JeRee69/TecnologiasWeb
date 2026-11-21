@@ -4,12 +4,14 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Services\RecuperacionContrasena;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 use App\Rules\LimiteContrasenaBcrypt;
@@ -17,14 +19,14 @@ use Illuminate\Validation\ValidationException;
 
 class RecuperarContrasenaController extends Controller
 {
-    private const MINUTOS_VIGENCIA = 60;
+    private const MINUTOS_VIGENCIA = RecuperacionContrasena::MINUTOS_VIGENCIA;
 
     public function mostrarFormularioSolicitud(): View
     {
         return view('auth.recuperar-contrasena');
     }
 
-    public function enviarTokenRecuperacion(Request $request): RedirectResponse
+    public function enviarTokenRecuperacion(Request $request, RecuperacionContrasena $recuperacion): RedirectResponse
     {
         $request->validate([
             'email' => 'required|email',
@@ -33,38 +35,16 @@ class RecuperarContrasenaController extends Controller
             'email.email' => 'Ingresa un formato de correo electrónico válido.',
         ]);
 
-        $usuario = User::where('email', $request->email)->first();
+        $recuperacion->solicitar($request->string('email')->toString());
 
-        if (!$usuario) {
-            return back()
-                ->withInput()
-                ->withErrors(['email' => 'No encontramos ninguna cuenta asociada a este correo electrónico.']);
-        }
-
-        $token = Str::random(64);
-
-        DB::table('password_reset_tokens')->updateOrInsert(
-            ['email' => $request->email],
-            [
-                'token' => Hash::make($token),
-                'created_at' => Carbon::now(),
-            ]
-        );
-
-        $enlaceRecuperacion = route('password.reset', ['token' => $token, 'email' => $request->email]);
-
-        // En desarrollo local dejamos el enlace disponible en la sesión para pruebas inmediatas
-        return back()->with([
-            'estado' => 'Hemos generado tu enlace de recuperación con vigencia de ' . self::MINUTOS_VIGENCIA . ' minutos.',
-            'enlace_simulado' => $enlaceRecuperacion
-        ]);
+        return back()->with('estado', RecuperacionContrasena::MENSAJE_SOLICITUD);
     }
 
     public function mostrarFormularioRestablecer(Request $request, string $token): View|RedirectResponse
     {
         $email = $request->query('email');
 
-        if (!$email) {
+        if (Validator::make(['email' => $email], ['email' => 'required|string|email'])->fails()) {
             return redirect()->route('password.request')
                 ->withErrors(['email' => 'El enlace de recuperación es inválido.']);
         }
@@ -77,10 +57,9 @@ class RecuperarContrasenaController extends Controller
         }
 
         $creadoEl = Carbon::parse($registro->created_at);
-        if ($creadoEl->addMinutes(self::MINUTOS_VIGENCIA)->isPast()) {
-            DB::table('password_reset_tokens')->where('email', $email)->delete();
+        if ($creadoEl->addMinutes(self::MINUTOS_VIGENCIA)->isPast() || !Hash::check($token, $registro->token)) {
             return redirect()->route('password.request')
-                ->withErrors(['email' => 'El enlace de recuperación ha expirado. Por favor, solicita uno nuevo.']);
+                ->withErrors(['email' => 'El enlace de recuperación es inválido o ha expirado. Solicita uno nuevo.']);
         }
 
         return view('auth.restablecer-contrasena', [
@@ -115,32 +94,16 @@ class RecuperarContrasenaController extends Controller
         return redirect()->route('login')->with('estado', 'Tu contraseña ha sido restablecida con éxito. Puedes iniciar sesión ahora.');
     }
 
-    public function apiForgotPassword(Request $request): JsonResponse
+    public function apiForgotPassword(Request $request, RecuperacionContrasena $recuperacion): JsonResponse
     {
         $request->validate([
             'email' => 'required|email',
         ]);
 
-        $usuario = User::where('email', $request->email)->first();
-
-        if (!$usuario) {
-            return response()->json([
-                'message' => 'Correo no registrado'
-            ], 404);
-        }
-
-        $token = Str::random(64);
-
-        DB::table('password_reset_tokens')->updateOrInsert(
-            ['email' => $request->email],
-            [
-                'token' => Hash::make($token),
-                'created_at' => Carbon::now(),
-            ]
-        );
+        $recuperacion->solicitar($request->string('email')->toString());
 
         return response()->json([
-            'message' => 'Correo enviado'
+            'message' => RecuperacionContrasena::MENSAJE_SOLICITUD
         ], 200);
     }
 }

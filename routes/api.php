@@ -9,7 +9,8 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('v1')->group(function () {
     Route::prefix('auth')->group(function () {
         Route::post('/login', [AutenticacionController::class, 'apiLogin']);
-        Route::post('/forgot-password', [RecuperarContrasenaController::class, 'apiForgotPassword']);
+        Route::post('/forgot-password', [RecuperarContrasenaController::class, 'apiForgotPassword'])
+            ->middleware(\Illuminate\Routing\Middleware\ThrottleRequests::class.':recuperacion');
     });
 
     Route::post('/encomiendas', [EncomiendaApiController::class, 'store'])

@@ -119,7 +119,7 @@ docker compose up -d --build
 
 Para personalizar variables, puedes copiar `.env.example` a `.env`. Es opcional; Compose ya incluye los valores necesarios. Si cambias el puerto, configura `APP_PORT` y `APP_URL` juntos. Las credenciales de MySQL deben coincidir con las del volumen existente; cambiar `.env` no cambia contraseñas en una base ya inicializada.
 
-La recuperación de contraseña actual muestra un enlace de prueba en pantalla; no envía correos reales.
+La recuperación de contraseña usa la API de Resend. Configura la clave y el remitente como se indica en **HU-38** antes de probar un envío real.
 
 ## Verificar la instalación
 
@@ -224,6 +224,8 @@ La prueba comprueba solapamientos parciales, límites entre bloques, cancelacion
 
 ## HU-22: reserva de espacios comunes
 
+Se conserva la aprobación administrativa para que la administración pueda revisar las solicitudes antes de autorizar el uso. **Criterio de aceptación recomendado:** el residente solicita un bloque disponible; la solicitud queda asociada a su cuenta y aparece en su listado como Pendiente, bloqueando el horario. El administrador puede confirmarla tras revalidar disponibilidad, espacio y residente, o rechazarla con motivo y liberar el bloque. La solicitud no equivale a una reserva confirmada hasta su aprobación.
+
 Desde **Consultar disponibilidad**, selecciona un bloque disponible y pulsa **Enviar solicitud**. El sistema vuelve a comprobar el espacio activo, la configuración, el horario y las reservas vigentes en el servidor. Solo acepta bloques exactos del calendario que todavía no hayan comenzado, incluido el último bloque corto del día. Una reserva que ocupa parte de un bloque también impide solicitarlo.
 
 La solicitud se guarda con estado **Pendiente**, asociada exclusivamente al residente autenticado, hasta la aprobación del administrador. Los identificadores de usuario, estados y horas adicionales enviados por el navegador no alteran estos datos. Después de enviar se abre **Mis reservas** (`/residente/reservas`) con un aviso de recepción, espacio, fecha, horario, estado y número de solicitud. El listado está paginado y solo muestra registros propios; también está enlazado desde el portal y el calendario.
@@ -323,7 +325,7 @@ La prueba comprueba solicitudes pendientes, aprobación, rechazo, cancelación a
 Desde el dashboard del administrador, abre **Departamentos → Administrar departamentos** (`/admin/departamentos`).
 
 - **HU-07 (Registro):** Permite registrar nuevas unidades residenciales indicando el número único (ej.: 101, 204-B) y el piso correspondiente (-10 a 200). Valida unicidad a nivel de formulario y base de datos.
-- **HU-08 (Gestión de Estado):** Permite activar o desactivar departamentos. Si un departamento está inactivo, el sistema restringe estrictamente la vinculación de nuevos residentes.
+- **HU-08 (Gestión de Estado):** Permite activar o desactivar departamentos. Una unidad inactiva no admite nuevos residentes, cobros, visitas, vehículos, encomiendas ni incidencias vinculadas. Las incidencias verifican estado y asociación también al guardar, bajo bloqueo transaccional. El historial se conserva; un residente sin unidades activas puede reportar un problema común a su nombre, sin vincularlo automáticamente a una unidad inactiva.
 - **HU-09 (Asociación de Residentes):** Permite vincular cuentas activas con rol Residente a departamentos activos, con designación opcional de residente titular principal o habitante general, así como desasociar residentes.
 - **HU-10 (Contactos de Emergencia):** Permite registrar contactos de emergencia (nombre, teléfono y relación/parentesco) vinculados a la unidad o a un residente específico de la misma, con capacidad de eliminación directa.
 
@@ -360,3 +362,59 @@ Para ejecutar la suite de pruebas automatizadas:
 ```powershell
 docker compose exec -T app php tests/docker-comprobantes.php
 ```
+
+## HU-26: consulta de encomiendas de unidades inactivas
+
+Desactivar una unidad impide recibir nuevas encomiendas, pero no oculta los paquetes pendientes que ya están en conserjería. **Mis encomiendas** y el dashboard del residente conservan su consulta mientras siga asociado a la unidad. No se incluyen paquetes retirados ni de unidades ajenas. Desasociar al residente revoca la consulta en ambas pantallas. Las cuentas de usuario inactivas siguen sin poder ingresar.
+
+```powershell
+docker compose exec -T app php tests/docker-hu26.php
+```
+
+## HU-38: recuperación de contraseña con Resend
+
+La web (`/recuperar-contrasena`) y `POST /api/v1/auth/forgot-password` usan el transporte API de Resend incluido en Laravel 12 y el SDK `resend/resend-php`, sin SMTP ni enlaces de simulación en pantalla. El correo incluye un enlace de un solo uso, válido durante 60 minutos. Al establecer una nueva contraseña se consume el token y se revocan los accesos API y sesiones anteriores, conservando la política de contraseñas existente.
+
+### Configuración para enviar correos
+
+Si todavía no existe `.env`, copia `.env.example` a `.env`. Completa estas variables localmente, sin subir la clave al repositorio:
+
+```dotenv
+MAIL_MAILER=resend
+RESEND_API_KEY=tu_clave_de_resend
+MAIL_FROM_ADDRESS=no-reply@tu-dominio-verificado.cl
+MAIL_FROM_NAME="EdiConnect"
+APP_URL=http://localhost:8000
+```
+
+`MAIL_FROM_ADDRESS` debe pertenecer a un dominio verificado en Resend. Para una primera prueba al correo de tu propia cuenta Resend se puede usar `onboarding@resend.dev`; ese remitente de prueba no permite enviar a otros residentes. `APP_URL` debe ser la dirección de la aplicación que el destinatario pueda abrir (HTTPS en producción); los enlaces no usan el Host recibido en la solicitud. Docker Compose transmite estas variables al contenedor y el arranque vuelve a generar la caché de configuración.
+
+Después de configurar, reconstruye y recrea la aplicación:
+
+```powershell
+docker compose up -d --build
+```
+
+Solicita el correo desde **Olvidé mi contraseña** o mediante la API:
+
+```http
+POST /api/v1/auth/forgot-password
+Content-Type: application/json
+
+{"email":"residente@tu-dominio.cl"}
+```
+
+Una solicitud válida devuelve HTTP 200 en la API y un mensaje genérico en ambas interfaces para no revelar si una cuenta existe. Se permite un envío por cuenta cada 60 segundos y cinco solicitudes por IP por minuto, compartidas entre web y API. Si falta la clave o Resend rechaza el envío, se muestra un error controlado (HTTP 422 en JSON), se revierte el token nuevo y se conserva el enlace anterior. El mensaje de éxito indica que se ha procesado la solicitud; la aceptación por Resend no garantiza la entrega final al buzón, cuyo estado puede consultarse en Resend.
+
+### Pruebas de recuperación
+
+En la instancia aislada de QA:
+
+```powershell
+docker compose -p ediconnect-qa -f docker-compose.yml -f tests/compose.qa.yml up -d --build
+docker compose -p ediconnect-qa -f docker-compose.yml -f tests/compose.qa.yml exec -T app php tests/docker-hu38.php
+```
+
+La prueba usa el SDK y transporte reales con respuestas HTTP simuladas del proveedor; no requiere credenciales reales ni realiza envíos externos. Verifica solicitudes web/API, remitente, destinatario, contenido, hash del token, enlaces con APP_URL, caducidad, uso único, revocación de tokens, errores de Resend, clave ausente y límites de solicitudes. La entrega real queda pendiente de configurar la clave y probar con un destinatario autorizado.
+
+Referencias: [transporte Resend de Laravel 12](https://laravel.com/docs/12.x/mail#resend-driver) y [configuración de Resend](https://resend.com/docs/send-with-laravel).

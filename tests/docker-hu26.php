@@ -145,6 +145,18 @@ try {
     verify(! str_contains($htmlB, 'Chilexpress'), 'Residente B no visualiza encomiendas del Depto A');
     verify(! str_contains($htmlB, 'Starken'), 'Residente B no visualiza encomiendas de otros');
 
+    // La desactivación bloquea nuevas recepciones, pero conserva los paquetes pendientes.
+    $db->prepare("UPDATE departamentos SET estado = 'inactivo' WHERE id = ?")->execute([$deptoAId]);
+    $inactivo = (string) $clientA->get('/residente/encomiendas')->getBody();
+    verify(str_contains($inactivo, 'CHX-A1') && str_contains($inactivo, 'STK-A2'), 'Unidad inactiva conserva sus encomiendas pendientes');
+    verify(!str_contains($inactivo, 'MELI-A3') && !str_contains($inactivo, 'CCH-B1'), 'Unidad inactiva no expone retiradas ni paquetes ajenos');
+    $panel = (string) $clientA->get('/residente/dashboard')->getBody();
+    verify(str_contains($panel, 'CHX-A1') && str_contains($panel, 'STK-A2'), 'Dashboard conserva los paquetes pendientes de la unidad inactiva');
+    $db->prepare('DELETE FROM departamento_user WHERE departamento_id = ? AND user_id = ?')->execute([$deptoAId, $residenteAId]);
+    $desasociado = (string) $clientA->get('/residente/encomiendas')->getBody();
+    verify(!str_contains($desasociado, 'CHX-A1') && !str_contains($desasociado, 'STK-A2'), 'Desasociar al residente revoca la consulta de paquetes');
+    verify(!str_contains((string) $clientA->get('/residente/dashboard')->getBody(), 'CHX-A1'), 'Desasociar revoca también la consulta desde el dashboard');
+
     // 10. Control RBAC: Conserje intentando ingresar a /residente/encomiendas es bloqueado (HTTP 403)
     $clientConserje = sessionClient();
     login($clientConserje, $conserjeEmail);

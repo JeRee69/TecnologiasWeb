@@ -40,7 +40,7 @@ class DashboardController extends Controller
         $cobroDestacado = (clone $cobros)->where('estado', '!=', 'pagado')->orderByDesc('periodo')->first()
             ?? (clone $cobros)->orderByDesc('periodo')->first();
         $ultimoPago = (clone $cobros)->where('estado', 'pagado')->orderByDesc('periodo')->first();
-        $paquetes = Encomienda::with('departamento')->pendientes()->whereIn('departamento_id', $departamentos->where('estado', 'activo')->pluck('id'));
+        $paquetes = Encomienda::with('departamento')->pendientes()->whereIn('departamento_id', $departamentos->pluck('id'));
         $totalEncomiendas = (clone $paquetes)->count();
         $encomiendas = $paquetes->orderByDesc('fecha_ingreso')->limit(2)->get();
         $proximaReserva = Reserva::with('espacioComun')->where('user_id', $usuario->id)->vigentes()

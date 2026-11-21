@@ -11,6 +11,10 @@ services:
       APP_DEBUG: ${APP_DEBUG:-true}
       APP_URL: ${APP_URL:-http://localhost:8000}
       APP_KEY: ${APP_KEY:-}
+      MAIL_MAILER: ${MAIL_MAILER:-resend}
+      RESEND_API_KEY: ${RESEND_API_KEY:-}
+      MAIL_FROM_ADDRESS: ${MAIL_FROM_ADDRESS:-onboarding@resend.dev}
+      MAIL_FROM_NAME: ${MAIL_FROM_NAME:-EdiConnect}
       DB_CONNECTION: mysql
       DB_HOST: db
       DB_PORT: 3306

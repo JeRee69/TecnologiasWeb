@@ -22,14 +22,6 @@
           <span class="material-symbols-outlined text-emerald-600 text-[20px]">check_circle</span>
           <span class="font-medium">{{ session('estado') }}</span>
         </div>
-        @if (session('enlace_simulado'))
-          <div class="mt-1 p-2 bg-white rounded border border-emerald-100 text-xs break-all">
-            <span class="font-semibold block text-emerald-900 mb-1">Enlace generado para pruebas locales:</span>
-            <a href="{{ session('enlace_simulado') }}" class="text-secondary underline font-medium hover:text-blue-800">
-              {{ session('enlace_simulado') }}
-            </a>
-          </div>
-        @endif
       </div>
     @endif
 

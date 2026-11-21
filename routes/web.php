@@ -32,7 +32,8 @@ Route::middleware('guest')->group(function () {
 
     // Recuperación de contraseña (HU-38)
     Route::get('/recuperar-contrasena', [RecuperarContrasenaController::class, 'mostrarFormularioSolicitud'])->name('password.request');
-    Route::post('/recuperar-contrasena', [RecuperarContrasenaController::class, 'enviarTokenRecuperacion'])->name('password.email');
+    Route::post('/recuperar-contrasena', [RecuperarContrasenaController::class, 'enviarTokenRecuperacion'])
+        ->middleware(\Illuminate\Routing\Middleware\ThrottleRequests::class.':recuperacion')->name('password.email');
     Route::get('/restablecer-contrasena/{token}', [RecuperarContrasenaController::class, 'mostrarFormularioRestablecer'])->name('password.reset');
     Route::post('/restablecer-contrasena', [RecuperarContrasenaController::class, 'restablecerContrasena'])->name('password.update');
 });

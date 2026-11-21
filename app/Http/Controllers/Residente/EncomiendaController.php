@@ -13,9 +13,9 @@ class EncomiendaController extends Controller
     {
         $usuario = $request->user();
 
-        // Departamentos activos asociados al residente
+        // La asociación vigente conserva la consulta de paquetes ya recibidos,
+        // incluso si la unidad dejó de admitir nuevos registros.
         $departamentos = $usuario->departamentos()
-            ->activos()
             ->orderBy('numero')
             ->get();
 
