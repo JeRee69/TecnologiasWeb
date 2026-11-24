@@ -115,6 +115,51 @@
       </div>
     @endif
 
+    <section aria-labelledby="propietario-heading" class="mb-8 bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <span class="material-symbols-outlined text-indigo-700">real_estate_agent</span>
+          <div>
+            <h2 id="propietario-heading" class="text-lg font-bold text-gray-900">Dueño del departamento</h2>
+            @if ($departamento->propietario)
+              <p class="text-xs text-gray-600 mt-0.5">
+                <strong class="text-gray-900">{{ $departamento->propietario->nombre }}</strong>
+                &bull; {{ $departamento->propietario->email }}
+                @if ($departamento->propietario->telefono)
+                  &bull; {{ $departamento->propietario->telefono }}
+                @endif
+              </p>
+            @else
+              <p class="text-xs text-gray-500 mt-0.5">Sin dueño asignado. El dueño puede consultar la información de la unidad sin modificarla.</p>
+            @endif
+          </div>
+        </div>
+
+        <form action="{{ route('admin.departamentos.propietario', $departamento) }}" method="POST" class="flex flex-col sm:flex-row gap-2 sm:items-center">
+          @csrf
+          @method('PATCH')
+          <label for="propietario_id" class="sr-only">Seleccionar dueño</label>
+          <select id="propietario_id" name="propietario_id" class="text-xs rounded-lg border border-gray-300 px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-700 min-w-[240px]">
+            <option value="">-- Sin dueño asignado --</option>
+            @foreach ($duenosDisponibles as $dueno)
+              <option value="{{ $dueno->id }}" @selected($departamento->propietario_id === $dueno->id)>
+                {{ $dueno->nombre }} ({{ $dueno->rut ?? $dueno->email }})
+              </option>
+            @endforeach
+          </select>
+          <button type="submit" class="bg-indigo-700 hover:bg-indigo-800 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center justify-center gap-1 transition-colors shadow-sm">
+            <span class="material-symbols-outlined text-[16px]">save</span>
+            <span>Guardar dueño</span>
+          </button>
+        </form>
+      </div>
+      @if ($duenosDisponibles->isEmpty())
+        <p class="text-xs text-amber-800 bg-amber-50 border border-amber-200 rounded-lg p-2 mt-4">
+          No hay cuentas activas con rol Dueño. Créalas desde <a href="{{ route('admin.usuarios.index') }}" class="font-semibold underline">Usuarios y Roles</a>.
+        </p>
+      @endif
+    </section>
+
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
       {{-- SECCIÓN RESIDENTES (HU-09) --}}
       <section aria-labelledby="residentes-heading" class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm space-y-6">

@@ -16,6 +16,7 @@ class RedirectIfAuthenticated
                     'administrador' => 'admin.dashboard',
                     'conserje' => 'conserje.dashboard',
                     'residente' => 'residente.dashboard',
+                    'dueño' => 'dueno.dashboard',
                     default => null,
                 };
                 abort_unless($route, 403);

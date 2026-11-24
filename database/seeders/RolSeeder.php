@@ -25,6 +25,11 @@ class RolSeeder extends Seeder
                 'nombre' => 'Residente',
                 'descripcion' => 'Consulta de gastos comunes, comprobantes, reservas y avisos comunitarios.',
             ],
+            [
+                'id' => 4,
+                'nombre' => 'Dueño',
+                'descripcion' => 'Consulta de solo lectura de los departamentos de su propiedad.',
+            ],
         ];
 
         foreach ($roles as $rol) {

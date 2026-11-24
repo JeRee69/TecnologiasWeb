@@ -19,6 +19,7 @@ use App\Http\Controllers\Residente\IncidenciaController as ResidenteIncidenciaCo
 use App\Http\Controllers\PerfilController;
 use App\Http\Controllers\Residente\DisponibilidadController;
 use App\Http\Controllers\Residente\ReservaController;
+use App\Http\Controllers\Dueno\PropiedadController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -82,6 +83,7 @@ Route::middleware(['auth', 'rol:Administrador'])->prefix('admin')->name('admin.'
     Route::post('/departamentos', [DepartamentoController::class, 'store'])->name('departamentos.store');
     Route::get('/departamentos/{departamento}', [DepartamentoController::class, 'show'])->name('departamentos.show');
     Route::patch('/departamentos/{departamento}/estado', [DepartamentoController::class, 'actualizarEstado'])->name('departamentos.estado');
+    Route::patch('/departamentos/{departamento}/propietario', [DepartamentoController::class, 'asignarPropietario'])->name('departamentos.propietario');
     Route::post('/departamentos/{departamento}/residentes', [DepartamentoController::class, 'asociarResidente'])->name('departamentos.residentes.asociar');
     Route::delete('/departamentos/{departamento}/residentes/{usuario}', [DepartamentoController::class, 'desasociarResidente'])->name('departamentos.residentes.desasociar');
     Route::post('/departamentos/{departamento}/contactos', [DepartamentoController::class, 'storeContacto'])->name('departamentos.contactos.store');
@@ -147,4 +149,10 @@ Route::middleware(['auth', 'rol:Residente'])->prefix('residente')->name('residen
     Route::get('/incidencias/crear', [ResidenteIncidenciaController::class, 'create'])->name('incidencias.create');
     Route::post('/incidencias', [ResidenteIncidenciaController::class, 'store'])->name('incidencias.store');
     Route::get('/incidencias/{incidencia}', [ResidenteIncidenciaController::class, 'show'])->name('incidencias.show');
+});
+
+// Módulo Dueño: consulta de solo lectura de sus departamentos
+Route::middleware(['auth', 'rol:Dueño'])->prefix('dueno')->name('dueno.')->group(function () {
+    Route::get('/dashboard', [PropiedadController::class, 'index'])->name('dashboard');
+    Route::get('/departamentos/{departamento}', [PropiedadController::class, 'show'])->whereNumber('departamento')->name('departamentos.show');
 });

@@ -9,8 +9,8 @@
 @php
   $cuenta = auth()->user();
   $rol = $cuenta->rol?->nombre;
-  $zona = match ($rol) { 'Administrador' => 'admin', 'Conserje' => 'conserje', default => 'residente' };
-  $portal = match ($zona) { 'admin' => 'Administración', 'conserje' => 'Conserjería', default => 'Portal Residente' };
+  $zona = match ($rol) { 'Administrador' => 'admin', 'Conserje' => 'conserje', 'Dueño' => 'dueno', default => 'residente' };
+  $portal = match ($zona) { 'admin' => 'Administración', 'conserje' => 'Conserjería', 'dueno' => 'Portal Dueño', default => 'Portal Residente' };
   $iniciales = collect(explode(' ', $cuenta->nombre))->filter()->take(2)->map(fn ($parte) => mb_substr($parte, 0, 1))->implode('');
   $menu = match ($zona) {
     'admin' => [
@@ -30,6 +30,9 @@
       ['conserje.visitas.index','shield_person','Control de Visitas','conserje.visitas.*'],
       ['conserje.vehiculos.index','directions_car','Registro Vehicular','conserje.vehiculos.*'],
       ['conserje.incidencias.index','report_problem','Incidencias Vecinales','conserje.incidencias.*'],
+    ],
+    'dueno' => [
+      ['dueno.dashboard','real_estate_agent','Mis Propiedades','dueno.*'],
     ],
     default => [
       ['residente.dashboard','home','Dashboard Residente','residente.dashboard'],

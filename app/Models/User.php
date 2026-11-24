@@ -46,6 +46,11 @@ class User extends Authenticatable
             ->withTimestamps();
     }
 
+    public function propiedades(): HasMany
+    {
+        return $this->hasMany(Departamento::class, 'propietario_id');
+    }
+
     public function visitasRegistradas(): HasMany
     {
         return $this->hasMany(Visita::class, 'conserje_id');
@@ -94,6 +99,11 @@ class User extends Authenticatable
     public function esResidente(): bool
     {
         return $this->tieneRol('Residente');
+    }
+
+    public function esDueno(): bool
+    {
+        return $this->tieneRol('Dueño');
     }
 
     public function estaActivo(): bool

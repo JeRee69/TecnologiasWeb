@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -18,11 +19,17 @@ class Departamento extends Model
         'numero',
         'piso',
         'estado',
+        'propietario_id',
     ];
 
     protected $casts = [
         'piso' => 'integer',
     ];
+
+    public function propietario(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'propietario_id');
+    }
 
     public function gastosComunes(): HasMany
     {

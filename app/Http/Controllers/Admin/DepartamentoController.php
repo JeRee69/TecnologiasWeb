@@ -95,6 +95,7 @@ class DepartamentoController extends Controller
                 $q->orderByPivot('es_titular', 'desc')->orderBy('nombre');
             },
             'contactosEmergencia.residente',
+            'propietario',
         ]);
 
         // Cargar residentes activos no asociados a este departamento
@@ -108,7 +109,41 @@ class DepartamentoController extends Controller
             ->orderBy('nombre')
             ->get();
 
-        return view('admin.departamentos.show', compact('departamento', 'residentesDisponibles'));
+        $duenosDisponibles = User::whereHas('rol', fn ($q) => $q->where('nombre', 'Dueño'))
+            ->where('estado', 'activo')
+            ->orderBy('nombre')
+            ->get();
+
+        return view('admin.departamentos.show', compact('departamento', 'residentesDisponibles', 'duenosDisponibles'));
+    }
+
+    public function asignarPropietario(Request $request, Departamento $departamento): RedirectResponse
+    {
+        $datos = $request->validate([
+            'propietario_id' => ['bail', 'nullable', 'integer', 'exists:users,id'],
+        ], [
+            'propietario_id.exists' => 'El dueño seleccionado no existe.',
+        ]);
+
+        if (empty($datos['propietario_id'])) {
+            $departamento->update(['propietario_id' => null]);
+
+            return back()->with('estado', "El departamento {$departamento->numero} quedó sin dueño asignado.");
+        }
+
+        $dueno = User::with('rol')->findOrFail($datos['propietario_id']);
+
+        if (! $dueno->esDueno()) {
+            return back()->withErrors(['propietario_id' => 'El usuario seleccionado no cuenta con el rol de Dueño.']);
+        }
+
+        if (! $dueno->estaActivo()) {
+            return back()->withErrors(['propietario_id' => 'No puedes asignar un dueño cuya cuenta esté inactiva.']);
+        }
+
+        $departamento->update(['propietario_id' => $dueno->id]);
+
+        return back()->with('estado', "{$dueno->nombre} fue asignado como dueño del departamento {$departamento->numero}.");
     }
 
     /**

@@ -12,6 +12,7 @@ class DatabaseSeeder extends Seeder
             RolSeeder::class,
             UsuarioSeeder::class,
             GastoComunSeeder::class,
+            DuenoSeeder::class,
         ]);
     }
 }

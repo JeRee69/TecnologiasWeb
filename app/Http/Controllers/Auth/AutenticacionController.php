@@ -113,6 +113,7 @@ class AutenticacionController extends Controller
             'administrador' => redirect()->route('admin.dashboard'),
             'conserje' => redirect()->route('conserje.dashboard'),
             'residente' => redirect()->route('residente.dashboard'),
+            'dueño' => redirect()->route('dueno.dashboard'),
             default => redirect()->route('login')->withErrors(['identifier' => 'Rol de usuario no reconocido']),
         };
     }

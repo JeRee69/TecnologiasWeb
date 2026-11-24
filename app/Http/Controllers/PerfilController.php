@@ -22,6 +22,7 @@ class PerfilController extends Controller
             'administrador' => 'admin.dashboard',
             'conserje' => 'conserje.dashboard',
             'residente' => 'residente.dashboard',
+            'dueño' => 'dueno.dashboard',
             default => 'login',
         };
 
