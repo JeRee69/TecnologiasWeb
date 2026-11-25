@@ -72,34 +72,26 @@ docker compose exec -T app php tests/docker-hu15.php
 La prueba comprueba descarga HTTP, permisos, aislamiento entre residentes, desasociación, estados antes y después de validar un pago, unidades inactivas y desgloses vacíos y de 50 conceptos. Elimina sus datos temporales y deja PDFs de prueba en `storage/app/hu15-qa` (almacenamiento privado) para revisar contenido y presentación. `tests/verificar_pdf_hu15.py` permite verificar esos archivos y renderizarlos con pypdf, pdfplumber y Poppler.
 
 ## Ejecutar con Docker
+Guía rápida de arranque con Docker (Opción A)
+  1. Abrir Docker Desktop y esperar a que el motor esté activo (verde).
+  2. Levantar y compilar el proyecto:
+    docker compose up -d --build
+  3. Poblar datos de prueba (incluye el nuevo rol de Dueño):
+    docker compose exec -T app php artisan db:seed
 
-El frontend usa la referencia visual del prototipo Stitch de EdiConnect: navegación lateral blanca con sección activa azul marino, acciones azules, fondo claro, tarjetas y tipografía Inter. Las pantallas web comparten `layouts.app` y las públicas `layouts.auth`; estilos y menú móvil están en `public/css/ediconnect.css` y `public/js/ediconnect.js`. Los menús se construyen según el rol autenticado. Los paneles muestran datos persistidos, sin incorporar cuentas bancarias, residentes ni cifras ficticias del prototipo. El menú se convierte en un panel desplegable en móvil, con cierre por Escape y navegación de teclado.
+  4. Abrir en el navegador:
+   http://localhost:8000
+  ──────
+ Credenciales (Contraseña para todos: Password123!)
 
-Para comprobar renderizado de las pantallas, navegación por rol y privacidad de los datos del panel con cuentas temporales:
+  • Administrador: admin@ediconnect.cl
+  • Conserje: conserje@ediconnect.cl
+  • Residente: residente@ediconnect.cl
+  • Dueño: dueno@ediconnect.cl
+  ──────
+ Para apagar los servicios:
 
-```powershell
-docker compose exec -T app php tests/docker-front.php
-```
-
-Con Docker Desktop instalado e iniciado (contenedores Linux), abre una terminal en esta carpeta y ejecuta:
-
-```powershell
-docker compose up -d
-```
-
-La primera ejecución construye la imagen e instala las dependencias con Composer. MySQL debe estar listo antes de iniciar Laravel; la aplicación genera y conserva su clave, ejecuta las migraciones y crea las cuentas de demostración una sola vez. No necesitas instalar PHP, Composer ni Node en tu equipo, ni crear un `.env`.
-
-Cuando termine el arranque, abre <http://localhost:8000>.
-
-| Rol | Correo | Contraseña inicial |
-| --- | --- | --- |
-| Administrador | admin@ediconnect.cl | Password123! |
-| Conserje | conserje@ediconnect.cl | Password123! |
-| Residente | residente@ediconnect.cl | Password123! |
-
-Estas cuentas y los valores predeterminados son para desarrollo local.
-
-Se actualizaron Laravel y Sanctum porque Composer bloqueaba las versiones originales de Laravel 10 por avisos de seguridad. `composer.lock` fija las versiones instaladas.
+    docker compose down
 
 ## Estado y mantenimiento
 
